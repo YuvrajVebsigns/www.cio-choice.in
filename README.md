@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Core Media Admin Frontend
 
-## Getting Started
+A robust, production-ready Next.js 16 (App Router) administration dashboard architecture.
 
-First, run the development server:
+## Tech Stack
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS v4, `clsx`, `tailwind-merge`
+- **State Management**: Zustand (Global state), TanStack React Query (Server state)
+- **Language**: TypeScript
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Project Structure & Architecture
+
+The application is structured following feature-based modules and strict SOLID principles to ensure maintainability and separation of concerns.
+
+```text
+src/
+ ├── app/             # Next.js App Router (pages, layouts, error, loading)
+ ├── components/      # Reusable UI components
+ ├── modules/         # Feature-based domains (e.g., /auth, /users)
+ ├── services/        # API abstractions (apiFetch, auth.service)
+ ├── hooks/           # Reusable React hooks (useAuth, useDebounce)
+ ├── store/           # Zustand global state stores (auth.store)
+ ├── lib/             # Utility functions (cn for Tailwind)
+ ├── types/           # TypeScript interfaces and models
+ ├── constants/       # Global constants (API routes, app configs)
+ └── providers/       # Global React Context providers (QueryProvider)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Core Principles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **No API calls in UI components**: All data fetching must be handled by `services/` and consumed via custom hooks or Server Components.
+2. **Predictable State**: Use TanStack Query for server state (caching, refetching) and Zustand for local/global client state.
+3. **Robust Error Handling**: Utilize the centralized `apiFetch` wrapper alongside Next.js global `error.tsx` and `not-found.tsx` boundaries.
+4. **Strict Security**: The Next.js Edge proxy (`src/proxy.ts`) protects authenticated routes globally.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 How to Use the API Fetcher
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The application utilizes a centralized `apiFetch` wrapper located in `src/services/apiFetch.ts`. It automatically attaches the base URL, parses JSON responses, includes credentials for cookies, and centrally handles generic `ApiError` throwing.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Step 1: Define endpoints in `constants/api.ts`
+```typescript
+export const API_ENDPOINTS = {
+  USERS: {
+    BASE: "/users",
+    BY_ID: (id: string) => `/users/${id}`,
+  },
+} as const;
+```
 
-## Deploy on Vercel
+### Step 2: Create a service in `services/`
+Create a service file to encapsulate the API request logic.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```typescript
+// src/services/user.service.ts
+import { apiFetch } from "./apiFetch";
+import { API_ENDPOINTS } from "@/constants/api";
+import { User } from "@/types/user.types";
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+export const userService = {
+  async getUsers(): Promise<User[]> {
+    return apiFetch<User[]>(API_ENDPOINTS.USERS.BASE, {
+      method: "GET",
+      // requireAuth: true (default) -> sends credentials
+    });
+  },
+};
+```
+
+### Step 3: Consume in a Hook (TanStack Query)
+Always fetch data through TanStack Query on the client to get caching, retries, and loading states for free.
+
+```typescript
+// src/hooks/useUsers.ts
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { userService } from "@/services/user.service";
+
+export function useUsers() {
+  return useQuery({
+    queryKey: ["users"],
+    queryFn: () => userService.getUsers(),
+  });
+}
+```
+
+### Step 4: Use in a Component
+```tsx
+"use client";
+
+import { useUsers } from "@/hooks/useUsers";
+
+export function UserList() {
+  const { data: users, isLoading, error } = useUsers();
+
+  if (isLoading) return <p>Loading users...</p>;
+  if (error) return <p>Error loading users: {error.message}</p>;
+
+  return (
+    <ul>
+      {users?.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+---
+
+## Setup & Running
+
+1. **Install Dependencies**
+   ```bash
+   yarn install
+   ```
+
+2. **Start Development Server**
+   ```bash
+   yarn dev
+   ```
+
+3. **Production Build**
+   ```bash
+   yarn build
+   yarn start
+   ```
