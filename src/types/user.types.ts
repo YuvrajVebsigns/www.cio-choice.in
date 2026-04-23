@@ -1,8 +1,12 @@
 export enum UserRole {
-  SUPER_ADMIN = "super_admin",
-  ADMIN = "admin",
-  EDITOR = "editor",
-  VIEWER = "viewer",
+  // eslint-disable-next-line no-unused-vars
+  SUPER_ADMIN = 'super_admin',
+  // eslint-disable-next-line no-unused-vars
+  ADMIN = 'admin',
+  // eslint-disable-next-line no-unused-vars
+  EDITOR = 'editor',
+  // eslint-disable-next-line no-unused-vars
+  VIEWER = 'viewer',
 }
 
 export interface User {

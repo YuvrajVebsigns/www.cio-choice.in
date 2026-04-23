@@ -1,6 +1,6 @@
-import { apiFetch } from "./apiFetch";
-import { API_ENDPOINTS } from "@/constants/api";
-import { User } from "@/types/user.types";
+import { apiFetch } from './apiFetch';
+import { API_ENDPOINTS } from '@/constants/api';
+import { User } from '@/types/user.types';
 
 interface LoginCredentials {
   email: string;
@@ -19,7 +19,7 @@ export const authService = {
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     return apiFetch<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(credentials),
       requireAuth: false,
     });
@@ -30,7 +30,7 @@ export const authService = {
    */
   async logout(): Promise<void> {
     return apiFetch<void>(API_ENDPOINTS.AUTH.LOGOUT, {
-      method: "POST",
+      method: 'POST',
     });
   },
 
@@ -39,7 +39,7 @@ export const authService = {
    */
   async getProfile(): Promise<User> {
     return apiFetch<User>(API_ENDPOINTS.AUTH.ME, {
-      method: "GET",
+      method: 'GET',
     });
   },
 };

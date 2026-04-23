@@ -17,7 +17,7 @@ export interface StatsCardData {
   change: number;
   changeLabel: string;
   icon: string;
-  color: "primary" | "emerald" | "amber" | "rose" | "cyan";
+  color: 'primary' | 'emerald' | 'amber' | 'rose' | 'cyan';
 }
 
 export interface ChartDataPoint {
@@ -39,5 +39,6 @@ export type ColumnDef<T> = {
   key: keyof T | string;
   label: string;
   sortable?: boolean;
+  // eslint-disable-next-line no-unused-vars
   render?: (value: unknown, row: T) => React.ReactNode;
 };

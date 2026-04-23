@@ -1,12 +1,12 @@
-import { API_BASE_URL } from "@/constants/api";
+import { API_BASE_URL } from '@/constants/api';
 
 export class ApiError extends Error {
   public statusCode: number;
-  public data: any;
+  public data: unknown;
 
-  constructor(message: string, statusCode: number, data?: any) {
+  constructor(message: string, statusCode: number, data?: unknown) {
     super(message);
-    this.name = "ApiError";
+    this.name = 'ApiError';
     this.statusCode = statusCode;
     this.data = data;
   }
@@ -26,25 +26,25 @@ export async function apiFetch<T>(endpoint: string, options: FetchOptions = {}):
   const config: RequestInit = {
     ...customConfig,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...headers,
     },
   };
 
   // If credentials are required, we include them so cookies are sent automatically.
   if (requireAuth) {
-    config.credentials = "include";
+    config.credentials = 'include';
   }
 
   const url = `${API_BASE_URL}${endpoint}`;
 
   try {
     const response = await fetch(url, config);
-    
+
     // We try to parse the response body, but handle empty bodies
     let data;
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
       data = await response.json();
     } else {
       data = await response.text();
@@ -52,9 +52,9 @@ export async function apiFetch<T>(endpoint: string, options: FetchOptions = {}):
 
     if (!response.ok) {
       throw new ApiError(
-        data?.message || response.statusText || "An error occurred",
+        data?.message || response.statusText || 'An error occurred',
         response.status,
-        data
+        data,
       );
     }
 
@@ -64,9 +64,6 @@ export async function apiFetch<T>(endpoint: string, options: FetchOptions = {}):
       throw error;
     }
     // Network errors or other unexpected errors
-    throw new ApiError(
-      error instanceof Error ? error.message : "Network error",
-      500
-    );
+    throw new ApiError(error instanceof Error ? error.message : 'Network error', 500);
   }
 }

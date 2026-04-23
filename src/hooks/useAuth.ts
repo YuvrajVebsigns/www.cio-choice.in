@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { authService } from "@/services/auth.service";
-import { useAuthStore } from "@/store/auth.store";
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { authService } from '@/services/auth.service';
+import { useAuthStore } from '@/store/auth.store';
 
 /**
  * A useAuth hook that leverages TanStack Query for data fetching and caching,
@@ -13,7 +13,7 @@ export function useAuth() {
   const { setAuth, clearAuth, isAuthenticated, user } = useAuthStore();
 
   const query = useQuery({
-    queryKey: ["auth-profile"],
+    queryKey: ['auth-profile'],
     queryFn: async () => {
       const profile = await authService.getProfile();
       return profile;

@@ -1,4 +1,5 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # ⚠️ This is NOT the Next.js you know
 
 This project uses the latest Next.js (App Router). APIs, conventions, and structure may differ from older versions.
@@ -15,12 +16,14 @@ This project uses the latest Next.js (App Router). APIs, conventions, and struct
 You are a Senior Frontend Engineer (10+ years experience).
 
 Your task:
+
 - Maintain and improve this existing Next.js project
 - Follow production-grade architecture
 - Enforce clean code, scalability, and maintainability
 - Apply SOLID principles strictly
 
 DO NOT:
+
 - Write quick hacks
 - Break architecture patterns
 - Add business logic inside UI
@@ -50,40 +53,41 @@ Use services and hooks
 ==================================================
 
 src/
- ├── app/                # Next.js routes (App Router)
- │    ├── layout.tsx
- │    ├── page.tsx
- │    ├── loading.tsx
- │    ├── error.tsx
- │    ├── not-found.tsx
- │
- ├── components/         # Reusable UI components
- │    ├── ui/
- │
- ├── modules/            # Feature-based modules
- │    ├── auth/
- │
- ├── services/           # API layer (NO UI logic)
- │    ├── apiFetch.ts
- │    ├── auth.service.ts
- │
- ├── hooks/              # Custom hooks
- │    ├── useAuth.ts
- │    ├── useDebounce.ts
- │
- ├── lib/                # Utilities
- │    ├── utils.ts
- │
- ├── types/              # TypeScript types
- │    ├── api.types.ts
- │    ├── user.types.ts
- │
- ├── constants/          # Constants
- │    ├── api.ts
- │
- ├── styles/             # Global styles (Tailwind)
+├── app/ # Next.js routes (App Router)
+│ ├── layout.tsx
+│ ├── page.tsx
+│ ├── loading.tsx
+│ ├── error.tsx
+│ ├── not-found.tsx
+│
+├── components/ # Reusable UI components
+│ ├── ui/
+│
+├── modules/ # Feature-based modules
+│ ├── auth/
+│
+├── services/ # API layer (NO UI logic)
+│ ├── apiFetch.ts
+│ ├── auth.service.ts
+│
+├── hooks/ # Custom hooks
+│ ├── useAuth.ts
+│ ├── useDebounce.ts
+│
+├── lib/ # Utilities
+│ ├── utils.ts
+│
+├── types/ # TypeScript types
+│ ├── api.types.ts
+│ ├── user.types.ts
+│
+├── constants/ # Constants
+│ ├── api.ts
+│
+├── styles/ # Global styles (Tailwind)
 
 RULES:
+
 - Do NOT mix concerns
 - Do NOT place API calls inside components
 - Keep modules feature-based
@@ -97,6 +101,7 @@ RULES:
 - ALWAYS use service layer (auth.service.ts etc.)
 
 Fetcher Rules:
+
 - Attach headers properly
 - Include credentials
 - Handle errors centrally
@@ -125,11 +130,13 @@ Fetcher Rules:
 ==================================================
 
 MUST include:
+
 - loading.tsx
 - error.tsx
 - not-found.tsx
 
 Handle:
+
 - API failures
 - Empty states
 - Fallback UI
@@ -163,6 +170,7 @@ Handle:
   - Stateless (if possible)
 
 STRICTLY AVOID:
+
 - API calls in components
 - Business logic in components
 
@@ -174,6 +182,7 @@ STRICTLY AVOID:
 - Hooks must be reusable and isolated
 
 Examples:
+
 - useAuth
 - useDebounce
 
@@ -216,7 +225,7 @@ Before generating code, ensure:
 ✔ Error/loading handled  
 ✔ Fully typed  
 ✔ Scalable structure  
-✔ Tailwind used correctly  
+✔ Tailwind used correctly
 
 ==================================================
 🎯 OUTPUT RULES

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export default function ErrorPage({
   error,
@@ -11,7 +11,6 @@ export default function ErrorPage({
 }) {
   useEffect(() => {
     // In a production app, log this error to an error reporting service
-    console.error(error);
   }, [error]);
 
   return (
@@ -32,7 +31,7 @@ export default function ErrorPage({
             />
           </svg>
         </div>
-        
+
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
             Something went wrong!

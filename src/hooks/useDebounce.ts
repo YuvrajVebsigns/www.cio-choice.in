@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 /**
  * Custom hook to debounce a value. Useful for search inputs to prevent
  * excessive API calls while the user is typing.
- * 
+ *
  * @param value The value to debounce
  * @param delay The delay in milliseconds
  * @returns The debounced value

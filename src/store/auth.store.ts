@@ -1,9 +1,10 @@
-import { create } from "zustand";
-import { User } from "@/types/user.types";
+import { create } from 'zustand';
+import { User } from '@/types/user.types';
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
+  // eslint-disable-next-line no-unused-vars
   setAuth: (user: User) => void;
   clearAuth: () => void;
 }
