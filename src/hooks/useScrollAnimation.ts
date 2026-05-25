@@ -7,14 +7,16 @@ type Options = {
   initialTransform?: string;
   rootMargin?: string;
   threshold?: number;
+  once?: boolean;
 };
 
-export function useScrollAnimation<T extends HTMLElement = HTMLElement>(options: Options = {}) {
+export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(options: Options = {}) {
   const {
     animationClass = 'animate-fade-in',
     initialTransform = 'translateY(24px)',
     rootMargin = '0px',
     threshold = 0.12,
+    once = true,
   } = options;
   const ref = useRef<T | null>(null);
 
@@ -35,7 +37,11 @@ export function useScrollAnimation<T extends HTMLElement = HTMLElement>(options:
             el.classList.add(options.animationClass || animationClass);
             el.style.opacity = '1';
             el.style.transform = 'none';
-          } else {
+
+            if (once) {
+              observer.disconnect();
+            }
+          } else if (!once) {
             // remove animation when element leaves viewport so it animates on scroll up/down
             el.classList.remove(options.animationClass || animationClass);
             el.style.opacity = '0';
@@ -49,7 +55,7 @@ export function useScrollAnimation<T extends HTMLElement = HTMLElement>(options:
     observer.observe(el);
 
     return () => observer.disconnect();
-  }, [animationClass, initialTransform, options.animationClass, rootMargin, threshold]);
+  }, [animationClass, initialTransform, options.animationClass, rootMargin, threshold, once]);
 
   return ref;
 }

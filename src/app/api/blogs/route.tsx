@@ -10,6 +10,7 @@ export async function GET() {
       author: 'Ellinien Loma',
       date: '28 FEB',
       image: '/assets/blogs/blog-1.webp',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
     },
     {
       id: 2,
@@ -19,6 +20,7 @@ export async function GET() {
       author: 'Ellinien Loma',
       date: '28 FEB',
       image: '/assets/blogs/blog-3.webp',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
     },
     {
       id: 3,
@@ -28,6 +30,7 @@ export async function GET() {
       author: 'Ellinien Loma',
       date: '28 FEB',
       image: '/assets/blogs/blog-3.webp',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
     },
     {
       id: 4,
@@ -37,6 +40,7 @@ export async function GET() {
       author: 'Ellinien Loma',
       date: '28 FEB',
       image: '/assets/blogs/blog-3.webp',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
     },
     {
       id: 5,
@@ -46,6 +50,7 @@ export async function GET() {
       author: 'Ellinien Loma',
       date: '28 FEB',
       image: '/assets/blogs/blog-3.webp',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
     },
     {
       id: 6,
@@ -55,15 +60,7 @@ export async function GET() {
       author: 'Ellinien Loma',
       date: '28 FEB',
       image: '/assets/blogs/blog-3.webp',
-    },
-    {
-      id: 7,
-      title: 'Harnessing Digital Transform a Roadmap Businesses.',
-      slug: 'slug-7',
-      category: 'Business',
-      author: 'Ellinien Loma',
-      date: '28 FEB',
-      image: '/assets/blogs/blog-3.webp',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
     },
   ];
 

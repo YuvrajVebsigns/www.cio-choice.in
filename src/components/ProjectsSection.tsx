@@ -246,7 +246,7 @@ export default function ProjectsSection() {
         <div className="project-top-bar">
           <h6 className="project-subtitle">⬢ Custom Event Platforms</h6>
 
-          <Link href="/contact" className="talk-btn">
+          <Link href="/events" className="talk-btn">
             <span>More Events</span>
 
             <div className="talk-btn-icon">
@@ -282,8 +282,8 @@ export default function ProjectsSection() {
         <div className="project-top-bar">
           <h6 className="project-subtitle">⬢ Video Showcase</h6>
 
-          <Link href="/contact" className="talk-btn">
-            <span>More Video</span>
+          <Link href="/videos" className="talk-btn">
+            <span>More Videos</span>
 
             <div className="talk-btn-icon">
               <ArrowUpRight size={18} />

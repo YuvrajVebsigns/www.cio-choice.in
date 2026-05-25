@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import useScrollAnimation from '@/hooks/useScrollAnimation';
 
 const dialogues = [
@@ -98,9 +99,11 @@ export default function OurDialogues() {
           </span>
         </div>
 
-        <h2 className="dialogues-title">
-          Our <span>Dialogues</span>
-        </h2>
+        <div className="dialogues-top-bar">
+          <h2 className="dialogues-title">
+            Our <span>Dialogues</span>
+          </h2>
+        </div>
 
         {/* Controls */}
         <div className="dialogues-controls">
@@ -152,6 +155,17 @@ export default function OurDialogues() {
               </article>
             ))}
           </div>
+        </div>
+
+        {/* Bottom action - More Dialogues button placed below cards */}
+        <div className="project-top-bar" style={{ marginTop: 28 }}>
+          <div />
+          <Link href="/dialoges" className="projects-btn">
+            <span>More Dialogues</span>
+            <div className="projects-btn-icon">
+              <ArrowUpRight size={16} />
+            </div>
+          </Link>
         </div>
 
         {/* Dots */}
