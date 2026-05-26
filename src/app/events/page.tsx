@@ -2,11 +2,37 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+// import { ArrowUpRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
+// type EventItem = {
+//   category: string;
+//   title: string;
+//   image: string;
+// };
 
 export default function EventsPage() {
   const customEvents = [
+    {
+      category: 'Custom Events',
+      title: 'Event Management Platform',
+      image: '/assets/Shaping-the1.png',
+    },
+    {
+      category: 'Custom Events',
+      title: 'Digital Event Experience',
+      image: '/assets/Unlocking-Agility.png',
+    },
+    {
+      category: 'Custom Events',
+      title: 'Event Management Platform',
+      image: '/assets/Shaping-the1.png',
+    },
+    {
+      category: 'Custom Events',
+      title: 'Digital Event Experience',
+      image: '/assets/Unlocking-Agility.png',
+    },
     {
       category: 'Custom Events',
       title: 'Event Management Platform',
@@ -85,7 +111,7 @@ export default function EventsPage() {
             </h2>
           </div> */}
 
-          <div className="project-top-bar">
+          {/* <div className="project-top-bar">
             <h6 className="project-subtitle">⬢ Custom Event Platforms</h6>
 
             <Link href="/events" className="talk-btn">
@@ -95,7 +121,7 @@ export default function EventsPage() {
                 <ArrowUpRight size={18} />
               </div>
             </Link>
-          </div>
+          </div> */}
 
           <div className="project-grid">
             {customEvents.map((item, index) => (
@@ -116,6 +142,25 @@ export default function EventsPage() {
           </div>
         </div>
       </section>
+
+      {/* Duplicate the two events below (downside) with animations */}
+      {/* <section className="project-section">
+        <div className="project-container">
+          <div className="project-top-bar">
+            <h6 className="project-subtitle">⬢ More Events</h6>
+          </div>
+
+          <div className="project-grid">
+            {Array.from({ length: 2 }, () => customEvents)
+              .flat()
+              .map((item, index) => {
+                const variant = index % 2 === 0 ? 'animate-fade-in-left' : 'animate-fade-in-right';
+
+                return <AnimatedEventCard key={`${item.title}-dup-${index}`} item={item} index={index} variant={variant} />;
+              })}
+          </div>
+        </div>
+      </section> */}
     </>
   );
 }

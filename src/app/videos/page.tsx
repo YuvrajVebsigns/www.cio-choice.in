@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Play } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 interface VideoItem {
   id: number;
@@ -19,6 +20,20 @@ interface VideoItem {
 export default function VideosPage() {
   const [videos, setVideos] = useState<VideoItem[]>([]);
 
+  const heroMediaRef = useScrollAnimation<HTMLDivElement>({
+    animationClass: 'animate-fade-in-right',
+    initialTransform: 'translateX(40px)',
+    threshold: 0.12,
+    once: false,
+  });
+
+  const heroContentRef = useScrollAnimation<HTMLDivElement>({
+    animationClass: 'animate-fade-in-left',
+    initialTransform: 'translateX(-40px)',
+    threshold: 0.12,
+    once: false,
+  });
+
   useEffect(() => {
     fetch('/api/videos')
       .then((res) => res.json())
@@ -27,65 +42,95 @@ export default function VideosPage() {
   }, []);
 
   return (
-    <section className="videos-section red-theme">
-      <div className="videos-container">
-        <br />
+    <>
+      <section className="blog-hero">
+        <div className="blog-hero-media" ref={heroMediaRef}>
+          <Image
+            src="/assets/blogs/blog-1.webp"
+            alt="Read Videos"
+            fill
+            priority
+            className="blog-hero-image"
+          />
+        </div>
+
+        <div className="blog-hero-overlay"></div>
+
+        <div className="blog-hero-content" ref={heroContentRef}>
+          <h1>Play Videos</h1>
+
+          <div className="blog-breadcrumb">
+            <Link href="/" className="blog-breadcrumb-home">
+              🏦 Home
+            </Link>
+
+            <span>&gt;</span>
+
+            <p>Videos</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="videos-section red-theme">
+        <div className="videos-container">
+          {/* <br />
 
         <h2 className="videos-title">
           All <span>Videos</span>
         </h2>
 
-        <br />
+        <br /> */}
 
-        {/* <div className="videos-header">
+          {/* <div className="videos-header">
           <h2>Videos</h2>
           <p>Curated video content and case studies from our team.</p>
         </div> */}
 
-        <div className="videos-grid">
-          {videos.slice(0, 6).map((v) => (
-            <article className="project-card" key={v.id}>
-              <div className="project-video-wrap">
-                {v.videoUrl ? (
-                  <iframe
-                    src={`${v.videoUrl}?rel=0`}
-                    title={v.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                ) : (
-                  <Image src={v.image} alt={v.title} width={800} height={450} />
-                )}
+          <div className="videos-grid">
+            {videos.slice(0, 6).map((v) => (
+              <article className="project-card" key={v.id}>
+                <div className="project-video-wrap">
+                  {v.videoUrl ? (
+                    <iframe
+                      src={`${v.videoUrl}?rel=0`}
+                      title={v.title}
+                      loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <Image src={v.image} alt={v.title} width={800} height={450} />
+                  )}
 
-                {/* Play button - clickable and sits above iframe */}
-                <Link
-                  href={`/videos/${v.slug}`}
-                  className="play-btn"
-                  aria-label={`Open ${v.title}`}
-                >
-                  <div className="play-icon">
-                    <Play size={36} />
-                  </div>
-                </Link>
-              </div>
+                  {/* Play button - clickable and sits above iframe */}
+                  <Link
+                    href={`/videos/${v.slug}`}
+                    className="play-btn"
+                    aria-label={`Open ${v.title}`}
+                  >
+                    <div className="play-icon">
+                      <Play size={36} />
+                    </div>
+                  </Link>
+                </div>
 
-              <div className="project-overlay">
-                <span className="project-category">{v.category}</span>
-                <div className="project-content">
-                  <h3>
-                    <Link href={`/videos/${v.slug}`}>{v.title}</Link>
-                  </h3>
-                  <div className="video-info">
-                    <span>{v.author}</span>
-                    <span>{v.date}</span>
+                <div className="project-overlay">
+                  <span className="project-category">{v.category}</span>
+                  <div className="project-content">
+                    <h3>
+                      <Link href={`/videos/${v.slug}`}>{v.title}</Link>
+                    </h3>
+                    <div className="video-info">
+                      <span>{v.author}</span>
+                      <span>{v.date}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

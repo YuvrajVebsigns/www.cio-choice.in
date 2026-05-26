@@ -156,6 +156,9 @@ export default function Navbar() {
           <Link href="/blog" className="nav-link">
             Blog
           </Link>
+          <Link href="/register" className="nav-link">
+            Register
+          </Link>
 
           <Link href="/contact" className="nav-link">
             Contact
