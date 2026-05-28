@@ -147,7 +147,7 @@ function AnimatedDialogueCard({
       <div className="dialogue-divider" />
 
       <div className="dialogue-footer">
-        <Image src={d.avatar} alt={d.author} width={58} height={58} className="dialogue-avatar" />
+        <Image src={d.avatar} alt={d.author} width={65} height={65} className="dialogue-avatar" />
 
         <div>
           <h4 className="dialogue-author">{d.author}</h4>

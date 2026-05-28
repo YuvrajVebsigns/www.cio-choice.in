@@ -9,27 +9,30 @@ import useScrollAnimation from '@/hooks/useScrollAnimation';
 const dialogues = [
   {
     id: 1,
+    slug: 'arpanarghya-saha-nimf-digital-first',
     quote:
-      'CIO Dialogues is a unique experience that helped us in connecting with top CIOs and to better understand each other through an intimate conversation.',
+      'Arpanarghya Saha, Chief Digital Officer at Nippon India Mutual Fund (NIMF), is an industry veteran with 24 years of experience spanning e-commerce, BFSI, and retail. At NIMF, Arpan sparked a digital-first mindset through iterative delivery.',
     author: 'Sendil Kumar Venkatesan',
-    role: 'VP IT | Shriram Value Services',
-    avatar: '/assets/dialoges/client-2.webp',
+    role: 'Chief Digital Officer at Nippon India Mutual Fund (NIMF)',
+    avatar: '/assets/dialoges/ArpanarghyaSaha.png',
   },
   {
     id: 2,
+    slug: 'future-of-aviation-tech-and-sustainability',
     quote:
-      'It was a great experience being a part of CIO Dialogues. It provides an interesting informal opportunity for knowledge sharing, learning from industry peers.',
-    author: 'Sendil Kumar Venkatesan',
-    role: 'VP IT | Shriram Value Services',
-    avatar: '/assets/dialoges/client-2.webp',
+      'Foresees an exciting future for the aviation sector driven by high-tech, omnipresent customer experiences, contactless technologies, and sustainable operating models reshaping the future of flying.',
+    author: 'Vinod Bhat',
+    role: 'CIO of Vistara Airlines',
+    avatar: '/assets/dialoges/VinodBhat.png',
   },
   {
     id: 3,
+    slug: 'cios-driving-digital-business-innovation',
     quote:
       'CIO Dialogues helped broaden my perspective and connected me with peers facing similar challenges in technology leadership.',
-    author: 'Sendil Kumar Venkatesan',
-    role: 'VP IT | Shriram Value Services',
-    avatar: '/assets/dialoges/client-2.webp',
+    author: 'Ashok Nayak',
+    role: 'CIO of Ipca Laboratories',
+    avatar: '/assets/dialoges/AshokNayak.png',
   },
   {
     id: 4,

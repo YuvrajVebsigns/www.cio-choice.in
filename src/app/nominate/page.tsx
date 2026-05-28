@@ -19,10 +19,17 @@ export default function NominatePage() {
   const [nominatorEmail, setNominatorEmail] = useState('');
 
   const [cios, setCios] = useState<CIOEntry[]>([
-    { category: '', name: '', company: '', email: '', mobile: '' },
+    {
+      category: '',
+      name: '',
+      company: '',
+      email: '',
+      mobile: '',
+    },
   ]);
 
   const [submitted, setSubmitted] = useState(false);
+
   const maxCios = 10;
 
   const addCio = () => {
@@ -58,17 +65,38 @@ export default function NominatePage() {
   };
 
   const validate = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10}$/;
+    const nameRegex = /^[A-Za-z\s]+$/;
+
     if (
       !nominatorName.trim() ||
+      !nameRegex.test(nominatorName) ||
       !nominatorCompany.trim() ||
       !nominatorCity.trim() ||
-      !nominatorEmail.trim()
+      !nominatorEmail.trim() ||
+      !emailRegex.test(nominatorEmail)
     ) {
       return false;
     }
 
+    if (nominatorContact && !phoneRegex.test(nominatorContact)) {
+      return false;
+    }
+
     for (const c of cios) {
-      if (!c.name.trim() || !c.company.trim() || !c.email.trim() || !c.category.trim()) {
+      if (
+        !c.name.trim() ||
+        !nameRegex.test(c.name) ||
+        !c.company.trim() ||
+        !c.email.trim() ||
+        !emailRegex.test(c.email) ||
+        !c.category.trim()
+      ) {
+        return false;
+      }
+
+      if (c.mobile && !phoneRegex.test(c.mobile)) {
         return false;
       }
     }
@@ -80,7 +108,7 @@ export default function NominatePage() {
     e.preventDefault();
 
     if (!validate()) {
-      alert('Please complete all required fields (asterisk).');
+      alert('Please complete all required fields correctly.');
       return;
     }
 
@@ -172,16 +200,20 @@ export default function NominatePage() {
                 <fieldset className="nominate-fieldset">
                   <legend className="nominate-legend">Nominator details</legend>
 
+                  {/* NOMINATOR NAME */}
                   <label className="nominate-label">
                     Name of the Nominator *
                     <input
                       value={nominatorName}
-                      onChange={(e) => setNominatorName(e.target.value)}
+                      onChange={(e) => setNominatorName(e.target.value.replace(/[^A-Za-z\s]/g, ''))}
+                      pattern="^[A-Za-z\s]+$"
+                      title="Only alphabets are allowed"
                       required
                       className="nominate-input-field"
                     />
                   </label>
 
+                  {/* COMPANY */}
                   <label className="nominate-label">
                     Name of the Nominator&apos;s Company *
                     <input
@@ -192,6 +224,7 @@ export default function NominatePage() {
                     />
                   </label>
 
+                  {/* CITY */}
                   <label className="nominate-label">
                     Nominator City *
                     <input
@@ -203,21 +236,30 @@ export default function NominatePage() {
                     />
                   </label>
 
+                  {/* CONTACT */}
                   <label className="nominate-label">
                     Nominator Contact No
                     <input
+                      type="tel"
                       value={nominatorContact}
-                      onChange={(e) => setNominatorContact(e.target.value)}
-                      placeholder="+91 9XXXXXXXXX"
+                      onChange={(e) => setNominatorContact(e.target.value.replace(/[^0-9]/g, ''))}
+                      maxLength={10}
+                      pattern="[0-9]{10}"
+                      title="Enter a valid 10-digit phone number"
+                      placeholder="9876543210"
                       className="nominate-input-field"
                     />
                   </label>
 
+                  {/* EMAIL */}
                   <label className="nominate-label">
                     Nominator Email ID *
                     <input
+                      type="email"
                       value={nominatorEmail}
                       onChange={(e) => setNominatorEmail(e.target.value)}
+                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                      title="Enter a valid email address"
                       placeholder="abc@abc.com"
                       required
                       className="nominate-input-field"
@@ -244,6 +286,7 @@ export default function NominatePage() {
                         )}
                       </div>
 
+                      {/* CATEGORY */}
                       <label className="nominate-label">
                         Nominated CIO by Category *
                         <select
@@ -260,16 +303,22 @@ export default function NominatePage() {
                         </select>
                       </label>
 
+                      {/* CIO NAME */}
                       <label className="nominate-label">
                         CIO Contact Name *
                         <input
                           value={c.name}
-                          onChange={(e) => updateCio(idx, 'name', e.target.value)}
+                          onChange={(e) =>
+                            updateCio(idx, 'name', e.target.value.replace(/[^A-Za-z\s]/g, ''))
+                          }
+                          pattern="^[A-Za-z\s]+$"
+                          title="Only alphabets are allowed"
                           required
                           className="nominate-input-field"
                         />
                       </label>
 
+                      {/* COMPANY */}
                       <label className="nominate-label">
                         CIO Company Name *
                         <input
@@ -280,22 +329,33 @@ export default function NominatePage() {
                         />
                       </label>
 
+                      {/* EMAIL */}
                       <label className="nominate-label">
                         Contact Email *
                         <input
+                          type="email"
                           value={c.email}
                           onChange={(e) => updateCio(idx, 'email', e.target.value)}
+                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                          title="Enter a valid email address"
                           required
                           className="nominate-input-field"
                         />
                       </label>
 
+                      {/* MOBILE */}
                       <label className="nominate-label">
                         Mobile No.
                         <input
+                          type="tel"
                           value={c.mobile}
-                          onChange={(e) => updateCio(idx, 'mobile', e.target.value)}
-                          placeholder="+91 9XXXXXXXXX"
+                          onChange={(e) =>
+                            updateCio(idx, 'mobile', e.target.value.replace(/[^0-9]/g, ''))
+                          }
+                          maxLength={10}
+                          pattern="[0-9]{10}"
+                          title="Enter a valid 10-digit phone number"
+                          placeholder="9876543210"
                           className="nominate-input-field"
                         />
                       </label>
