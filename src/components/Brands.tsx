@@ -174,7 +174,7 @@ export default function Brands() {
         <div className="dialogue-header" ref={headerRef}>
           <div>
             <span className="dialogue-subtitle">
-              <span className="dialogue-subtitle-mark">*</span>
+              <span className="dialogue-subtitle-mark">⬢</span>
               <span className="dialogue-subtitle-text">CLIENTS FEEDBACK</span>
             </span>
 

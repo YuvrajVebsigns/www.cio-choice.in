@@ -129,19 +129,19 @@ export default function Footer() {
 
           {/* SOCIAL */}
           <div className="footer-socials">
-            <a href="/" aria-label="Facebook">
+            <a href="https://www.facebook.com/" aria-label="Facebook">
               <FaFacebookF />
             </a>
 
-            <a href="/" aria-label="Instagram">
+            <a href="https://www.instagram.com/" aria-label="Instagram">
               <FaInstagram />
             </a>
 
-            <a href="/" aria-label="Twitter">
+            <a href="https://x.com/" aria-label="Twitter">
               <FaXTwitter />
             </a>
 
-            <a href="/" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/" aria-label="LinkedIn">
               <FaLinkedinIn />
             </a>
           </div>

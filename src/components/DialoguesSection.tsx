@@ -1,8 +1,201 @@
+// 'use client';
+
+// import Image from 'next/image';
+// import Link from 'next/link';
+// import { useRef, useState } from 'react';
+// import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
+// import useScrollAnimation from '@/hooks/useScrollAnimation';
+
+// const dialogues = [
+//   {
+//     id: 1,
+//     slug: 'arpanarghya-saha-nimf-digital-first',
+//     quote:
+//       'Arpanarghya Saha, Chief Digital Officer at Nippon India Mutual Fund, is an industry veteran with 24 years of experience spanning e-commerce, BFSI, and retail. At NIMF, Arpan sparked a digital-first mindset through iterative delivery.',
+//     author: 'Sendil Kumar Venkatesan',
+//     role: 'Chief Digital Officer at Nippon India Mutual Fund (NIMF)',
+//     avatar: '/assets/dialoges/ArpanarghyaSaha.png',
+//   },
+//   {
+//     id: 2,
+//     slug: 'future-of-aviation-tech-and-sustainability',
+//     quote:
+//       'Foresees an exciting future for the aviation sector driven by high-tech, omnipresent customer experiences, contactless technologies and sustainable operating models reshaping the future of flying.',
+//     author: 'Vinod Bhat',
+//     role: 'CIO of Vistara Airlines',
+//     avatar: '/assets/dialoges/VinodBhat.png',
+//   },
+//   {
+//     id: 3,
+//     slug: 'cios-driving-digital-business-innovation',
+//     quote:
+//       'CIO Dialogues helped broaden my perspective and connected me with peers facing similar challenges in technology leadership.',
+//     author: 'Ashok Nayak',
+//     role: 'CIO of Ipca Laboratories',
+//     avatar: '/assets/dialoges/AshokNayak.png',
+//   },
+//   {
+//     id: 4,
+//     quote:
+//       'CIO Dialogues is a unique experience that helped us in connecting with top CIOs and to better understand each other through an intimate conversation.',
+//     author: 'Sendil Kumar Venkatesan',
+//     role: 'VP IT | Shriram Value Services',
+//     avatar: '/assets/dialoges/client-2.webp',
+//   },
+//   {
+//     id: 5,
+//     quote:
+//       'It was a great experience being a part of CIO Dialogues. It provides an interesting informal opportunity for knowledge sharing, learning from industry peers.',
+//     author: 'Sendil Kumar Venkatesan',
+//     role: 'VP IT | Shriram Value Services',
+//     avatar: '/assets/dialoges/client-2.webp',
+//   },
+//   {
+//     id: 6,
+//     quote:
+//       'CIO Dialogues helped broaden my perspective and connected me with peers facing similar challenges in technology leadership.',
+//     author: 'Sendil Kumar Venkatesan',
+//     role: 'VP IT | Shriram Value Services',
+//     avatar: '/assets/dialoges/client-2.webp',
+//   },
+// ];
+
+// const getShortText = (text: string, limit = 20) => {
+//   const words = text.split(' ');
+
+//   if (words.length <= limit) return text;
+
+//   return `${words.slice(0, limit).join(' ')}...`;
+// };
+
+// export default function OurDialogues() {
+//   const containerRef = useRef<HTMLDivElement | null>(null);
+//   const [expandedCard, setExpandedCard] = useState<number | null>(null);
+
+//   const headingRef = useScrollAnimation<HTMLDivElement>({
+//     animationClass: 'animate-fade-in-left',
+//     initialTransform: 'translateX(-28px)',
+//     threshold: 0.1,
+//   });
+
+//   const carouselWrapRef = useScrollAnimation<HTMLDivElement>({
+//     animationClass: 'animate-fade-in',
+//     initialTransform: 'translateY(24px)',
+//     threshold: 0.1,
+//   });
+
+//   const scrollByCard = (direction: number) => {
+//     const el = containerRef.current;
+
+//     if (!el) return;
+
+//     const firstCard = el.querySelector<HTMLElement>('.dialogue-card');
+//     const cardWidth = firstCard ? firstCard.clientWidth : Math.floor(el.clientWidth / 3);
+//     const gap = 28;
+
+//     el.scrollBy({
+//       left: direction * (cardWidth + gap),
+//       behavior: 'smooth',
+//     });
+//   };
+
+//   return (
+//     <section className="dialogues-section">
+//       <div className="dialogues-container">
+//         <div className="dialogues-heading" ref={headingRef}>
+//           <span className="dialogues-badge">
+//             <span className="dialogues-badge-mark">⬢</span>
+//             <span className="dialogues-badge-text">SUCCESS STORIES</span>
+//           </span>
+//         </div>
+
+//         <div className="dialogues-top-bar">
+//           <h2 className="dialogues-title">
+//             Our <span>Dialogues</span>
+//           </h2>
+//         </div>
+
+//         <div className="dialogues-controls">
+//           <button aria-label="Previous" className="dialogues-nav" onClick={() => scrollByCard(-1)}>
+//             <ChevronLeft />
+//           </button>
+
+//           <button aria-label="Next" className="dialogues-nav" onClick={() => scrollByCard(1)}>
+//             <ChevronRight />
+//           </button>
+//         </div>
+
+//         <div ref={carouselWrapRef}>
+//           <div ref={containerRef} className="dialogues-carousel">
+//             {dialogues.map((dialogue) => {
+//               const isExpanded = expandedCard === dialogue.id;
+//               const hasMoreText = dialogue.quote.split(' ').length > 20;
+
+//               return (
+//                 <article className="dialogue-card" key={dialogue.id}>
+//                   <Image
+//                     src="/assets/dialoges/quote.png"
+//                     alt="Quote"
+//                     width={56}
+//                     height={56}
+//                     className="dialogue-quote"
+//                   />
+
+//                   <div className="dialogue-text">
+//                     <p>{isExpanded ? dialogue.quote : getShortText(dialogue.quote)}</p>
+
+//                     {hasMoreText && (
+//                       <button
+//                         type="button"
+//                         className="dialogue-read-more"
+//                         onClick={() => setExpandedCard(isExpanded ? null : dialogue.id)}
+//                       >
+//                         {isExpanded ? 'Read Less' : 'Read More'}
+//                       </button>
+//                     )}
+//                   </div>
+
+//                   <div className="dialogue-divider" />
+
+//                   <div className="dialogue-footer">
+//                     <Image
+//                       src={dialogue.avatar}
+//                       alt={dialogue.author}
+//                       width={58}
+//                       height={58}
+//                       className="dialogue-avatar"
+//                     />
+
+//                     <div>
+//                       <h4 className="dialogue-author">{dialogue.author}</h4>
+//                       <p className="dialogue-role">{dialogue.role}</p>
+//                     </div>
+//                   </div>
+//                 </article>
+//               );
+//             })}
+//           </div>
+//         </div>
+
+//         <div className="blogs-more">
+//           <Link href="/dialoges" className="blogs-more-btn">
+//             <span>More Dialogues</span>
+
+//             <span className="blogs-more-icon">
+//               <ArrowUpRight size={16} />
+//             </span>
+//           </Link>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import useScrollAnimation from '@/hooks/useScrollAnimation';
 
@@ -36,37 +229,88 @@ const dialogues = [
   },
   {
     id: 4,
+    slug: 'cybersecurity-strategy-for-banking-and-finance',
     quote:
-      'CIO Dialogues is a unique experience that helped us in connecting with top CIOs and to better understand each other through an intimate conversation.',
-    author: 'Sendil Kumar Venkatesan',
-    role: 'VP IT | Shriram Value Services',
-    avatar: '/assets/dialoges/client-2.webp',
+      'Cybersecurity is an essential component of any organization’s business strategy, and an efficient security strategy can help reduce risk in the banking and finance sector.',
+    author: 'Ninad Varadkar',
+    role: 'Group CISO, Edelweiss Financial Services Ltd ',
+    avatar: '/assets/dialoges/NinadVaradkar.png',
   },
   {
     id: 5,
+    slug: 'cios-as-strategic-business-partners',
     quote:
-      'It was a great experience being a part of CIO Dialogues. It provides an interesting informal opportunity for knowledge sharing, learning from industry peers.',
-    author: 'Sendil Kumar Venkatesan',
-    role: 'VP IT | Shriram Value Services',
-    avatar: '/assets/dialoges/client-2.webp',
+      'A global turnaround leader and entrepreneur discussing how CIOs must evolve into strategic business partners in the digital age.',
+    author: 'Nitin Seth',
+    role: 'CEO, Incedo',
+    avatar: '/assets/dialoges/NitinSeth.png',
   },
   {
     id: 6,
+    slug: 'building-a-technology-roadmap-for-success',
     quote:
-      'CIO Dialogues helped broaden my perspective and connected me with peers facing similar challenges in technology leadership.',
-    author: 'Sendil Kumar Venkatesan',
-    role: 'VP IT | Shriram Value Services',
-    avatar: '/assets/dialoges/client-2.webp',
+      'Shares insights about key priorities while building the company’s technology roadmap for success.',
+    author: 'Kunal Mehta',
+    role: ' Global CTO, Fabindia',
+    avatar: '/assets/dialoges/KunalMehta.png',
+  },
+  {
+    id: 7,
+    slug: 'accelerating-digital-transformation-for-cxos',
+    quote:
+      'Explains how enterprises can accelerate digital transformation efforts and how CXOs can thrive as digital leaders.',
+    author: 'Rahul Ghodke',
+    role: 'Editorial Team',
+    avatar: '/assets/dialoges/RahulGhodke.png',
+  },
+  {
+    id: 8,
+    slug: 'data-driven-business-and-evolving-cios',
+    quote:
+      'Discusses how data has become one of the essential pillars of business operations and the evolving role of CIOs in a data-driven era.',
+    author: ' Kiran Komatla',
+    role: 'Group CTO, Restaurant Brands Asia',
+    avatar: '/assets/dialoges/KiranKomatla.png',
+  },
+  {
+    id: 9,
+    slug: 'leadership-transitions-driving-enterprise-transformation',
+    quote:
+      'Highlights leadership transitions and executive movements shaping digital and operational transformation in enterprises..',
+    author: 'Rishi Sareen',
+    role: 'Chief Operating Officer, DTDC Express',
+    avatar: '/assets/dialoges/RishiSareen.png',
+  },
+  {
+    id: 10,
+    slug: 'leadership-transformation-and-business-growth',
+    quote:
+      'Focuses on leadership transformation and  strategic business growth driven by experienced industry leaders.',
+    author: 'Raghunath Bal',
+    role: 'Global Head, Cumii Fine Sciences (CFS)',
+    avatar: '/assets/dialoges/RaghunathBal.png',
+  },
+  {
+    id: 11,
+    slug: 'cybersecurity-and-secure-digital-transformation',
+    quote:
+      'shares insights on cybersecurity, IT leadership, and building secure digital transformation strategies in the financial sector.',
+    author: 'Devinder Singh',
+    role: 'Sr. VP IT & CISO, Religare Broking',
+    avatar: '/assets/dialoges/DevinderSingh.png',
   },
 ];
 
 export default function OurDialogues() {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [expandedCard, setExpandedCard] = useState<number | null>(null);
+
   const headingRef = useScrollAnimation<HTMLDivElement>({
     animationClass: 'animate-fade-in-left',
     initialTransform: 'translateX(-28px)',
     threshold: 0.1,
   });
+
   const carouselWrapRef = useScrollAnimation<HTMLDivElement>({
     animationClass: 'animate-fade-in',
     initialTransform: 'translateY(24px)',
@@ -79,9 +323,7 @@ export default function OurDialogues() {
     if (!el) return;
 
     const firstCard = el.querySelector<HTMLElement>('.dialogue-card');
-
     const cardWidth = firstCard ? firstCard.clientWidth : Math.floor(el.clientWidth / 3);
-
     const gap = 28;
 
     el.scrollBy({
@@ -93,12 +335,10 @@ export default function OurDialogues() {
   return (
     <section className="dialogues-section">
       <div className="dialogues-container">
-        {/* Header */}
         <div className="dialogues-heading" ref={headingRef}>
           <span className="dialogues-badge">
             <span className="dialogues-badge-mark">⬢</span>
-
-            <span className="dialogues-badge-text">CLIENT&apos;S FEEDBACK</span>
+            <span className="dialogues-badge-text">SUCCESS STORIES</span>
           </span>
         </div>
 
@@ -108,7 +348,6 @@ export default function OurDialogues() {
           </h2>
         </div>
 
-        {/* Controls */}
         <div className="dialogues-controls">
           <button aria-label="Previous" className="dialogues-nav" onClick={() => scrollByCard(-1)}>
             <ChevronLeft />
@@ -119,57 +358,56 @@ export default function OurDialogues() {
           </button>
         </div>
 
-        {/* Carousel */}
         <div ref={carouselWrapRef}>
           <div ref={containerRef} className="dialogues-carousel">
-            {dialogues.map((dialogue) => (
-              <article className="dialogue-card" key={dialogue.id}>
-                {/* Quote */}
-                <Image
-                  src="/assets/dialoges/quote.png"
-                  alt="Quote"
-                  width={56}
-                  height={56}
-                  className="dialogue-quote"
-                />
+            {dialogues.map((dialogue) => {
+              const isExpanded = expandedCard === dialogue.id;
 
-                {/* Text */}
-                <p className="dialogue-text">{dialogue.quote}</p>
-
-                {/* Divider */}
-                <div className="dialogue-divider" />
-
-                {/* Footer */}
-                <div className="dialogue-footer">
+              return (
+                <article className="dialogue-card" key={dialogue.id}>
                   <Image
-                    src={dialogue.avatar}
-                    alt={dialogue.author}
-                    width={58}
-                    height={58}
-                    className="dialogue-avatar"
+                    src="/assets/dialoges/quote.png"
+                    alt="Quote"
+                    width={56}
+                    height={56}
+                    className="dialogue-quote"
                   />
 
-                  <div>
-                    <h4 className="dialogue-author">{dialogue.author}</h4>
+                  <div className="dialogue-text">
+                    <p className={`dialogue-description ${isExpanded ? 'expanded' : 'collapsed'}`}>
+                      {dialogue.quote}
+                    </p>
 
-                    <p className="dialogue-role">{dialogue.role}</p>
+                    <button
+                      type="button"
+                      className="dialogue-read-more"
+                      onClick={() => setExpandedCard(isExpanded ? null : dialogue.id)}
+                    >
+                      {isExpanded ? 'Read Less' : 'Read More'}
+                    </button>
                   </div>
-                </div>
-              </article>
-            ))}
+
+                  <div className="dialogue-divider" />
+
+                  <div className="dialogue-footer">
+                    <Image
+                      src={dialogue.avatar}
+                      alt={dialogue.author}
+                      width={58}
+                      height={58}
+                      className="dialogue-avatar"
+                    />
+
+                    <div>
+                      <h4 className="dialogue-author">{dialogue.author}</h4>
+                      <p className="dialogue-role">{dialogue.role}</p>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
-
-        {/* Bottom action - More Dialogues button placed below cards */}
-        {/* <div className="project-top-bar" style={{ marginTop: 28 }}>
-          <div />
-          <Link href="/dialoges" className="projects-btn">
-            <span>More Dialogues</span>
-            <div className="projects-btn-icon">
-              <ArrowUpRight size={16} />
-            </div>
-          </Link>
-        </div> */}
 
         <div className="blogs-more">
           <Link href="/dialoges" className="blogs-more-btn">
@@ -180,18 +418,6 @@ export default function OurDialogues() {
             </span>
           </Link>
         </div>
-
-        {/* Dots */}
-        {/* <div className="dialogues-dots">
-          {dialogues.map((_, index) => (
-            <span
-              key={index}
-              className={`dialogue-dot ${
-                index === 0 ? 'active' : ''
-              }`}
-            />
-          ))}
-        </div> */}
       </div>
     </section>
   );

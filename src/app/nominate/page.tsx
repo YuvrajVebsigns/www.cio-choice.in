@@ -11,6 +11,23 @@ type CIOEntry = {
   mobile: string;
 };
 
+type FormErrors = {
+  nominatorName?: string;
+  nominatorCompany?: string;
+  nominatorCity?: string;
+  nominatorEmail?: string;
+  nominatorContact?: string;
+  cios?: {
+    [key: number]: {
+      category?: string;
+      name?: string;
+      company?: string;
+      email?: string;
+      mobile?: string;
+    };
+  };
+};
+
 export default function NominatePage() {
   const [nominatorName, setNominatorName] = useState('');
   const [nominatorCompany, setNominatorCompany] = useState('');
@@ -29,6 +46,8 @@ export default function NominatePage() {
   ]);
 
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const maxCios = 10;
 
@@ -49,69 +68,135 @@ export default function NominatePage() {
 
   const removeCio = (idx: number) => {
     setCios((s) => s.filter((_, i) => i !== idx));
+    // Clean up dynamic dynamic index errors if a entry block gets deleted
+    if (errors.cios?.[idx]) {
+      const nextCioErrors = { ...errors.cios };
+      delete nextCioErrors[idx];
+      setErrors({ ...errors, cios: nextCioErrors });
+    }
   };
 
   const updateCio = (idx: number, key: keyof CIOEntry, value: string) => {
-    setCios((s) =>
-      s.map((c, i) =>
-        i === idx
-          ? {
-              ...c,
-              [key]: value,
-            }
-          : c,
-      ),
-    );
-  };
+    setCios((s) => s.map((c, i) => (i === idx ? { ...c, [key]: value } : c)));
 
-  const validate = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10}$/;
-    const nameRegex = /^[A-Za-z\s]+$/;
-
-    if (
-      !nominatorName.trim() ||
-      !nameRegex.test(nominatorName) ||
-      !nominatorCompany.trim() ||
-      !nominatorCity.trim() ||
-      !nominatorEmail.trim() ||
-      !emailRegex.test(nominatorEmail)
-    ) {
-      return false;
+    // Clear dynamic error markers on typings
+    if (errors.cios?.[idx]?.[key]) {
+      setErrors({
+        ...errors,
+        cios: {
+          ...errors.cios,
+          [idx]: {
+            ...errors.cios[idx],
+            [key]: undefined,
+          },
+        },
+      });
     }
-
-    if (nominatorContact && !phoneRegex.test(nominatorContact)) {
-      return false;
-    }
-
-    for (const c of cios) {
-      if (
-        !c.name.trim() ||
-        !nameRegex.test(c.name) ||
-        !c.company.trim() ||
-        !c.email.trim() ||
-        !emailRegex.test(c.email) ||
-        !c.category.trim()
-      ) {
-        return false;
-      }
-
-      if (c.mobile && !phoneRegex.test(c.mobile)) {
-        return false;
-      }
-    }
-
-    return true;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validate()) {
-      alert('Please complete all required fields correctly.');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10}$/;
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+    const nextErrors: FormErrors = {};
+    let hasErrors = false;
+
+    /* NOMINATOR VALIDATIONS */
+    if (!nominatorName.trim()) {
+      nextErrors.nominatorName = 'Nominator name is required.';
+      hasErrors = true;
+    } else if (!nameRegex.test(nominatorName)) {
+      nextErrors.nominatorName = 'Only alphabets are allowed.';
+      hasErrors = true;
+    }
+
+    if (!nominatorCompany.trim()) {
+      nextErrors.nominatorCompany = 'Company name is required.';
+      hasErrors = true;
+    }
+
+    if (!nominatorCity.trim()) {
+      nextErrors.nominatorCity = 'City is required.';
+      hasErrors = true;
+    }
+
+    if (!nominatorEmail.trim()) {
+      nextErrors.nominatorEmail = 'Email is required.';
+      hasErrors = true;
+    } else if (!emailRegex.test(nominatorEmail)) {
+      nextErrors.nominatorEmail = 'Enter a valid email.';
+      hasErrors = true;
+    }
+
+    if (nominatorContact && !phoneRegex.test(nominatorContact)) {
+      nextErrors.nominatorContact = 'Enter a valid 10-digit phone number.';
+      hasErrors = true;
+    }
+
+    /* DYNAMIC CIO ENTRIES VALIDATIONS */
+    const cioErrorsMap: NonNullable<FormErrors['cios']> = {};
+
+    cios.forEach((c, idx) => {
+      const currentCioErrors: {
+        category?: string;
+        name?: string;
+        company?: string;
+        email?: string;
+        mobile?: string;
+      } = {};
+
+      if (!c.category) {
+        currentCioErrors.category = 'Please select a category.';
+        hasErrors = true;
+      }
+
+      if (!c.name.trim()) {
+        currentCioErrors.name = 'CIO name is required.';
+        hasErrors = true;
+      } else if (!nameRegex.test(c.name)) {
+        currentCioErrors.name = 'Only alphabets are allowed.';
+        hasErrors = true;
+      }
+
+      if (!c.company.trim()) {
+        currentCioErrors.company = 'CIO company is required.';
+        hasErrors = true;
+      }
+
+      if (!c.email.trim()) {
+        currentCioErrors.email = 'Email is required.';
+        hasErrors = true;
+      } else if (!emailRegex.test(c.email)) {
+        currentCioErrors.email = 'Enter a valid email address.';
+        hasErrors = true;
+      }
+
+      if (c.mobile && !phoneRegex.test(c.mobile)) {
+        currentCioErrors.mobile = 'Enter a valid 10-digit mobile number.';
+        hasErrors = true;
+      }
+
+      if (Object.keys(currentCioErrors).length > 0) {
+        cioErrorsMap[idx] = currentCioErrors;
+      }
+    });
+
+    if (Object.keys(cioErrorsMap).length > 0) {
+      nextErrors.cios = cioErrorsMap;
+    }
+
+    setErrors(nextErrors);
+
+    if (hasErrors) {
+      setStatus('Please fix the errors marked in the form below.');
       return;
     }
 
+    // Processing submission
+    setStatus(null);
     setSubmitted(true);
   };
 
@@ -120,12 +205,10 @@ export default function NominatePage() {
       <main className="nominate-page-container">
         <section className="nominate-success-section">
           <h1>CIO Power List 2026 — Nomination Received</h1>
-
           <p>
             Thank you. Your nomination has been recorded. You will receive a confirmation email
             shortly and the nominated CIO(s) will be notified as described.
           </p>
-
           <p>
             <Link href="/">Return to home</Link>
           </p>
@@ -146,24 +229,19 @@ export default function NominatePage() {
         </p>
 
         <h3>Categories</h3>
-
         <p>
           CIOs may be nominated under either of the following categories:{' '}
           <strong>Business Icon</strong> or <strong>Technology Icon</strong>.
         </p>
 
         <h3>Nomination Process &amp; Confirmation</h3>
-
         <p>
           Once you submit your nomination, an automated process will trigger three confirmation
           emails:
         </p>
-
         <ol>
           <li>To the CIO Power List (CORE Media) team, sharing the nomination details.</li>
-
           <li>To you, acknowledging and summarizing all your nominations.</li>
-
           <li>
             To each nominated CIO, informing them that they have been nominated by you for CIO Power
             List 2026.
@@ -171,18 +249,15 @@ export default function NominatePage() {
         </ol>
 
         <h3>Note</h3>
-
         <ol>
           <li>
             All nominations are treated with strict confidentiality and will not be shared or
-            displayed on any private or public forums.
+            displayed on forums.
           </li>
-
           <li>CIOs are welcome to nominate themselves.</li>
-
           <li>
             For ICT vendors, there is no commercial or sponsorship obligation associated with
-            nominating CIOs for the CIO Power List 2026.
+            nominating.
           </li>
         </ol>
 
@@ -196,7 +271,7 @@ export default function NominatePage() {
                 button.
               </p>
 
-              <form id="nominate-form" onSubmit={handleSubmit} className="nominate-form">
+              <form id="nominate-form" onSubmit={handleSubmit} className="nominate-form" noValidate>
                 <fieldset className="nominate-fieldset">
                   <legend className="nominate-legend">Nominator details</legend>
 
@@ -205,12 +280,17 @@ export default function NominatePage() {
                     Name of the Nominator *
                     <input
                       value={nominatorName}
-                      onChange={(e) => setNominatorName(e.target.value.replace(/[^A-Za-z\s]/g, ''))}
-                      pattern="^[A-Za-z\s]+$"
-                      title="Only alphabets are allowed"
-                      required
+                      onChange={(e) => {
+                        setNominatorName(e.target.value.replace(/[^A-Za-z\s]/g, ''));
+                        if (errors.nominatorName)
+                          setErrors({ ...errors, nominatorName: undefined });
+                      }}
+                      placeholder="Full Name"
                       className="nominate-input-field"
                     />
+                    {errors.nominatorName && (
+                      <div className="registration-error">{errors.nominatorName}</div>
+                    )}
                   </label>
 
                   {/* COMPANY */}
@@ -218,10 +298,16 @@ export default function NominatePage() {
                     Name of the Nominator&apos;s Company *
                     <input
                       value={nominatorCompany}
-                      onChange={(e) => setNominatorCompany(e.target.value)}
-                      required
+                      onChange={(e) => {
+                        setNominatorCompany(e.target.value);
+                        if (errors.nominatorCompany)
+                          setErrors({ ...errors, nominatorCompany: undefined });
+                      }}
                       className="nominate-input-field"
                     />
+                    {errors.nominatorCompany && (
+                      <div className="registration-error">{errors.nominatorCompany}</div>
+                    )}
                   </label>
 
                   {/* CITY */}
@@ -229,11 +315,17 @@ export default function NominatePage() {
                     Nominator City *
                     <input
                       value={nominatorCity}
-                      onChange={(e) => setNominatorCity(e.target.value)}
+                      onChange={(e) => {
+                        setNominatorCity(e.target.value);
+                        if (errors.nominatorCity)
+                          setErrors({ ...errors, nominatorCity: undefined });
+                      }}
                       placeholder="eg. Mumbai"
-                      required
                       className="nominate-input-field"
                     />
+                    {errors.nominatorCity && (
+                      <div className="registration-error">{errors.nominatorCity}</div>
+                    )}
                   </label>
 
                   {/* CONTACT */}
@@ -242,13 +334,18 @@ export default function NominatePage() {
                     <input
                       type="tel"
                       value={nominatorContact}
-                      onChange={(e) => setNominatorContact(e.target.value.replace(/[^0-9]/g, ''))}
+                      onChange={(e) => {
+                        setNominatorContact(e.target.value.replace(/[^0-9]/g, ''));
+                        if (errors.nominatorContact)
+                          setErrors({ ...errors, nominatorContact: undefined });
+                      }}
                       maxLength={10}
-                      pattern="[0-9]{10}"
-                      title="Enter a valid 10-digit phone number"
                       placeholder="9876543210"
                       className="nominate-input-field"
                     />
+                    {errors.nominatorContact && (
+                      <div className="registration-error">{errors.nominatorContact}</div>
+                    )}
                   </label>
 
                   {/* EMAIL */}
@@ -257,13 +354,17 @@ export default function NominatePage() {
                     <input
                       type="email"
                       value={nominatorEmail}
-                      onChange={(e) => setNominatorEmail(e.target.value)}
-                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                      title="Enter a valid email address"
+                      onChange={(e) => {
+                        setNominatorEmail(e.target.value);
+                        if (errors.nominatorEmail)
+                          setErrors({ ...errors, nominatorEmail: undefined });
+                      }}
                       placeholder="abc@abc.com"
-                      required
                       className="nominate-input-field"
                     />
+                    {errors.nominatorEmail && (
+                      <div className="registration-error">{errors.nominatorEmail}</div>
+                    )}
                   </label>
                 </fieldset>
 
@@ -274,7 +375,6 @@ export default function NominatePage() {
                     <div key={idx} className="nominate-cio-block">
                       <div className="nominate-cio-top">
                         <strong className="nominate-cio-title">CIO {idx + 1}</strong>
-
                         {cios.length > 1 && (
                           <button
                             type="button"
@@ -292,15 +392,15 @@ export default function NominatePage() {
                         <select
                           value={c.category}
                           onChange={(e) => updateCio(idx, 'category', e.target.value)}
-                          required
                           className="nominate-input-field"
                         >
                           <option value="">- Select Category -</option>
-
                           <option value="Business Icon">Business Icon</option>
-
                           <option value="Technology Icon">Technology Icon</option>
                         </select>
+                        {errors.cios?.[idx]?.category && (
+                          <div className="registration-error">{errors.cios[idx].category}</div>
+                        )}
                       </label>
 
                       {/* CIO NAME */}
@@ -311,11 +411,11 @@ export default function NominatePage() {
                           onChange={(e) =>
                             updateCio(idx, 'name', e.target.value.replace(/[^A-Za-z\s]/g, ''))
                           }
-                          pattern="^[A-Za-z\s]+$"
-                          title="Only alphabets are allowed"
-                          required
                           className="nominate-input-field"
                         />
+                        {errors.cios?.[idx]?.name && (
+                          <div className="registration-error">{errors.cios[idx].name}</div>
+                        )}
                       </label>
 
                       {/* COMPANY */}
@@ -324,9 +424,11 @@ export default function NominatePage() {
                         <input
                           value={c.company}
                           onChange={(e) => updateCio(idx, 'company', e.target.value)}
-                          required
                           className="nominate-input-field"
                         />
+                        {errors.cios?.[idx]?.company && (
+                          <div className="registration-error">{errors.cios[idx].company}</div>
+                        )}
                       </label>
 
                       {/* EMAIL */}
@@ -336,11 +438,11 @@ export default function NominatePage() {
                           type="email"
                           value={c.email}
                           onChange={(e) => updateCio(idx, 'email', e.target.value)}
-                          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                          title="Enter a valid email address"
-                          required
                           className="nominate-input-field"
                         />
+                        {errors.cios?.[idx]?.email && (
+                          <div className="registration-error">{errors.cios[idx].email}</div>
+                        )}
                       </label>
 
                       {/* MOBILE */}
@@ -353,11 +455,12 @@ export default function NominatePage() {
                             updateCio(idx, 'mobile', e.target.value.replace(/[^0-9]/g, ''))
                           }
                           maxLength={10}
-                          pattern="[0-9]{10}"
-                          title="Enter a valid 10-digit phone number"
                           placeholder="9876543210"
                           className="nominate-input-field"
                         />
+                        {errors.cios?.[idx]?.mobile && (
+                          <div className="registration-error">{errors.cios[idx].mobile}</div>
+                        )}
                       </label>
                     </div>
                   ))}
@@ -379,12 +482,17 @@ export default function NominatePage() {
         </div>
 
         <div className="nominate-submit-row">
+          {/* INLINE STATUS WARNING BOX */}
+          {status && (
+            <p className="registration-status" style={{ marginBottom: '15px', color: 'red' }}>
+              {status}
+            </p>
+          )}
+
           <button
             type="submit"
             form="nominate-form"
             className="nominate-btn nominate-btn-primary nominate-submit"
-            disabled={!validate()}
-            aria-disabled={!validate()}
             aria-label="Submit nomination"
           >
             Submit

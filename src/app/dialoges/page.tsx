@@ -18,6 +18,7 @@ interface Dialogue {
 
 export default function DialoguesPage() {
   const [dialogues, setDialogues] = useState<Dialogue[]>([]);
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
   const heroMediaRef = useScrollAnimation<HTMLDivElement>({
     animationClass: 'animate-fade-in-right',
@@ -77,10 +78,6 @@ export default function DialoguesPage() {
           <br />
           <br />
 
-          {/* <h2 className="dialogues-title">
-            All <span>Dialogues</span>
-          </h2> */}
-
           <div className="dialogues-list">
             {repeatedDialogues.map((d, index) => {
               const variant =
@@ -90,12 +87,17 @@ export default function DialoguesPage() {
                     ? 'animate-fade-in'
                     : 'animate-fade-in-right';
 
+              const cardKey = `${d.id}-${index}`;
+
               return (
                 <AnimatedDialogueCard
-                  key={`${d.id}-${index}`}
+                  key={cardKey}
+                  cardKey={cardKey}
                   dialogue={d}
                   index={index}
                   variant={variant}
+                  expandedCard={expandedCard}
+                  setExpandedCard={setExpandedCard}
                 />
               );
             })}
@@ -107,15 +109,21 @@ export default function DialoguesPage() {
 }
 
 type AnimatedDialogueCardProps = {
+  cardKey: string;
   dialogue: Dialogue;
   index: number;
   variant?: string;
+  expandedCard: string | null;
+  setExpandedCard: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 function AnimatedDialogueCard({
+  cardKey,
   dialogue,
   index,
   variant = 'animate-fade-in',
+  expandedCard,
+  setExpandedCard,
 }: AnimatedDialogueCardProps) {
   const initialTransform = variant.includes('left')
     ? 'translateX(-40px)'
@@ -130,7 +138,7 @@ function AnimatedDialogueCard({
     once: false,
   });
 
-  const d = dialogue;
+  const isExpanded = expandedCard === cardKey;
 
   return (
     <article ref={ref} className="dialogue-card" style={{ transitionDelay: `${index * 60}ms` }}>
@@ -142,16 +150,34 @@ function AnimatedDialogueCard({
         className="dialogue-quote"
       />
 
-      <p className="dialogue-text">{d.quote}</p>
+      <div className="dialogue-text">
+        <p className={`dialogue-description ${isExpanded ? 'expanded' : 'collapsed'}`}>
+          {dialogue.quote}
+        </p>
+
+        <button
+          type="button"
+          className="dialogue-read-more"
+          onClick={() => setExpandedCard(isExpanded ? null : cardKey)}
+        >
+          {isExpanded ? 'Read Less' : 'Read More'}
+        </button>
+      </div>
 
       <div className="dialogue-divider" />
 
       <div className="dialogue-footer">
-        <Image src={d.avatar} alt={d.author} width={65} height={65} className="dialogue-avatar" />
+        <Image
+          src={dialogue.avatar}
+          alt={dialogue.author}
+          width={65}
+          height={65}
+          className="dialogue-avatar"
+        />
 
         <div>
-          <h4 className="dialogue-author">{d.author}</h4>
-          <p className="dialogue-role">{d.role}</p>
+          <h4 className="dialogue-author">{dialogue.author}</h4>
+          <p className="dialogue-role">{dialogue.role}</p>
         </div>
       </div>
     </article>
