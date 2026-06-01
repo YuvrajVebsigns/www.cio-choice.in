@@ -590,26 +590,25 @@ main {
   top: 0;
   left: 1%;
   z-index: 999;
-
   padding: 16px 32px;
-
   background: #ffffff;
   backdrop-filter: blur(10px);
-
   border-radius: 0 0 23px 23px;
-
   transition:
-    transform 0.4s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     background 0.3s ease,
     box-shadow 0.3s ease;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .navbar-hide {
-  transform: translateY(-100%);
+  transform: translate3d(0, -110%, 0);
 }
 
 .navbar-show {
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .navbar.scrolled {
@@ -619,15 +618,12 @@ main {
 .navbar-container {
   max-width: 1320px;
   margin: 0 auto;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-/* =========================================================
-   LOGO
-========================================================= */
+/* LOGO */
 
 .navbar-logo {
   display: flex;
@@ -635,9 +631,7 @@ main {
   flex-shrink: 0;
 }
 
-/* =========================================================
-   MENU
-========================================================= */
+/* MENU */
 
 .navbar-menu {
   display: flex;
@@ -653,17 +647,13 @@ main {
   display: flex;
   align-items: center;
   gap: 5px;
-
   font-size: 16px;
   font-weight: 500;
-
   color: #1f1f1f;
   text-decoration: none;
-
   background: transparent;
   border: none;
   cursor: pointer;
-
   transition: color 0.3s ease;
 }
 
@@ -672,62 +662,36 @@ main {
   color: #a40000;
 }
 
-/* =========================================================
-   MEGA MENU
-========================================================= */
+/* MEGA MENU */
 
 .mega-panel {
   position: absolute;
   top: calc(100% + 30px);
   left: -80px;
-
   width: 260px;
   max-width: calc(100vw - 40px);
   min-height: 120px;
-
   padding: 28px;
-
   background: #f7efef;
-
   border-radius: 16px;
   overflow: hidden;
-
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-12px);
-
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-
+  transform: translate3d(0, -12px, 0);
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 1200;
+  will-change: transform, opacity;
 }
 
 .nav-dropdown:hover .mega-panel,
 .nav-dropdown.open .mega-panel {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
-}
-
-.mega-inner {
-  display: grid;
-  grid-template-columns: 220px 220px 1fr;
-  gap: 20px;
-  align-items: start;
-}
-
-/* =========================================================
-   MEGA MENU COLUMNS
-========================================================= */
-
-.mega-column h4 {
-  margin-bottom: 18px;
-
-  font-size: 18px;
-  font-weight: 600;
-
-  color: #1f1f1f;
+  transform: translate3d(0, 0, 0);
 }
 
 .mega-column ul {
@@ -740,144 +704,27 @@ main {
   margin-bottom: 6px;
 }
 
-.mega-column ul li a {
+.mega-column ul li a,
+.mega-item {
   display: block;
-
   padding: 10px 12px;
-
   border-radius: 10px;
-
   color: #333;
   text-decoration: none;
-
-  transition: all 0.3s ease;
+  transition:
+    padding-left 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease;
 }
 
-.mega-column ul li a:hover {
+.mega-column ul li a:hover,
+.mega-item:hover {
   padding-left: 18px;
-
   background: rgba(164, 0, 0, 0.06);
   color: #a40000;
 }
 
-/* =========================================================
-   RIGHT CARD
-========================================================= */
-
-.mega-right-card {
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  justify-content: flex-end;
-}
-
-.mega-card-inner {
-  position: relative;
-  overflow: hidden;
-
-  width: 60%;
-  min-height: 300px;
-
-  padding: 40px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  color: white;
-
-  border-radius: 20px;
-
-  background: linear-gradient(135deg, #8b0000, #d60000);
-}
-
-.mega-card-inner::before {
-  content: '';
-
-  position: absolute;
-  top: -80px;
-  right: -80px;
-
-  width: 250px;
-  height: 250px;
-
-  border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.mega-blog-tag {
-  font-size: 14px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  opacity: 0.85;
-}
-
-.mega-blog-title {
-  margin: 18px 0;
-  font-size: 30px;
-  font-weight: 400;
-  line-height: 1.2;
-}
-
-.mega-blog-text {
-  max-width: 400px;
-
-  font-size: 16px;
-  line-height: 1.7;
-
-  opacity: 0.9;
-}
-
-/* Liked state for blog like buttons */
-.blog-engagement-item.liked,
-.blogpage-engagement-item.liked {
-  color: #d11f26; /* red heart */
-}
-
-.blog-engagement-item,
-.blogpage-engagement-item {
-  cursor: pointer;
-   display: flex;
-  align-items: center;
-  gap: 6px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: #666;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.mega-blog-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: fit-content;
-
-  padding: 14px 24px;
-
-  border-radius: 999px;
-
-  background: white;
-  color: #a40000;
-
-  font-weight: 600;
-  text-decoration: none;
-
-  transition: 0.3s ease;
-}
-
-.mega-blog-btn:hover {
-  transform: translateY(-3px);
-  background: #fff5f5;
-}
-
-/* =========================================================
-   ACTIONS
-========================================================= */
+/* ACTIONS */
 
 .navbar-actions {
   display: flex;
@@ -885,25 +732,18 @@ main {
   gap: 14px;
 }
 
-/* Search */
-
 .search-btn {
   width: 46px;
   height: 46px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border: none;
   border-radius: 50%;
-
   background: #f0ebeb;
   color: #1f1f1f;
-
   cursor: pointer;
-
-  transition: all 0.3s ease;
+  transition: background 0.3s ease;
 }
 
 .search-btn:hover {
@@ -915,59 +755,53 @@ main {
 .talk-btn {
   height: 48px;
   padding: 0 10px 0 20px;
-
   display: inline-flex;
   align-items: center;
   gap: 14px;
-
   border-radius: 999px;
-
   background: linear-gradient(90deg, #9d1111, #b40000);
   color: white;
-
   font-size: 16px;
   font-weight: 700;
   text-decoration: none;
-
-  transition: all 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .talk-btn:hover {
-  transform: translateY(-2px);
+  transform: translate3d(0, -2px, 0);
   box-shadow: 0 10px 20px rgba(164, 0, 0, 0.2);
 }
 
 .talk-btn-icon {
   width: 32px;
   height: 32px;
-
   display: flex;
   align-items: center;
   justify-content: center;
   color: #b40000;
-
   border-radius: 50%;
-
   background: white;
+  transition: transform 0.3s ease;
 }
+
 .talk-btn:hover .talk-btn-icon {
   transform: rotate(45deg);
 }
-/* Menu Button */
+
+/* MENU BUTTON */
 
 .menu-btn {
-  display: none !important; /* hidden on desktop by default; shown on mobile via media query */
+  display: none !important;
   align-items: center;
   justify-content: center;
-
   width: 42px;
   height: 42px;
   padding: 6px;
   border-radius: 8px;
-
   border: none;
   background: transparent;
-
   color: #1f1f1f;
   cursor: pointer;
   transition:
@@ -976,46 +810,62 @@ main {
     color 180ms ease;
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* BLOG LIKE BUTTONS */
+
+.blog-engagement-item.liked,
+.blogpage-engagement-item.liked {
+  color: #d11f26;
+}
+
+.blog-engagement-item,
+.blogpage-engagement-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
 
 @media (max-width: 992px) {
   .navbar {
-    padding: 14px 20px;
+    width: 96%;
+    left: 2%;
+    padding: 14px 18px;
   }
 
   .navbar-menu {
     display: none;
   }
 
-  /* When mobile menu is open (header gets .mobile-open) show menu as overlay */
   .navbar.mobile-open .navbar-menu {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     position: fixed;
-    top: 72px;
-    left: 0;
-    right: 0;
+    top: 78px;
+    left: 2%;
+    right: 2%;
+    width: 96%;
     background: #ffffff;
     padding: 20px 18px;
-    gap: 12px;
+    gap: 14px;
+    border-radius: 0 0 18px 18px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
     z-index: 1500;
-    max-height: calc(100vh - 88px);
+    max-height: calc(100vh - 90px);
     overflow-y: auto;
   }
 
-  /* Hide CTA on mobile */
   .navbar .talk-btn {
     display: none !important;
   }
 
-  .navbar.mobile-open .talk-btn {
-    display: none !important;
-  }
-
-  /* show menu button on mobile */
   .menu-btn {
     display: flex !important;
   }
@@ -1033,25 +883,48 @@ main {
     color: #a40000;
   }
 
-  .mega-panel {
-    position: static;
-
+  .nav-link {
     width: 100%;
-    max-width: 100%;
-
-    margin-top: 12px;
-
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-
-    border-radius: 10px;
-    box-shadow: none;
+    justify-content: space-between;
+    font-size: 16px;
   }
 
-  .mega-inner {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .nav-dropdown {
+    width: 100%;
+  }
+
+  .mega-panel {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    min-height: auto;
+    margin-top: 10px;
+    padding: 0 12px;
+    border-radius: 12px;
+    box-shadow: none;
+    background: #f7efef;
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    transform: none;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease,
+      max-height 0.3s ease,
+      padding 0.3s ease;
+  }
+
+  .nav-dropdown.open .mega-panel {
+    opacity: 1;
+    visibility: visible;
+    max-height: 300px;
+    padding: 12px;
+  }
+
+  .mega-column ul li a,
+  .mega-item {
+    padding: 10px 12px;
   }
 }
 
@@ -1062,6 +935,27 @@ main {
 
   .navbar-actions {
     gap: 8px;
+  }
+
+  .navbar-logo img {
+    width: 130px;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 12px 14px;
+  }
+
+  .navbar.mobile-open .navbar-menu {
+    top: 70px;
+    padding: 18px 16px;
+  }
+
+  .navbar-logo img {
+    width: 120px;
+    height: auto;
   }
 }
 
@@ -5090,6 +4984,41 @@ main {
   background: #eef2f2;
 }
 
+
+@media (max-width: 768px) {
+  .blogpage-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .blogpage-readmore {
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .blogpage-engagement {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  .blogpage-engagement-item {
+    padding: 0;
+    font-size: 13px;
+  }
+
+  .blogpage-arrow {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 /* =========================================================
    EVENT DETAILS PAGE
 ========================================================= */
@@ -5589,6 +5518,9 @@ main {
     font-size: 13px;
   }
 }
+
+/* registration form */
+
 
 .registration-section {
   width: 100%;
@@ -6177,70 +6109,70 @@ main {
 @media (max-width: 768px) {
   .nominate-page-container {
     padding: 70px 16px;
+    min-height: auto;
   }
 
   .nominate-page-content {
     width: 100%;
+    margin-top: 0;
   }
 
   .nominate-page-content h1 {
-    font-size: 36px;
-    line-height: 1.2;
+    font-size: 24px;
+    line-height: 1.25;
   }
 
   .nominate-page-content h3 {
-    font-size: 22px;
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .nominate-page-content p,
+  .nominate-page-content li {
+    font-size: 14px;
+    line-height: 1.7;
   }
 
   .nominate-wrapper {
-    margin-top: 40px;
     width: 100%;
-    margin-left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 20px;
   }
 
   .nominate-card {
     width: 100%;
     max-width: 100%;
+    margin-right: 0;
     border-radius: 22px;
   }
 
-  .nominate-card-body {
-    padding: 24px;
-  }
-
   .nominate-card-header {
-    padding: 18px 22px;
-    font-size: 18px;
+    padding: 18px 20px;
+    font-size: 16px;
+    text-align: center;
   }
 
-  .nominate-input-field {
-    height: 52px;
-    font-size: 14px;
+  .nominate-card-body {
+    padding: 22px 18px;
+  }
+
+  .nominate-fieldset {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    column-gap: 0;
   }
 
   .nominate-label {
-    grid-template-columns: 1fr;
-    gap: 8px;
     font-size: 13px;
   }
 
-  .nominate-btn-primary {
-    width: 100%;
-  }
-
-  .nominate-submit {
-    width: 100%;
-  }
-
-  .nominate-submit-row {
-    width: 100%;
+  .nominate-input-field {
+    height: 50px;
+    font-size: 14px;
   }
 
   .nominate-cio-block {
-    padding: 18px;
+    padding: 18px 14px;
+    border-radius: 20px;
   }
 
   .nominate-cio-top {
@@ -6249,26 +6181,47 @@ main {
     gap: 10px;
   }
 
-  .nominate-success-section {
+  .nominate-btn-add,
+  .nominate-btn-primary,
+  .nominate-submit {
     width: 100%;
-    padding: 28px 22px;
-    border-radius: 22;
   }
 
   .nominate-submit-row {
-    align-items: flex-start;
-  }
-
-  .nominate-submit {
-    width: auto;
-    min-width: 180px;
-    align-self: flex-start;
+    width: 100%;
+    margin-left: 0;
+    margin-top: 28px;
+    align-items: stretch;
   }
 
   .nominate-submit-note {
+    margin-left: 0;
+    margin-right: 0;
     text-align: left;
-    margin-right: 31cm;
-    margin-left: -30cm;
+  }
+
+  .nominate-success-section {
+    width: 100%;
+    padding: 28px 22px;
+    border-radius: 22px;
+  }
+
+  .nominate-success-section h1 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nominate-page-container {
+    padding: 60px 12px;
+  }
+
+  .nominate-card-body {
+    padding: 20px 14px;
+  }
+
+  .nominate-card-header {
+    font-size: 15px;
   }
 }
 
