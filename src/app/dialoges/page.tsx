@@ -183,3 +183,215 @@ function AnimatedDialogueCard({
     </article>
   );
 }
+
+
+
+// 'use client';
+
+// import Image from 'next/image';
+// import Link from 'next/link';
+// import { useEffect, useState } from 'react';
+// import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+// import {
+//   fetchWebsiteDialogues,
+//   type WebsiteDialogueItem,
+// } from '@/services/dialogues.service';
+
+// type Dialogue = WebsiteDialogueItem;
+
+// export default function DialoguesPage() {
+//   const [dialogues, setDialogues] = useState<Dialogue[]>([]);
+//   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+//   const [isLoading, setIsLoading] = useState(true);
+
+//   const heroMediaRef = useScrollAnimation<HTMLDivElement>({
+//     animationClass: 'animate-fade-in-right',
+//     initialTransform: 'translateX(40px)',
+//     threshold: 0.12,
+//     once: false,
+//   });
+
+//   const heroContentRef = useScrollAnimation<HTMLDivElement>({
+//     animationClass: 'animate-fade-in-left',
+//     initialTransform: 'translateX(-40px)',
+//     threshold: 0.12,
+//     once: false,
+//   });
+
+//   const featuredDialogues = dialogues.slice(0, 3);
+//   const repeatedDialogues = Array.from({ length: 3 }, () => featuredDialogues).flat();
+
+//   useEffect(() => {
+//     let isMounted = true;
+
+//     async function loadDialogues() {
+//       setIsLoading(true);
+
+//       try {
+//         const response = await fetchWebsiteDialogues(1, 10);
+
+//         if (!isMounted) return;
+
+//         setDialogues(response.data?.data ?? []);
+//       } catch {
+//         if (isMounted) {
+//           setDialogues([]);
+//         }
+//       } finally {
+//         if (isMounted) {
+//           setIsLoading(false);
+//         }
+//       }
+//     }
+
+//     loadDialogues();
+
+//     return () => {
+//       isMounted = false;
+//     };
+//   }, []);
+
+//   return (
+//     <>
+//       <section className="blog-hero dialogues-hero">
+//         <div className="blog-hero-media" ref={heroMediaRef}>
+//           <Image
+//             src="/assets/blogs/blog-1.webp"
+//             alt="Read Dialogues"
+//             fill
+//             className="blog-hero-image"
+//           />
+//         </div>
+
+//         <div className="blog-hero-overlay" />
+
+//         <div className="blog-hero-content" ref={heroContentRef}>
+//           <h1>Read Dialogues</h1>
+
+//           <div className="blog-breadcrumb">
+//             <Link href="/" className="blog-breadcrumb-home">
+//               🏦 Home
+//             </Link>
+
+//             <span>&gt;</span>
+
+//             <p>Dialogues</p>
+//           </div>
+//         </div>
+//       </section>
+
+//       <section className="dialogues-section">
+//         <div className="dialogues-container">
+//           <br />
+//           <br />
+
+//           {isLoading ? <p>Loading dialogues...</p> : null}
+
+//           {!isLoading && repeatedDialogues.length === 0 ? <p>No dialogues found.</p> : null}
+
+//           <div className="dialogues-list">
+//             {repeatedDialogues.map((d, index) => {
+//               const variant =
+//                 index % 3 === 0
+//                   ? 'animate-fade-in-left'
+//                   : index % 3 === 1
+//                     ? 'animate-fade-in'
+//                     : 'animate-fade-in-right';
+
+//               const cardKey = `${d.id}-${index}`;
+
+//               return (
+//                 <AnimatedDialogueCard
+//                   key={cardKey}
+//                   cardKey={cardKey}
+//                   dialogue={d}
+//                   index={index}
+//                   variant={variant}
+//                   expandedCard={expandedCard}
+//                   setExpandedCard={setExpandedCard}
+//                 />
+//               );
+//             })}
+//           </div>
+//         </div>
+//       </section>
+//     </>
+//   );
+// }
+
+// type AnimatedDialogueCardProps = {
+//   cardKey: string;
+//   dialogue: Dialogue;
+//   index: number;
+//   variant?: string;
+//   expandedCard: string | null;
+//   setExpandedCard: React.Dispatch<React.SetStateAction<string | null>>;
+// };
+
+// function AnimatedDialogueCard({
+//   cardKey,
+//   dialogue,
+//   index,
+//   variant = 'animate-fade-in',
+//   expandedCard,
+//   setExpandedCard,
+// }: AnimatedDialogueCardProps) {
+//   const initialTransform = variant.includes('left')
+//     ? 'translateX(-40px)'
+//     : variant.includes('right')
+//       ? 'translateX(40px)'
+//       : 'translateY(40px)';
+
+//   const ref = useScrollAnimation<HTMLDivElement>({
+//     animationClass: variant,
+//     initialTransform,
+//     threshold: 0.12,
+//     once: false,
+//   });
+
+//   const isExpanded = expandedCard === cardKey;
+
+//   return (
+//     <article ref={ref} className="dialogue-card" style={{ transitionDelay: `${index * 60}ms` }}>
+//       <Image
+//         src="/assets/dialoges/quote.png"
+//         alt="Quote"
+//         width={56}
+//         height={56}
+//         className="dialogue-quote"
+//       />
+
+//       <div className="dialogue-text">
+//         <p className={`dialogue-description ${isExpanded ? 'expanded' : 'collapsed'}`}>
+//           {dialogue.quote}
+//         </p>
+
+//         <button
+//           type="button"
+//           className="dialogue-read-more"
+//           onClick={() => setExpandedCard(isExpanded ? null : cardKey)}
+//         >
+//           {isExpanded ? 'Read Less' : 'Read More'}
+//         </button>
+//       </div>
+
+//       <div className="dialogue-divider" />
+
+//       <div className="dialogue-footer">
+//         <Image
+//           src={dialogue.avatar || '/assets/dialoges/avatar.png'}
+//           alt={dialogue.author || 'Dialogue author'}
+//           width={65}
+//           height={65}
+//           className="dialogue-avatar"
+//           unoptimized
+//         />
+
+//         <div>
+//           <h4 className="dialogue-author">{dialogue.author}</h4>
+//           <p className="dialogue-role">{dialogue.role}</p>
+//         </div>
+//       </div>
+//     </article>
+//   );
+// }          
