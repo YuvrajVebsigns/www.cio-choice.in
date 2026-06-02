@@ -29,11 +29,9 @@
 //   );
 // }
 
-
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpLeft, Home, Mail } from 'lucide-react';
+import { Home, Mail } from 'lucide-react';
 
 export default function NotFound() {
   return (
@@ -50,13 +48,9 @@ export default function NotFound() {
           priority
         />
 
-        <h1 className="notfound-title">
-          Oops! Page Not Found
-        </h1>
+        <h1 className="notfound-title">Oops! Page Not Found</h1>
 
-        <p className="notfound-description">
-          This page is unavailable or has been removed.
-        </p>
+        <p className="notfound-description">This page is unavailable or has been removed.</p>
 
         <div className="notfound-actions">
           <Link href="/" className="notfound-btn-primary">

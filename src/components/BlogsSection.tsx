@@ -168,7 +168,9 @@ export default function BlogsSection() {
   const [isLoading, setIsLoading] = useState(true);
   const [likedBlogs, setLikedBlogs] = useState<Set<string>>(new Set());
   const [openCommentsBlogId, setOpenCommentsBlogId] = useState<string | null>(null);
-  const [commentsByBlogId, setCommentsByBlogId] = useState<Record<string, WebsiteBlogComment[]>>({});
+  const [commentsByBlogId, setCommentsByBlogId] = useState<Record<string, WebsiteBlogComment[]>>(
+    {},
+  );
   const [loadingCommentsFor, setLoadingCommentsFor] = useState<string | null>(null);
 
   const LIKED_KEY = 'likedBlogs';
@@ -298,7 +300,7 @@ export default function BlogsSection() {
     try {
       await submitWebsiteBlogLike(blogId);
     } catch (error) {
-      console.error('Like failed:', error);
+      // console.error('Like failed:', error);
 
       setBlogs((prev) =>
         prev.map((blog) =>

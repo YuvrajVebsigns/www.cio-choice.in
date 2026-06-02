@@ -2,7 +2,7 @@
 
 // import Image from 'next/image';
 // import Link from 'next/link';
-// import { useParams } from 'next/navigation';  
+// import { useParams } from 'next/navigation';
 // import { useEffect, useState } from 'react';
 // import useScrollAnimation from '../../../hooks/useScrollAnimation';
 // import {
@@ -388,9 +388,6 @@
 //   );
 // }
 
-
-
-
 'use client';
 
 import Image from 'next/image';
@@ -446,9 +443,9 @@ function getBlogCategory(blog?: WebsiteBlogDetailItem | null) {
   return blog?.websites?.[0]?.name || blog?.tags?.[0] || 'Blog';
 }
 
-function getBlogAuthor(blog?: WebsiteBlogDetailItem | null) {
-  return blog?.author?.fullName || 'CIO Dialogues Team';
-}
+// function getBlogAuthor(blog?: WebsiteBlogDetailItem | null) {
+//   return blog?.author?.fullName || 'CIO Dialogues Team';
+// }
 
 function getBlogContentBlocks(blog?: WebsiteBlogDetailItem | null) {
   return Array.isArray(blog?.content?.blocks) ? blog.content.blocks : [];
@@ -608,24 +605,24 @@ export default function BlogDetailsPage() {
 
         <h1>Blog Not Found</h1>
 
-<p>
-  The article you're looking for may have been moved, removed, or is no longer
-  available. Discover our latest blogs and stay informed with fresh insights.
-</p>
+        <p>
+          The article you&apos;re looking for may have been moved, removed, or is no longer
+          available. Discover our latest blogs and stay informed with fresh insights.
+        </p>
 
-<Link href="/blog" className="backbutton">
-  <div className="backbutton-icon">
-    <ArrowUpLeft size={18} />
-  </div>
+        <Link href="/blog" className="backbutton">
+          <div className="backbutton-icon">
+            <ArrowUpLeft size={18} />
+          </div>
 
-  <span>Back to Blog</span>
-</Link>
+          <span>Back to Blog</span>
+        </Link>
       </main>
     );
   }
 
   const displayTitle = blog.title;
-  const displayAuthor = getBlogAuthor(blog);
+  // const displayAuthor = getBlogAuthor(blog);
   const displayCategory = getBlogCategory(blog);
   const displayDate = formatPublishedDate(blog.publishedAt);
   const displayImage = getBlogImage(blog);
@@ -678,12 +675,12 @@ export default function BlogDetailsPage() {
               initialTransform="translateY(18px)"
             >
               <Link href="/events" className="backbutton">
-                  <div className="backbutton-icon">
-                    <ArrowUpLeft size={18} />
-                  </div>
+                <div className="backbutton-icon">
+                  <ArrowUpLeft size={18} />
+                </div>
 
-                  <span>Back to Events</span>
-                </Link>
+                <span>Back to Events</span>
+              </Link>
             </AnimatedBlock>
           </AnimatedBlock>
         </div>

@@ -250,8 +250,6 @@
 //   );
 // }
 
-
-
 'use client';
 
 import Link from 'next/link';
@@ -272,9 +270,7 @@ export default function Navbar() {
   const servicesCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isServicesPage =
-    pathname === '/videos' ||
-    pathname === '/events' ||
-    pathname === '/dialoges';
+    pathname === '/videos' || pathname === '/events' || pathname === '/dialoges';
 
   const openServices = () => {
     if (servicesCloseTimer.current) {
@@ -345,7 +341,9 @@ export default function Navbar() {
   }, [mobileOpen]);
 
   return (
-    <header className={`navbar ${isHidden ? 'navbar-hide' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
+    <header
+      className={`navbar ${isHidden ? 'navbar-hide' : ''} ${mobileOpen ? 'mobile-open' : ''}`}
+    >
       <div className="navbar-container">
         <Link href="/" className="navbar-logo" onClick={closeMobileMenu}>
           <Image src="/assets/logo/logo.png" alt="CORE Media" width={150} height={100} priority />

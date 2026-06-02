@@ -1,5 +1,3 @@
-
-
 // 'use client';
 
 // import Image from 'next/image';
@@ -193,7 +191,7 @@
 //             <span>{commentsCount}</span>
 //           </button>
 //         </span>
-        
+
 //  </div>
 
 //         {showComments ? (
@@ -442,7 +440,6 @@
 //   );
 // }
 
-
 'use client';
 
 import Image from 'next/image';
@@ -569,7 +566,7 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
       await submitWebsiteBlogLike(blog.id);
       markBlogLiked(blog.id);
     } catch (error) {
-      console.error('Like failed:', error);
+      // console.error('Like failed:', error);
       setLiked(false);
       setLocalLikes((n) => Math.max(0, n - 1));
       removeBlogLiked(blog.id);
@@ -895,4 +892,4 @@ export default function BlogPage() {
       </section>
     </>
   );
-}    
+}

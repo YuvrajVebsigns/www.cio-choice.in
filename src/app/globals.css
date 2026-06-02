@@ -4908,7 +4908,7 @@ main {
   font-weight: 740;
   color: #23292d;
 }
-  
+
 .blogpage-arrow {
   width: 28px;
   height: 28px;
@@ -4983,7 +4983,6 @@ main {
 .blogpage-page-arrow {
   background: #eef2f2;
 }
-
 
 @media (max-width: 768px) {
   .blogpage-footer {
@@ -5520,7 +5519,6 @@ main {
 }
 
 /* registration form */
-
 
 .registration-section {
   width: 100%;
@@ -7669,10 +7667,7 @@ s .dialogues-badge-mark {
   }
 }
 
-
-
 /* blogs and event notfound page */
-
 
 .not-found-page {
   min-height: 60vh; /* reduced from 100vh */
@@ -7682,7 +7677,8 @@ s .dialogues-badge-mark {
   justify-content: center;
   gap: 20px;
   padding: 80px 20px 40px;
-  margin-top: 80px; /* adjust value as needed */ padding: 40px 20px;
+  margin-top: 80px; /* adjust value as needed */
+  padding: 40px 20px;
 }
 
 .not-found-page img {
@@ -7690,7 +7686,7 @@ s .dialogues-badge-mark {
   height: auto;
 }
 
-.not-found-page h1{
+.not-found-page h1 {
   font-size: 40px;
 }
 
@@ -7739,9 +7735,8 @@ s .dialogues-badge-mark {
 }
 
 .backbutton:hover .backbutton-icon {
-  transform: rotate(-45deg);  
+  transform: rotate(-45deg);
 }
-
 
 /* not found page */
 

@@ -307,9 +307,6 @@
 //   );
 // }
 
-
-
-
 'use client';
 
 import Image from 'next/image';
@@ -345,9 +342,7 @@ function getEventField(event: WebsiteEvent, key: string): unknown {
 export default function EventDetailsPage() {
   const params = useParams<{ slug?: string | string[] }>();
 
-  const slug: string = Array.isArray(params?.slug)
-    ? params.slug[0] ?? ''
-    : params?.slug ?? '';
+  const slug: string = Array.isArray(params?.slug) ? (params.slug[0] ?? '') : (params?.slug ?? '');
 
   const [event, setEvent] = useState<WebsiteEvent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -423,7 +418,8 @@ export default function EventDetailsPage() {
           const list = await fetchWebsiteEvents();
 
           const matched = list.find(
-            (item) => String(getEventField(item, 'id')) === slug || getEventField(item, 'slug') === slug,
+            (item) =>
+              String(getEventField(item, 'id')) === slug || getEventField(item, 'slug') === slug,
           );
 
           if (matched) {
@@ -471,8 +467,8 @@ export default function EventDetailsPage() {
 
         <h1>Event Not Found</h1>
         <p>
-          The event you're looking for is unavailable or may have been removed.
-          Browse our latest events to discover what's coming next.
+          The event you&apos;re looking for is unavailable or may have been removed. Browse our
+          latest events to discover what&apos;s coming next.
         </p>
 
         <Link href="/events" className="backbutton">

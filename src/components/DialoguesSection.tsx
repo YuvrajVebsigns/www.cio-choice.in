@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import Image from 'next/image';
@@ -198,20 +196,20 @@ export default function OurDialogues() {
 
                   <div className="dialogue-divider" />
 
-                      <div className="dialogue-footer">
-                            <Image
-                              src={dialogue.avatar}
-                              alt={dialogue.author}
-                              width={58}
-                              height={58}
-                              className="dialogue-avatar"
-                            />
+                  <div className="dialogue-footer">
+                    <Image
+                      src={dialogue.avatar}
+                      alt={dialogue.author}
+                      width={58}
+                      height={58}
+                      className="dialogue-avatar"
+                    />
 
-                            <div>
-                              <h4 className="dialogue-author">{dialogue.author}</h4>
-                              <p className="dialogue-role">{dialogue.role}</p>
-                            </div>
-                      </div>
+                    <div>
+                      <h4 className="dialogue-author">{dialogue.author}</h4>
+                      <p className="dialogue-role">{dialogue.role}</p>
+                    </div>
+                  </div>
                 </article>
               );
             })}
