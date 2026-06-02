@@ -147,15 +147,21 @@ import Link from 'next/link';
 import { ArrowUpRight, Heart, MessageCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { fetchWebsiteBlogs, type WebsiteBlogItem } from '@/services/blogs.service';
+import {
+  fetchWebsiteBlogComments,
+  fetchWebsiteBlogs,
+  submitWebsiteBlogLike,
+  type WebsiteBlogComment,
+  type WebsiteBlogItem,
+} from '@/services/blogs.service';
 
 function getBlogCategory(blog: WebsiteBlogItem) {
   return blog.websites?.[0]?.name || blog.tags?.[0] || 'Blog';
 }
 
-function getBlogAuthor(blog: WebsiteBlogItem) {
-  return blog.author?.fullName || 'CORE Media Team';
-}
+// function getBlogAuthor(blog: WebsiteBlogItem) {
+//   return blog.author?.fullName || 'CORE Media Team';
+// }
 
 function getBlogImage(blog: WebsiteBlogItem) {
   return blog.featureImage || blog.seo?.ogImage || '/assets/blogs/blog-1.png';
@@ -164,6 +170,11 @@ function getBlogImage(blog: WebsiteBlogItem) {
 export default function BlogsSection() {
   const [blogs, setBlogs] = useState<WebsiteBlogItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [openCommentsBlogId, setOpenCommentsBlogId] = useState<string | null>(null);
+  const [commentsByBlogId, setCommentsByBlogId] = useState<Record<string, WebsiteBlogComment[]>>(
+    {},
+  );
+  const [loadingCommentsFor, setLoadingCommentsFor] = useState<string | null>(null);
 
   const blogRefs = [
     useScrollAnimation({
@@ -191,12 +202,107 @@ export default function BlogsSection() {
   const getTemporaryLikesCount = (blog: WebsiteBlogItem) =>
     typeof blog.engagement?.likes === 'number' && blog.engagement.likes > 0
       ? blog.engagement.likes
-      : 12;
+      : 0;
+  const LIKED_KEY = 'likedBlogs';
 
-  const getTemporaryCommentsCount = (blog: WebsiteBlogItem) =>
-    typeof blog.engagement?.commentsCount === 'number' && blog.engagement.commentsCount > 0
-      ? blog.engagement.commentsCount
-      : 4;
+  function readLikedSet(): Set<string> {
+    try {
+      const raw = typeof window !== 'undefined' ? window.localStorage.getItem(LIKED_KEY) : null;
+      if (!raw) return new Set();
+      const arr = JSON.parse(raw);
+      if (!Array.isArray(arr)) return new Set();
+      return new Set(arr.map(String));
+    } catch {
+      return new Set();
+    }
+  }
+
+  function markBlogLiked(id: string) {
+    try {
+      const set = readLikedSet();
+      set.add(String(id));
+      window.localStorage.setItem(LIKED_KEY, JSON.stringify(Array.from(set)));
+    } catch {
+      // ignore
+    }
+  }
+
+  function isBlogLiked(id?: string | number) {
+    if (!id) return false;
+    return readLikedSet().has(String(id));
+  }
+
+  async function handleLikeClick(e: React.MouseEvent, blogId?: string) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!blogId) return;
+
+    if (isBlogLiked(blogId)) {
+      // already liked by this user (localStorage) — do nothing
+      return;
+    }
+
+    // optimistic UI update
+    setBlogs((prev) =>
+      prev.map((b) =>
+        b.id === blogId
+          ? { ...b, engagement: { ...b.engagement, likes: (b.engagement?.likes ?? 0) + 1 } }
+          : b,
+      ),
+    );
+
+    try {
+      await submitWebsiteBlogLike(blogId);
+      // mark liked locally so user can't like again
+      markBlogLiked(blogId);
+    } catch (err) {
+      // revert on error
+      setBlogs((prev) =>
+        prev.map((b) =>
+          b.id === blogId
+            ? {
+                ...b,
+                engagement: { ...b.engagement, likes: Math.max(0, (b.engagement?.likes ?? 1) - 1) },
+              }
+            : b,
+        ),
+      );
+    }
+  }
+
+  const getCommentsCount = (blog: WebsiteBlogItem) =>
+    typeof blog.engagement?.commentsCount === 'number' ? blog.engagement.commentsCount : 0;
+
+  function getCommentAuthor(comment: WebsiteBlogComment) {
+    return comment.name || 'Guest';
+  }
+
+  function getCommentMessage(comment: WebsiteBlogComment) {
+    return comment.message || '';
+  }
+
+  async function handleCommentToggle(blogId?: string) {
+    if (!blogId) return;
+
+    const nextOpen = openCommentsBlogId === blogId ? null : blogId;
+    setOpenCommentsBlogId(nextOpen);
+
+    if (!nextOpen) return;
+
+    if (commentsByBlogId[blogId]) return;
+
+    setLoadingCommentsFor(blogId);
+    try {
+      const response = await fetchWebsiteBlogComments(blogId);
+      setCommentsByBlogId((prev) => ({
+        ...prev,
+        [blogId]: (response.data ?? []).filter((comment) => comment.isApproved !== false),
+      }));
+    } finally {
+      setLoadingCommentsFor(null);
+    }
+  }
 
   useEffect(() => {
     let isMounted = true;
@@ -273,29 +379,26 @@ export default function BlogsSection() {
                 <div className="blog-meta">
                   <span className="blog-category">{getBlogCategory(blog)}</span>
 
-                  <p>
+                  {/* <p>
                     By <span>{getBlogAuthor(blog)}</span>
-                  </p>
+                  </p> */}
                 </div>
 
                 <h4 className="blog-heading">{blog.title}</h4>
-
-                <Link href={`/blog/${blog.slug}`} className="blog-readmore">
-                  <span className="blog-readmore-text">Read More</span>
-                  <span className="blog-arrow" aria-hidden="true">
-                    <ArrowUpRight size={16} />
-                  </span>
+                <div className="blogpage-footer">
+                  <Link href={`/blog/${blog.slug}`} className="blog-readmore">
+                    <span className="blog-readmore-text">Read More</span>
+                    <span className="blog-arrow" aria-hidden="true">
+                      <ArrowUpRight size={16} />
+                    </span>
+                  </Link>
 
                   <span className="blog-engagement" aria-label="Blog engagement">
                     <button
                       type="button"
-                      className="blog-engagement-item"
+                      className={`blog-engagement-item ${isBlogLiked(blog.id) ? 'liked' : ''}`}
                       aria-label={`${getTemporaryLikesCount(blog)} likes`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        // future: handle like action here
-                      }}
+                      onClick={(e) => handleLikeClick(e, blog.id)}
                     >
                       <Heart size={14} />
                       <span>{getTemporaryLikesCount(blog)}</span>
@@ -304,18 +407,53 @@ export default function BlogsSection() {
                     <button
                       type="button"
                       className="blog-engagement-item"
-                      aria-label={`${getTemporaryCommentsCount(blog)} comments`}
+                      aria-label={`${getCommentsCount(blog)} comments`}
                       onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        // future: open comments or navigate to comments
+                        void handleCommentToggle(blog.id);
                       }}
                     >
                       <MessageCircle size={14} />
-                      <span>{getTemporaryCommentsCount(blog)}</span>
+                      <span>{getCommentsCount(blog)}</span>
                     </button>
                   </span>
-                </Link>
+                </div>
+
+                {openCommentsBlogId === blog.id ? (
+                  <div
+                    className="blog-inline-comments"
+                    style={{
+                      marginTop: 16,
+                      paddingTop: 16,
+                      borderTop: '1px solid rgba(0,0,0,0.08)',
+                    }}
+                  >
+                    {loadingCommentsFor === blog.id ? <p>Loading comments...</p> : null}
+
+                    {!loadingCommentsFor && (commentsByBlogId[blog.id]?.length ?? 0) === 0 ? (
+                      <p style={{ opacity: 0.7 }}>No comments yet.</p>
+                    ) : null}
+
+                    <div style={{ display: 'grid', gap: 12 }}>
+                      {(commentsByBlogId[blog.id] ?? []).map((comment, index) => (
+                        <div
+                          key={comment.id ?? `${blog.id}-${index}`}
+                          style={{
+                            background: 'rgba(255,255,255,0.75)',
+                            borderRadius: 12,
+                            padding: '10px 12px',
+                          }}
+                        >
+                          <strong style={{ display: 'block', marginBottom: 4 }}>
+                            {getCommentAuthor(comment)}
+                          </strong>
+                          <p style={{ margin: 0, lineHeight: 1.6 }}>{getCommentMessage(comment)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
           ))}

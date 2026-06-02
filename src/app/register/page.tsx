@@ -1,16 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { submitAttendeeRegistration } from '@/services/attendees.service';
+import { fetchWebsiteEvents, WebsiteEvent } from '@/services/events.service';
 
-type EventItem = {
-  id: number;
-  title: string;
-};
-
-type EventApiItem = {
-  id: number;
-  title: string;
-};
+type EventItem = WebsiteEvent;
 
 export default function RegisterPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
@@ -18,8 +12,8 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [organization, setOrganization] = useState('');
-  const [selectedEvent, setSelectedEvent] = useState<number | ''>('');
-  const [status, setStatus] = useState<string | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<string | ''>('');
+  const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const [errors, setErrors] = useState<{
@@ -30,13 +24,20 @@ export default function RegisterPage() {
   }>({});
 
   useEffect(() => {
-    fetch('/api/events')
-      .then((r) => r.json())
-      .then((data: EventApiItem[]) =>
-        setEvents(data.map((event) => ({ id: event.id, title: event.title }))),
-      )
+    fetchWebsiteEvents()
+      .then((data: WebsiteEvent[]) => setEvents(data))
       .catch(() => setEvents([]));
   }, []);
+
+  useEffect(() => {
+    if (!popupMessage) return;
+
+    const timer = window.setTimeout(() => {
+      setPopupMessage(null);
+    }, 3200);
+
+    return () => window.clearTimeout(timer);
+  }, [popupMessage]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -72,44 +73,31 @@ export default function RegisterPage() {
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length) {
-      setStatus('Please fix the errors above.');
+      setPopupMessage('Please fix the errors above.');
       return;
     }
 
     setLoading(true);
-    setStatus(null);
+    setPopupMessage(null);
 
     try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          phone,
-          organization,
-          eventId: selectedEvent,
-        }),
+      await submitAttendeeRegistration({
+        eventId: selectedEvent as string,
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
       });
 
-      const json = await res.json();
+      setPopupMessage('Registration successful — thank you!');
 
-      if (res.ok) {
-        setStatus('Registration successful — thank you!');
-
-        setName('');
-        setEmail('');
-        setPhone('');
-        setOrganization('');
-        setSelectedEvent('');
-        setErrors({});
-      } else {
-        setStatus(json?.message || 'Registration failed.');
-      }
+      setName('');
+      setEmail('');
+      setPhone('');
+      setOrganization('');
+      setSelectedEvent('');
+      setErrors({});
     } catch (err) {
-      setStatus('Network error. Please try again.');
+      setPopupMessage(err instanceof Error ? err.message : 'Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -119,6 +107,20 @@ export default function RegisterPage() {
     <section className="registration-section">
       <div className="registration-container">
         <div className="registration-wrapper">
+          {popupMessage ? (
+            <div className="registration-popup" role="status" aria-live="polite">
+              <span className="registration-popup-dot" aria-hidden="true" />
+              <p>{popupMessage}</p>
+              <button
+                type="button"
+                onClick={() => setPopupMessage(null)}
+                aria-label="Close message"
+              >
+                ×
+              </button>
+            </div>
+          ) : null}
+
           <h2 className="registration-title">Event Registration</h2>
 
           <form onSubmit={handleSubmit} className="registration-form">
@@ -215,7 +217,7 @@ export default function RegisterPage() {
               <select
                 value={selectedEvent}
                 onChange={(e) => {
-                  setSelectedEvent(e.target.value ? Number(e.target.value) : '');
+                  setSelectedEvent(e.target.value || '');
 
                   if (errors.selectedEvent) {
                     setErrors({
@@ -258,9 +260,6 @@ export default function RegisterPage() {
                 {loading ? 'Submitting...' : 'Register'}
               </button>
             </div>
-
-            {/* STATUS */}
-            {status && <p className="registration-status">{status}</p>}
           </form>
         </div>
       </div>

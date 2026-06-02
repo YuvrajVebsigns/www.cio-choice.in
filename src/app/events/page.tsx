@@ -4,6 +4,27 @@ import Image from 'next/image';
 import Link from 'next/link';
 // import { ArrowUpRight } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useEffect, useState } from 'react';
+import { fetchWebsiteEvents, WebsiteEvent } from '@/services/events.service';
+
+function getStoredWebsiteId(): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+
+  try {
+    const raw = window.localStorage.getItem('websiteAuth');
+    if (!raw) return undefined;
+
+    const parsed: unknown = JSON.parse(raw);
+    if (typeof parsed === 'object' && parsed !== null && 'websiteId' in parsed) {
+      const websiteId = (parsed as { websiteId?: unknown }).websiteId;
+      return typeof websiteId === 'string' ? websiteId : undefined;
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+}
 
 // type EventItem = {
 //   category: string;
@@ -12,38 +33,16 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 // };
 
 export default function EventsPage() {
-  const customEvents = [
-    {
-      category: 'Custom Events',
-      title: 'Event Management Platform',
-      image: '/assets/Shaping-the1.png',
-    },
-    {
-      category: 'Custom Events',
-      title: 'Digital Event Experience',
-      image: '/assets/Unlocking-Agility.png',
-    },
-    {
-      category: 'Custom Events',
-      title: 'Event Management Platform',
-      image: '/assets/Shaping-the1.png',
-    },
-    {
-      category: 'Custom Events',
-      title: 'Digital Event Experience',
-      image: '/assets/Unlocking-Agility.png',
-    },
-    {
-      category: 'Custom Events',
-      title: 'Event Management Platform',
-      image: '/assets/Shaping-the1.png',
-    },
-    {
-      category: 'Custom Events',
-      title: 'Digital Event Experience',
-      image: '/assets/Unlocking-Agility.png',
-    },
-  ];
+  const [events, setEvents] = useState<WebsiteEvent[] | null>(null);
+
+  useEffect(() => {
+    fetchWebsiteEvents(getStoredWebsiteId())
+      .then((data) => {
+        if (Array.isArray(data) && data.length) setEvents(data);
+        else setEvents([]);
+      })
+      .catch(() => setEvents([]));
+  }, []);
 
   const heroMediaRef = useScrollAnimation<HTMLDivElement>({
     animationClass: 'animate-fade-in-right',
@@ -124,30 +123,45 @@ export default function EventsPage() {
           </div> */}
 
           <div className="project-grid">
-            {customEvents.map((item, index) => {
-              const slug = item.title
-                .toLowerCase()
-                .replace(/\s+/g, '-')
-                .replace(/[^a-z0-9-]/g, '');
+            {events === null ? (
+              <div className="events-loading">Loading events…</div>
+            ) : events.length === 0 ? (
+              <div className="events-empty">No events available at the moment.</div>
+            ) : (
+              events.map((item: WebsiteEvent, index: number) => {
+                const title = String(item.title ?? item.name ?? item.eventName ?? 'Event');
+                const slug =
+                  item.id && typeof item.id === 'string'
+                    ? String(item.id)
+                    : title
+                        .toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .replace(/[^a-z0-9-]/g, '');
 
-              return (
-                <Link key={item.title} href={`/events/${slug}`}>
-                  <div className="project-card" ref={index === 0 ? leftRef : rightRef}>
-                    <div className="project-image-wrap">
-                      <Image src={item.image} alt={item.title} fill className="project-image" />
-                    </div>
+                const imageSrc = String(
+                  item.image ?? item.heroImage ?? item.banner ?? '/assets/blogs/blog-1.webp',
+                );
+                const category = String(item.category ?? 'Events');
 
-                    <div className="project-overlay">
-                      <span className="project-category">{item.category}</span>
+                return (
+                  <Link key={slug} href={`/events/${slug}`}>
+                    <div className="project-card" ref={index === 0 ? leftRef : rightRef}>
+                      <div className="project-image-wrap">
+                        <Image src={imageSrc} alt={title} fill className="project-image" />
+                      </div>
 
-                      <div className="project-content">
-                        <h3>{item.title}</h3>
+                      <div className="project-overlay">
+                        <span className="project-category">{category}</span>
+
+                        <div className="project-content">
+                          <h3>{title}</h3>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })
+            )}
           </div>
         </div>
       </section>
