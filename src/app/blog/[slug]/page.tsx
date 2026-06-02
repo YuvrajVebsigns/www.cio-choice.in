@@ -443,9 +443,9 @@ function getBlogCategory(blog?: WebsiteBlogDetailItem | null) {
   return blog?.websites?.[0]?.name || blog?.tags?.[0] || 'Blog';
 }
 
-function getBlogAuthor(blog?: WebsiteBlogDetailItem | null) {
-  return blog?.author?.fullName || 'CIO Dialogues Team';
-}
+// function getBlogAuthor(blog?: WebsiteBlogDetailItem | null) {
+//   return blog?.author?.fullName || 'CIO Dialogues Team';
+// }
 
 function getBlogContentBlocks(blog?: WebsiteBlogDetailItem | null) {
   return Array.isArray(blog?.content?.blocks) ? blog.content.blocks : [];
@@ -622,7 +622,7 @@ export default function BlogDetailsPage() {
   }
 
   const displayTitle = blog.title;
-  const displayAuthor = getBlogAuthor(blog);
+  // const displayAuthor = getBlogAuthor(blog);
   const displayCategory = getBlogCategory(blog);
   const displayDate = formatPublishedDate(blog.publishedAt);
   const displayImage = getBlogImage(blog);

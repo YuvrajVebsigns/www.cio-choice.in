@@ -6,6 +6,34 @@ type WebsiteAuth = {
   websiteId: string;
 };
 
+type WebsiteTokenResponse = {
+  token?: string;
+  websiteId?: string;
+  id?: string;
+  website?: {
+    id?: string;
+    token?: string;
+  };
+  data?: {
+    token?: string;
+    websiteId?: string;
+    id?: string;
+    website?: {
+      id?: string;
+      token?: string;
+    };
+    data?: {
+      token?: string;
+      websiteId?: string;
+      id?: string;
+      website?: {
+        id?: string;
+        token?: string;
+      };
+    };
+  };
+};
+
 export type AttendeeRegistration = {
   eventId: string;
   name: string;
@@ -47,27 +75,7 @@ function readStoredWebsiteAuth(): WebsiteAuth | null {
   return null;
 }
 
-function extractWebsiteToken(response: {
-  token?: string;
-  data?: {
-    token?: string;
-    data?: {
-      token?: string;
-      website?: {
-        token?: string;
-        id?: string;
-      };
-    };
-    website?: {
-      token?: string;
-      id?: string;
-    };
-  };
-  website?: {
-    token?: string;
-    id?: string;
-  };
-}) {
+function extractWebsiteToken(response: WebsiteTokenResponse) {
   return (
     response.token ??
     response.data?.token ??
@@ -79,27 +87,7 @@ function extractWebsiteToken(response: {
   );
 }
 
-function extractWebsiteId(response: {
-  websiteId?: string;
-  data?: {
-    websiteId?: string;
-    id?: string;
-    data?: {
-      websiteId?: string;
-      id?: string;
-      website?: {
-        id?: string;
-      };
-    };
-    website?: {
-      id?: string;
-    };
-  };
-  website?: {
-    id?: string;
-  };
-  id?: string;
-}) {
+function extractWebsiteId(response: WebsiteTokenResponse) {
   return (
     response.websiteId ??
     response.website?.id ??
@@ -108,6 +96,7 @@ function extractWebsiteId(response: {
     response.data?.data?.websiteId ??
     response.data?.data?.website?.id ??
     response.data?.data?.id ??
+    response.data?.id ??
     response.id ??
     null
   );
@@ -119,31 +108,18 @@ async function ensureWebsiteAuth(domain: string) {
   const stored = readStoredWebsiteAuth();
   if (stored) return stored;
 
-  const tokenRes = await apiFetch<{
-    token?: string;
-    websiteId?: string;
-    website?: { id?: string };
-    data?: {
-      token?: string;
-      websiteId?: string;
-      id?: string;
-      website?: { token?: string; id?: string };
-      data?: {
-        token?: string;
-        websiteId?: string;
-        id?: string;
-        website?: { token?: string; id?: string };
-      };
-    };
-  }>(`/api/v1/website/token?domain=${encodeURIComponent(domain)}`, {
-    method: 'POST',
-    requireAuth: false,
-    headers: {
-      'Content-Type': 'application/json',
-      'x-website-domain': domain,
+  const tokenRes = await apiFetch<WebsiteTokenResponse>(
+    `/api/v1/website/token?domain=${encodeURIComponent(domain)}`,
+    {
+      method: 'POST',
+      requireAuth: false,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-website-domain': domain,
+      },
+      body: JSON.stringify({}),
     },
-    body: JSON.stringify({}),
-  });
+  );
 
   const token = extractWebsiteToken(tokenRes);
   const websiteId = extractWebsiteId(tokenRes);
