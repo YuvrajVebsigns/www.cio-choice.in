@@ -4,6 +4,7 @@ import ExpertiseSection from '@/components/ExpertiseSection';
 import TeamSection from '@/components/TeamSection';
 import KeyClient from '@/components/KeyClient';
 import ProjectsSection from '@/components/ProjectsSection';
+import ResearchSection from '@/components/ResearchSection';
 import Brands from '@/components/Brands';
 import FAQSection from '@/components/FAQSection';
 import ContactSection from '@/components/ContactSection';
@@ -20,6 +21,7 @@ export default function Home() {
       <TeamSection />
       <KeyClient />
       <ProjectsSection />
+      <ResearchSection />
       <Brands />
       <FAQSection />
       <ContactSection />

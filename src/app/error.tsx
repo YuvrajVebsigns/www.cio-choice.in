@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function ErrorPage({
   error,
@@ -9,9 +10,24 @@ export default function ErrorPage({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const [showDetails, setShowDetails] = useState(false);
+
   useEffect(() => {
-    // In a production app, log this error to an error reporting service
+    // In production, send error to monitoring service here.
+    // console.error(error);
   }, [error]);
+
+  const mailto = () => {
+    try {
+      const subject = encodeURIComponent('Website error report');
+      const body = encodeURIComponent(
+        `Error: ${String(error?.message ?? 'Unknown')}\n\nURL: ${typeof window !== 'undefined' ? window.location.href : ''}`,
+      );
+      return `mailto:support@core-mediagroup.com?subject=${subject}&body=${body}`;
+    } catch (e) {
+      return 'mailto:support@core-mediagroup.com';
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">
@@ -34,19 +50,55 @@ export default function ErrorPage({
 
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-            Something went wrong!
+            Oops — something went wrong
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            An unexpected error occurred. Please try again or contact support if the issue persists.
+            We ran into an unexpected issue while loading this page. You can try again or report the
+            problem to our support team.
           </p>
         </div>
 
-        <button
-          onClick={() => reset()}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        >
-          Try again
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => reset()}
+            className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
+          >
+            Try again
+          </button>
+
+          <Link
+            href="/"
+            className="rounded-md border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-100"
+          >
+            Go to Home
+          </Link>
+        </div>
+
+        <div className="flex gap-3 items-center">
+          <a href={mailto()} className="text-sm text-gray-600 underline">
+            Report issue
+          </a>
+
+          <button
+            onClick={() => setShowDetails((s) => !s)}
+            className="text-sm text-gray-500 underline"
+          >
+            {showDetails ? 'Hide details' : 'Show details'}
+          </button>
+        </div>
+
+        {showDetails && (
+          <pre
+            style={{
+              whiteSpace: 'pre-wrap',
+              textAlign: 'left',
+              display: 'inline-block',
+              maxWidth: '90%',
+            }}
+          >
+            {String(error?.stack ?? error?.message ?? 'No details available')}
+          </pre>
+        )}
       </div>
     </div>
   );

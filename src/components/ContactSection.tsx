@@ -186,7 +186,7 @@ export default function ContactSection() {
 
             {/* BUTTON */}
             <button type="submit" className="contact-btn" disabled={isSubmitting}>
-              <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
+              <span>{isSubmitting ? 'Sending...' : 'Submit Message'}</span>
 
               <span className="contact-btn-icon">
                 <ArrowUpRight size={18} />

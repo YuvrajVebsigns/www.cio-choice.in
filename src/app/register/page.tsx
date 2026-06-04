@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { isValidPhoneNumber } from 'libphonenumber-js/min';
 import type { Country } from 'react-phone-number-input';
 import CountryCodeSelect, { getDialCodeFromCountry } from '@/components/CountryCodeSelect';
 import { submitAttendeeRegistration } from '@/services/attendees.service';
 import { fetchWebsiteEvents, WebsiteEvent } from '@/services/events.service';
+
 type EventItem = WebsiteEvent;
 
 export default function RegisterPage() {
@@ -49,43 +49,35 @@ export default function RegisterPage() {
 
     const nextErrors: typeof errors = {};
 
-    /* NAME VALIDATION */
     if (!name.trim()) {
       nextErrors.name = 'Name is required.';
     } else if (!/^[A-Za-z\s]+$/.test(name)) {
       nextErrors.name = 'Only alphabets are allowed.';
     }
 
-    /* EMAIL VALIDATION */
     if (!email.trim()) {
       nextErrors.email = 'Email is required.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       nextErrors.email = 'Enter a valid email.';
     }
 
-    /* COUNTRY CODE VALIDATION */
     const dialCode = getDialCodeFromCountry(country);
     if (!country || !dialCode) {
       nextErrors.countryCode = 'Please select a country code.';
     }
 
-    /* PHONE VALIDATION */
     const trimmedPhone = phone.trim();
+
     if (!trimmedPhone) {
       nextErrors.phone = 'Phone number is required.';
-    } else if (dialCode) {
-      const fullNumber = `${dialCode}${trimmedPhone}`;
-      if (!isValidPhoneNumber(fullNumber)) {
-        nextErrors.phone = 'Enter a valid phone number for the selected country.';
-      }
+    } else if (!/^\d{10}$/.test(trimmedPhone)) {
+      nextErrors.phone = 'Phone number must be exactly 10 digits.';
     }
 
-    /* ORGANIZATION VALIDATION */
     if (!organization.trim()) {
       nextErrors.organization = 'Organization is required.';
     }
 
-    /* EVENT VALIDATION */
     if (!selectedEvent) {
       nextErrors.selectedEvent = 'Please select an event.';
     }
@@ -152,7 +144,6 @@ export default function RegisterPage() {
           <h2 className="registration-title">Event Registration</h2>
 
           <form onSubmit={handleSubmit} className="registration-form">
-            {/* NAME */}
             <label className="registration-label">
               Name*
               <input
@@ -178,7 +169,6 @@ export default function RegisterPage() {
               {errors.name && <div className="registration-error">{errors.name}</div>}
             </label>
 
-            {/* EMAIL */}
             <label className="registration-label">
               Email*
               <input
@@ -201,7 +191,6 @@ export default function RegisterPage() {
               {errors.email && <div className="registration-error">{errors.email}</div>}
             </label>
 
-            {/* COUNTRY CODE */}
             <label className="registration-label" htmlFor="registration-country-code">
               Country Code*
               <CountryCodeSelect
@@ -219,15 +208,9 @@ export default function RegisterPage() {
                   }
                 }}
               />
-              {country ? (
-                <span className="registration-dial-code-preview">
-                  Dial code: {getDialCodeFromCountry(country)}
-                </span>
-              ) : null}
               {errors.countryCode && <div className="registration-error">{errors.countryCode}</div>}
             </label>
 
-            {/* PHONE NUMBER */}
             <label className="registration-label">
               Phone Number*
               <input
@@ -236,9 +219,11 @@ export default function RegisterPage() {
                 placeholder="9876543210"
                 value={phone}
                 inputMode="numeric"
-                title="Enter phone number without country code"
+                maxLength={10}
+                pattern="[0-9]{10}"
+                title="Enter exactly 10 digit phone number"
                 onInput={(e) => {
-                  e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '');
+                  e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 10);
                 }}
                 onChange={(e) => {
                   setPhone(e.target.value);
@@ -254,7 +239,6 @@ export default function RegisterPage() {
               {errors.phone && <div className="registration-error">{errors.phone}</div>}
             </label>
 
-            {/* ORGANIZATION */}
             <label className="registration-label">
               Organization*
               <input
@@ -278,7 +262,6 @@ export default function RegisterPage() {
               )}
             </label>
 
-            {/* EVENT */}
             <label className="registration-label">
               Select Event*
               <select
@@ -307,7 +290,6 @@ export default function RegisterPage() {
               )}
             </label>
 
-            {/* BUTTON */}
             <div className="registration-button-wrap">
               <button
                 type="submit"
@@ -324,12 +306,12 @@ export default function RegisterPage() {
                   !email ||
                   !country ||
                   !getDialCodeFromCountry(country) ||
-                  !phone ||
+                  phone.length !== 10 ||
                   !organization.trim() ||
                   !selectedEvent
                 }
               >
-                {loading ? 'Submitting...' : 'Register'}
+                {loading ? 'Submitting...' : 'Submit Registration'}
               </button>
             </div>
           </form>

@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cp .env.local .env.development.local && dotenv -e .env.local -- next dev",
-    "dev:uat": "cp .env.dev .env.development.local && dotenv -e .env.dev -- next dev",
+    "dev": "node -e \"require('fs').copyFileSync('.env.local','.env.development.local')\" && dotenv -e .env.local -- next dev",
+    "dev:uat": "node -e \"require('fs').copyFileSync('.env.dev','.env.development.local')\" && dotenv -e .env.dev -- next dev",
     "start": "dotenv -e .env.local -- next start",
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write .",

@@ -88,7 +88,7 @@ export default function EventsPage() {
         <div className="blog-hero-overlay"></div>
 
         <div className="blog-hero-content" ref={heroContentRef}>
-          <h1>Read Events</h1>
+          <h1>Event Calendar</h1>
 
           <div className="blog-breadcrumb">
             <Link href="/" className="blog-breadcrumb-home">

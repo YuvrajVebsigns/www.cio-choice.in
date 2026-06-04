@@ -6,10 +6,8 @@
 // import { useEffect, useState } from 'react';
 // import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 // import {
-//   fetchWebsiteBlogComments,
 //   fetchWebsiteBlogs,
 //   submitWebsiteBlogLike,
-//   type WebsiteBlogComment,
 //   type WebsiteBlogItem,
 // } from '@/services/blogs.service';
 
@@ -40,15 +38,12 @@
 //     typeof blog.engagement?.likes === 'number' && blog.engagement.likes > 0
 //       ? blog.engagement.likes
 //       : 0;
+
 //   const commentsCount =
 //     typeof blog.engagement?.commentsCount === 'number' ? blog.engagement.commentsCount : 0;
 
-//   // local likes state for optimistic UI
 //   const [localLikes, setLocalLikes] = useState<number>(likesCount);
 //   const [liked, setLiked] = useState<boolean>(false);
-//   const [showComments, setShowComments] = useState(false);
-//   const [comments, setComments] = useState<WebsiteBlogComment[]>([]);
-//   const [loadingComments, setLoadingComments] = useState(false);
 
 //   const LIKED_KEY = 'likedBlogs';
 
@@ -56,18 +51,30 @@
 //     try {
 //       const raw = typeof window !== 'undefined' ? window.localStorage.getItem(LIKED_KEY) : null;
 //       if (!raw) return new Set();
+
 //       const arr = JSON.parse(raw);
 //       if (!Array.isArray(arr)) return new Set();
+
 //       return new Set(arr.map(String));
 //     } catch {
 //       return new Set();
 //     }
 //   }
 
-//   function markBlogLiked(id: string) {
+//   function markBlogLiked(id: string | number) {
 //     try {
 //       const set = readLikedSet();
 //       set.add(String(id));
+//       window.localStorage.setItem(LIKED_KEY, JSON.stringify(Array.from(set)));
+//     } catch {
+//       // ignore
+//     }
+//   }
+
+//   function removeBlogLiked(id: string | number) {
+//     try {
+//       const set = readLikedSet();
+//       set.delete(String(id));
 //       window.localStorage.setItem(LIKED_KEY, JSON.stringify(Array.from(set)));
 //     } catch {
 //       // ignore
@@ -79,33 +86,34 @@
 //     return readLikedSet().has(String(id));
 //   }
 
-//   function getCommentAuthor(comment: WebsiteBlogComment) {
-//     return comment.name || 'Guest';
-//   }
-
-//   function getCommentMessage(comment: WebsiteBlogComment) {
-//     return comment.message || '';
-//   }
-
 //   useEffect(() => {
 //     setLiked(isBlogLiked(blog.id));
-//   }, [blog.id, isBlogLiked]);
+//     setLocalLikes(likesCount);
+//   }, [blog.id, likesCount]);
 
-//   async function handleCommentToggle(e: React.MouseEvent) {
+//   async function handleLikeClick(e: React.MouseEvent<HTMLButtonElement>) {
 //     e.stopPropagation();
 //     e.preventDefault();
 
-//     const nextShow = !showComments;
-//     setShowComments(nextShow);
+//     const wasLiked = liked;
 
-//     if (!nextShow || comments.length > 0) return;
+//     if (wasLiked) {
+//       setLiked(false);
+//       setLocalLikes((n) => Math.max(0, n - 1));
+//       removeBlogLiked(blog.id);
+//       return;
+//     }
 
-//     setLoadingComments(true);
+//     setLiked(true);
+//     setLocalLikes((n) => n + 1);
+
 //     try {
-//       const response = await fetchWebsiteBlogComments(blog.id);
-//       setComments((response.data ?? []).filter((comment) => comment.isApproved !== false));
-//     } finally {
-//       setLoadingComments(false);
+//       await submitWebsiteBlogLike(blog.id);
+//       markBlogLiked(blog.id);
+//     } catch {
+//       setLiked(false);
+//       setLocalLikes((n) => Math.max(0, n - 1));
+//       removeBlogLiked(blog.id);
 //     }
 //   }
 
@@ -133,94 +141,40 @@
 //           className="blogpage-image"
 //           unoptimized
 //         />
-
-//         {/* <div className="blogpage-date">
-//           <h3>{formatBlogDate(blog.publishedAt).day}</h3>
-//           <span>{formatBlogDate(blog.publishedAt).month}</span>
-//         </div> */}
 //       </div>
 
 //       <div className="blogpage-content">
 //         <div className="blogpage-meta">
 //           <span className="blogpage-category">{getBlogCategory(blog)}</span>
-//           {/* <p>By {getBlogAuthor(blog)}</p> */}
 //         </div>
 
 //         <h4 className="blogpage-heading">{blog.title}</h4>
-//           <div className="blogpage-footer">
-//         <Link href={`/blog/${blog.slug}`} className="blogpage-readmore">
-//           Read More
-//           <span className="blogpage-arrow">
-//             <ArrowUpRight size={12} />
+
+//         <div className="blogpage-footer">
+//           <Link href={`/blog/${blog.slug}`} className="blogpage-readmore">
+//             Read More
+//             <span className="blogpage-arrow">
+//               <ArrowUpRight size={12} />
+//             </span>
+//           </Link>
+
+//           <span className="blogpage-engagement" aria-label="Blog engagement">
+//             <button
+//               type="button"
+//               className={`blogpage-engagement-item ${liked ? 'liked' : ''}`}
+//               aria-label={`${localLikes} likes`}
+//               onClick={handleLikeClick}
+//             >
+//               <Heart size={14} fill={liked ? 'currentColor' : 'none'} />
+//               <span>{localLikes}</span>
+//             </button>
+
+//             <span className="blogpage-engagement-item" aria-label={`${commentsCount} comments`}>
+//               <MessageCircle size={14} />
+//               <span>{commentsCount}</span>
+//             </span>
 //           </span>
-//         </Link>
-
-//         <span className="blogpage-engagement" aria-label="Blog engagement">
-//           <button
-//             type="button"
-//             className={`blogpage-engagement-item ${liked ? 'liked' : ''}`}
-//             aria-label={`${localLikes} likes`}
-//             onClick={async (e) => {
-//               e.stopPropagation();
-//               e.preventDefault();
-
-//               if (liked) return;
-
-//               setLocalLikes((n) => n + 1);
-//               setLiked(true);
-//               try {
-//                 await submitWebsiteBlogLike(blog.id);
-//                 markBlogLiked(blog.id);
-//               } catch {
-//                 setLocalLikes((n) => Math.max(0, n - 1));
-//                 setLiked(false);
-//               }
-//             }}
-//           >
-//             <Heart size={14} />
-//             <span>{localLikes}</span>
-//           </button>
-
-//           <button
-//             type="button"
-//             className="blogpage-engagement-item"
-//             aria-label={`${commentsCount} comments`}
-//             onClick={handleCommentToggle}
-//           >
-//             <MessageCircle size={14} />
-//             <span>{commentsCount}</span>
-//           </button>
-//         </span>
-
-//  </div>
-
-//         {showComments ? (
-//           <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(0,0,0,0.08)' }}>
-//             {loadingComments ? <p>Loading comments...</p> : null}
-
-//             {!loadingComments && comments.length === 0 ? (
-//               <p style={{ opacity: 0.7 }}>No comments yet.</p>
-//             ) : null}
-
-//             <div style={{ display: 'grid', gap: 12 }}>
-//               {comments.map((comment, commentIndex) => (
-//                 <div
-//                   key={comment.id ?? `${blog.id}-${commentIndex}`}
-//                   style={{
-//                     background: 'rgba(255,255,255,0.75)',
-//                     borderRadius: 12,
-//                     padding: '10px 12px',
-//                   }}
-//                 >
-//                   <strong style={{ display: 'block', marginBottom: 4 }}>
-//                     {getCommentAuthor(comment)}
-//                   </strong>
-//                   <p style={{ margin: 0, lineHeight: 1.6 }}>{getCommentMessage(comment)}</p>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//         ) : null}
+//         </div>
 //       </div>
 //     </article>
 //   );
@@ -234,14 +188,16 @@
 //   const [statusMessage, setStatusMessage] = useState<string>('');
 //   const [page, setPage] = useState<number>(1);
 //   const [limit] = useState<number>(10);
-//   const CLIENT_PAGINATION_THRESHOLD = 200; // max items to fetch for client-side paging
+//   const CLIENT_PAGINATION_THRESHOLD = 200;
 //   const [totalPages, setTotalPages] = useState<number>(1);
+
 //   const heroMediaRef = useScrollAnimation<HTMLDivElement>({
 //     animationClass: 'animate-fade-in-right',
 //     initialTransform: 'translateX(40px)',
 //     threshold: 0.12,
 //     once: false,
 //   });
+
 //   const heroContentRef = useScrollAnimation<HTMLDivElement>({
 //     animationClass: 'animate-fade-in-left',
 //     initialTransform: 'translateX(-40px)',
@@ -249,13 +205,10 @@
 //     once: false,
 //   });
 
-//   const blogCards = blogs;
-//   const filteredCards = blogCards.filter((blog) => {
+//   const filteredCards = blogs.filter((blog) => {
 //     const searchValue = searchTerm.trim().toLowerCase();
 
-//     if (!searchValue) {
-//       return true;
-//     }
+//     if (!searchValue) return true;
 
 //     return [blog.title, getBlogCategory(blog), getBlogAuthor(blog), getBlogDescription(blog)]
 //       .join(' ')
@@ -271,23 +224,19 @@
 //       setError(null);
 
 //       try {
-//         // First request page=1 to get meta.total quickly
 //         const firstResp = await fetchWebsiteBlogs(1, Math.max(10, limit), searchTerm);
 
 //         if (!isMounted) return;
 
 //         const total = firstResp.data?.meta?.total ?? firstResp.data?.data?.length ?? 0;
 
-//         // If total is small, fetch all items and use client-side pagination with 9-on-first-page rule
 //         if (total > 0 && total <= CLIENT_PAGINATION_THRESHOLD) {
 //           const allResp = await fetchWebsiteBlogs(1, total, searchTerm);
 //           const allItems = allResp.data?.data ?? [];
 
-//           // compute total pages for 9 on first page, 10 thereafter
 //           const pages = total <= 9 ? 1 : 1 + Math.ceil((total - 9) / 10);
 //           setTotalPages(pages);
 
-//           // set blogs for current page from the allItems
 //           const pageItems = (() => {
 //             if (page === 1) return allItems.slice(0, 9);
 //             const start = 9 + (page - 2) * 10;
@@ -296,10 +245,11 @@
 
 //           setBlogs(pageItems);
 //         } else {
-//           // fallback to server pagination
 //           const resp = await fetchWebsiteBlogs(page, limit, searchTerm);
 //           const items = resp.data?.data ?? [];
+
 //           setBlogs(items);
+
 //           const meta = resp.data?.meta;
 //           setTotalPages(
 //             meta?.totalPages ?? Math.max(1, Math.ceil((meta?.total ?? items.length) / limit)),
@@ -327,13 +277,6 @@
 
 //   return (
 //     <>
-//       {/* HERO SECTION */}
-
-//       {/* <br />
-//       <br /> */}
-//       {/* <br />
-//       <br /> */}
-
 //       <section className="blog-hero">
 //         <div className="blog-hero-media" ref={heroMediaRef}>
 //           <Image
@@ -371,7 +314,10 @@
 //               type="text"
 //               placeholder="Search blog here"
 //               value={searchTerm}
-//               onChange={(event) => setSearchTerm(event.target.value)}
+//               onChange={(event) => {
+//                 setSearchTerm(event.target.value);
+//                 setPage(1);
+//               }}
 //             />
 
 //             <button type="submit" aria-label="Search blog">
@@ -447,7 +393,6 @@ import Link from 'next/link';
 import { ArrowUpRight, ChevronRight, ChevronLeft, Heart, MessageCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import BlogCommentsPanel from '@/components/BlogCommentsPanel';
 import {
   fetchWebsiteBlogs,
   submitWebsiteBlogLike,
@@ -487,7 +432,6 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
 
   const [localLikes, setLocalLikes] = useState<number>(likesCount);
   const [liked, setLiked] = useState<boolean>(false);
-  const [showComments, setShowComments] = useState(false);
 
   const LIKED_KEY = 'likedBlogs';
 
@@ -530,6 +474,7 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
     return readLikedSet().has(String(id));
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setLiked(isBlogLiked(blog.id));
     setLocalLikes(likesCount);
@@ -554,18 +499,11 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
     try {
       await submitWebsiteBlogLike(blog.id);
       markBlogLiked(blog.id);
-    } catch (error) {
-      // console.error('Like failed:', error);
+    } catch {
       setLiked(false);
       setLocalLikes((n) => Math.max(0, n - 1));
       removeBlogLiked(blog.id);
     }
-  }
-
-  function handleCommentToggle(e: React.MouseEvent) {
-    e.stopPropagation();
-    e.preventDefault();
-    setShowComments((current) => !current);
   }
 
   const initialTransform = variant.includes('left')
@@ -599,7 +537,7 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
           <span className="blogpage-category">{getBlogCategory(blog)}</span>
         </div>
 
-        <h4 className="blogpage-heading">{blog.title}</h4>
+        <h4 className="blogpage-heading blogpage-heading-fixed">{blog.title}</h4>
 
         <div className="blogpage-footer">
           <Link href={`/blog/${blog.slug}`} className="blogpage-readmore">
@@ -620,19 +558,12 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
               <span>{localLikes}</span>
             </button>
 
-            <button
-              type="button"
-              className="blogpage-engagement-item"
-              aria-label={`${commentsCount} comments`}
-              onClick={handleCommentToggle}
-            >
+            <span className="blogpage-engagement-item" aria-label={`${commentsCount} comments`}>
               <MessageCircle size={14} />
               <span>{commentsCount}</span>
-            </button>
+            </span>
           </span>
         </div>
-
-        {showComments && blog.id ? <BlogCommentsPanel blogId={String(blog.id)} /> : null}
       </div>
     </article>
   );
@@ -749,7 +680,7 @@ export default function BlogPage() {
         <div className="blog-hero-overlay"></div>
 
         <div className="blog-hero-content" ref={heroContentRef}>
-          <h1>Read Blog</h1>
+          <h1>Explore Insights</h1>
 
           <div className="blog-breadcrumb">
             <Link href="/" className="blog-breadcrumb-home">
