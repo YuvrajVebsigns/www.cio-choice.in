@@ -5,7 +5,6 @@
 // import { ArrowUpRight, ChevronRight, ChevronLeft, Heart, MessageCircle } from 'lucide-react';
 // import { useEffect, useState } from 'react';
 // import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-// import BlogCommentsPanel from '@/components/BlogCommentsPanel';
 // import {
 //   fetchWebsiteBlogs,
 //   submitWebsiteBlogLike,
@@ -45,7 +44,6 @@
 
 //   const [localLikes, setLocalLikes] = useState<number>(likesCount);
 //   const [liked, setLiked] = useState<boolean>(false);
-//   const [showComments, setShowComments] = useState(false);
 
 //   const LIKED_KEY = 'likedBlogs';
 
@@ -112,18 +110,11 @@
 //     try {
 //       await submitWebsiteBlogLike(blog.id);
 //       markBlogLiked(blog.id);
-//     } catch (error) {
-//       // console.error('Like failed:', error);
+//     } catch {
 //       setLiked(false);
 //       setLocalLikes((n) => Math.max(0, n - 1));
 //       removeBlogLiked(blog.id);
 //     }
-//   }
-
-//   function handleCommentToggle(e: React.MouseEvent) {
-//     e.stopPropagation();
-//     e.preventDefault();
-//     setShowComments((current) => !current);
 //   }
 
 //   const initialTransform = variant.includes('left')
@@ -178,19 +169,12 @@
 //               <span>{localLikes}</span>
 //             </button>
 
-//             <button
-//               type="button"
-//               className="blogpage-engagement-item"
-//               aria-label={`${commentsCount} comments`}
-//               onClick={handleCommentToggle}
-//             >
+//             <span className="blogpage-engagement-item" aria-label={`${commentsCount} comments`}>
 //               <MessageCircle size={14} />
 //               <span>{commentsCount}</span>
-//             </button>
+//             </span>
 //           </span>
 //         </div>
-
-//         {showComments && blog.id ? <BlogCommentsPanel blogId={String(blog.id)} /> : null}
 //       </div>
 //     </article>
 //   );
@@ -552,7 +536,7 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
           <span className="blogpage-category">{getBlogCategory(blog)}</span>
         </div>
 
-        <h4 className="blogpage-heading">{blog.title}</h4>
+        <h4 className="blogpage-heading blogpage-heading-fixed">{blog.title}</h4>
 
         <div className="blogpage-footer">
           <Link href={`/blog/${blog.slug}`} className="blogpage-readmore">

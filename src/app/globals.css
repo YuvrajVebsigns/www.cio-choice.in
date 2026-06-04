@@ -1423,7 +1423,7 @@ main {
 @media (max-width: 992px) {
   .hero-section {
     width: 94%;
-    margin-top: 50px;
+    margin-top: 10px;
   }
 
   .hero-wrapper {
@@ -1435,6 +1435,7 @@ main {
   .hero-content {
     padding: 35px 30px 25px;
     border-radius: 16px;
+    margin-top: -50px;
   }
 
   .hero-content::before {
@@ -1467,6 +1468,7 @@ main {
     border-radius: 14px;
     text-align: left;
     gap: 30px;
+    margin-top: -50px;
   }
 
   .hero-content::before {
@@ -1537,11 +1539,13 @@ main {
   .hero-section {
     width: calc(100% - 32px);
     margin: 20px auto 0;
+    margin-top: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .hero-section {
+    margin-top: 10px;
     width: calc(100% - 24px);
     margin-top: 30px;
     border-radius: 10px;
@@ -1558,6 +1562,7 @@ main {
   .hero-content {
     padding: 20px 14px 18px;
     border-radius: 12px;
+    margin-top: -50px;
   }
 
   .hero-content::before {
@@ -1570,7 +1575,7 @@ main {
   .hero-badge {
     padding: 6px 10px;
     margin-bottom: 12px;
-    margin-top: 40px;
+    margin-top: 10px;
   }
 
   .hero-badge-text {
@@ -2980,6 +2985,70 @@ main {
   color: #54616a;
   font-size: 14px;
 }
+
+.blog-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.blog-comments-side-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 110px;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .blog-detail-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .blog-comments-side-card {
+    position: static;
+    width: 100%;
+    margin: 0;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .blog-detail-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .blogpage-content {
+    width: 100%;
+  }
+
+  .blog-comments-side-card {
+    width: 100%;
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .blog-comments-side-card h3 {
+    font-size: 20px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .blog-comments-side-card {
+    padding: 16px;
+  }
+
+  .blog-comments-side-card h3 {
+    font-size: 18px;
+  }
+}
 @media (max-width: 768px) {
   .blogpage-body {
     padding-left: 10px;
@@ -4078,23 +4147,6 @@ main {
 }
 
 /* =========================================================
-   RIGHT SIDE
-========================================================= */
-
-.contact-form-area {
-  background: #810b0b;
-
-  padding: 70px 60px;
-  border-radius: 24px;
-
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* =========================================================
    BADGE
 ========================================================= */
 
@@ -4134,6 +4186,20 @@ main {
 }
 
 /* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.contact-form-area {
+  background: #810b0b;
+  padding: 70px 60px;
+  border-radius: 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* =========================================================
    FORM
 ========================================================= */
 
@@ -4145,58 +4211,75 @@ main {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 22px;
-
   margin-bottom: 22px;
 }
 
-/* INPUTS */
+/* =========================================================
+   INPUTS
+========================================================= */
 
 .contact-grid input,
 .contact-grid select,
 .contact-form textarea {
   width: 100%;
-
   background: #f2ecec;
-
   border: none;
   outline: none;
-
   border-radius: 12px;
-
-  padding: 18px 18px;
-
+  padding: 18px;
   font-size: 16px;
   color: #222;
-
   transition: all 0.3s ease;
+}
+
+/* SELECT - arrow fixed, moved little left */
+.contact-grid select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  padding-right: 58px;
+
+  background-color: #f2ecec;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23222' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 24px center;
+  background-size: 14px;
 }
 
 .contact-grid input:focus,
 .contact-grid select:focus,
 .contact-form textarea:focus {
-  background: white;
+  background-color: white;
 }
 
-/* TEXTAREA */
+.contact-grid select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23222' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
 
 .contact-form textarea {
   resize: none;
   margin-bottom: 24px;
 }
 
+/* =========================================================
+   POPUP
+========================================================= */
+
 .contact-popup {
   position: absolute;
   top: 24px;
   right: 24px;
   z-index: 20;
-
   display: flex;
   align-items: center;
   gap: 12px;
-
   max-width: 320px;
   padding: 14px 16px;
-
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.98);
   color: #7a0d0d;
@@ -4235,26 +4318,17 @@ main {
 
 .contact-btn {
   height: 70px;
-
   padding: 0 28px;
-
   border: none;
-
   background: #bb1a1a;
-
   color: white;
-
   display: inline-flex;
   align-items: center;
   gap: 20px;
-
   font-size: 18px;
   font-weight: 700;
-
   cursor: pointer;
-
   border-radius: 12px;
-
   transition: all 0.3s ease;
 }
 
@@ -4272,16 +4346,12 @@ main {
 .contact-btn-icon {
   width: 44px;
   height: 44px;
-
   border-radius: 50%;
   color: #b40000;
-
   background: white;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   transition: transform 0.3s ease;
 }
 
@@ -4495,6 +4565,9 @@ main {
 
 .blog-content {
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .blog-meta {
@@ -4506,12 +4579,12 @@ main {
 }
 
 .blog-category {
-  padding: 5px 12px;
+  padding: 4px 10px;
   border: 1px solid #cfc6c6;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 12px;
   color: #211d1d;
-  font-weight: 500;
+  font-weight: 550;
   transition: all 0.3s ease;
 }
 
@@ -4540,6 +4613,19 @@ main {
   font-style: normal;
   margin-bottom: 25px;
   transition: color 0.3s ease;
+  -webkit-line-clamp: 4; /* Maximum 4 lines */
+  min-height: calc(1.3em * 2); /* Reserve space for 4 lines */
+}
+
+.blog-heading-fixed {
+  line-height: 1.3;
+  min-height: calc(1.3em * 2);
+  margin-bottom: 24px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .blog-heading::after {
@@ -5000,14 +5086,30 @@ main {
 }
 
 .blogpage-heading {
-  position: relative; /* Required */
-  display: inline-block; /* Underline matches text width */
+  position: relative;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Maximum 4 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 
   margin: 0 0 24px;
   font-size: 22px;
   line-height: 1.3;
   font-weight: 500;
   color: #231f20;
+
+  min-height: calc(1.3em * 3); /* Reserve space for 4 lines */
+}
+
+.blogpage-heading-fixed {
+  line-height: 1.5;
+  min-height: calc(1.5em * 3); /* reserve space for 4 lines */
+  margin-bottom: 16px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .blogpage-heading::after {
@@ -5788,6 +5890,7 @@ main {
     padding: 0 18px;
     text-align: left;
     align-items: flex-start;
+    margin-top: -50px;
   }
 
   .blog-hero-content h1 {
