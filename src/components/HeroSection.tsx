@@ -24,7 +24,13 @@ export default function HeroSection() {
 
           <div className="hero-bottom">
             <div className="hero-arrow">
-              <img src="/assets/home/arrow.png" alt="Arrow" className="hero-arrow-img" />
+              <Image
+                src="/assets/home/arrow.png"
+                alt="Arrow"
+                width={40}
+                height={40}
+                className="hero-arrow-img"
+              />
             </div>
 
             <p className="hero-description">

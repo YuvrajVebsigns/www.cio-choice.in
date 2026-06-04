@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import useScrollAnimation from '@/hooks/useScrollAnimation';
@@ -90,22 +90,28 @@ export default function Brands() {
     scrollToPage(activePage + 1);
   };
 
-  const getPageCount = () => Math.ceil(testimonials.length / cardsPerPage);
+  const getPageCount = useCallback(
+    () => Math.ceil(testimonials.length / cardsPerPage),
+    [testimonials.length],
+  );
 
-  const scrollToPage = (pageIndex: number) => {
-    const el = sliderRef.current;
-    if (!el) return;
+  const scrollToPage = useCallback(
+    (pageIndex: number) => {
+      const el = sliderRef.current;
+      if (!el) return;
 
-    const maxPage = getPageCount() - 1;
-    const nextPage = Math.max(0, Math.min(pageIndex, maxPage));
-    const targetIndex = nextPage * cardsPerPage;
-    const child = el.children[targetIndex] as HTMLElement;
+      const maxPage = getPageCount() - 1;
+      const nextPage = Math.max(0, Math.min(pageIndex, maxPage));
+      const targetIndex = nextPage * cardsPerPage;
+      const child = el.children[targetIndex] as HTMLElement;
 
-    if (!child) return;
+      if (!child) return;
 
-    el.scrollTo({ left: child.offsetLeft, behavior: 'smooth' });
-    setActivePage(nextPage);
-  };
+      el.scrollTo({ left: child.offsetLeft, behavior: 'smooth' });
+      setActivePage(nextPage);
+    },
+    [getPageCount],
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -122,7 +128,7 @@ export default function Brands() {
     }, 4500);
 
     return () => clearInterval(interval);
-  }, [activePage]);
+  }, [activePage, getPageCount, scrollToPage]);
 
   useEffect(() => {
     const el = sliderRef.current;
@@ -155,7 +161,7 @@ export default function Brands() {
     onScroll();
 
     return () => el.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [getPageCount]);
 
   const scrollToIndex = (idx: number) => {
     const el = sliderRef.current;

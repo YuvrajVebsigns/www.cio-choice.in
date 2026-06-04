@@ -1,6 +1,7 @@
 'use client';
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import Image from 'next/image';
 
 export default function ExpertiseSection() {
   const sectionRef = useScrollAnimation<HTMLDivElement>({
@@ -74,15 +75,19 @@ export default function ExpertiseSection() {
             <div key={index} ref={cardRefs[index]} className="expertise-card">
               <br />
               <div className="expertise-image-wrapper">
-                <img
+                <Image
                   src={feature.image}
                   alt={feature.title}
+                  width={200}
+                  height={200}
                   className={`expertise-image default-image ${index === 0 ? 'expertise-image--small' : ''}`}
                 />
 
-                <img
+                <Image
                   src={feature.hoverImage}
                   alt={feature.title}
+                  width={200}
+                  height={200}
                   className={`expertise-image hover-image ${index === 0 ? 'expertise-image--small' : ''}`}
                 />
               </div>

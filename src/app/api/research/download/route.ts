@@ -1,12 +1,12 @@
 import fs from 'fs';
-import path from 'path';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
+  const cwd = process.cwd();
   const candidates = [
-    path.join(process.cwd(), 'public', 'download-report.pdf'),
-    path.join(process.cwd(), 'public', 'assets', 'Survey', 'download-report.pdf'),
-    path.join(process.cwd(), 'reports', 'download-report.pdf'),
+    `${cwd}/public/download-report.pdf`,
+    `${cwd}/public/assets/Survey/download-report.pdf`,
+    `${cwd}/reports/download-report.pdf`,
   ];
 
   for (const p of candidates) {
