@@ -1,15 +1,15 @@
 import HeroSection from '@/components/HeroSection';
 import FoundersMessage from '@/components/FoundersMessage';
 import ExpertiseSection from '@/components/ExpertiseSection';
-import TeamSection from '@/components/TeamSection';
-import KeyClient from '@/components/KeyClient';
+// import TeamSection from '@/components/TeamSection';
+// import KeyClient from '@/components/KeyClient';
 import ProjectsSection from '@/components/ProjectsSection';
-import ResearchSection from '@/components/ResearchSection';
-import Brands from '@/components/Brands';
-import FAQSection from '@/components/FAQSection';
+// import ResearchSection from '@/components/ResearchSection';
+// import Brands from '@/components/Brands';
+// import FAQSection from '@/components/FAQSection';
 import ContactSection from '@/components/ContactSection';
 import BlogsSection from '@/components/BlogsSection';
-import DialoguesSection from '@/components/DialoguesSection';
+// import DialoguesSection from '@/components/DialoguesSection';
 
 export default function Home() {
   return (
@@ -18,15 +18,16 @@ export default function Home() {
       <HeroSection />
       <FoundersMessage />
       <ExpertiseSection />
-      <TeamSection />
-      <KeyClient />
+      {/* <TeamSection />
+      <KeyClient /> */}
       <ProjectsSection />
-      <ResearchSection />
-      <Brands />
-      <FAQSection />
-      <ContactSection />
+      {/* <ResearchSection /> */}
+      {/* <Brands />
+      <FAQSection /> */}
       <BlogsSection />
-      <DialoguesSection />
+      <ContactSection />
+
+      {/* <DialoguesSection /> */}
       {/* </div> */}
     </main>
   );

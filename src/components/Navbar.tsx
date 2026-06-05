@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, ChevronDown, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronLeft, ArrowUpRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -11,44 +11,54 @@ export default function Navbar() {
 
   const [isHidden, setIsHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
+  const [advisoryOpen, setAdvisoryOpen] = useState(false);
+  const [redCarpetOpen, setRedCarpetOpen] = useState(false);
+  const [mediaOpen, setMediaOpen] = useState(false);
+  const [coverageHovered, setCoverageHovered] = useState(false);
+  const [winnerHovered, setWinnerHovered] = useState(false);
 
   const lastScrollY = useRef(0);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const servicesCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dropdownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const isServicesPage =
-    pathname === '/survey-study' ||
-    pathname === '/videos' ||
-    pathname === '/bespoke-events' ||
-    pathname === '/social-media' ||
-    pathname === '/events' ||
-    pathname === '/dialoges';
+  const advisoryYears = [
+    2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
+  ];
+  const redCarpetYears = [
+    2027, 2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
+  ];
+  const mediaYears = [2019, 2017];
 
-  const openServices = () => {
-    if (servicesCloseTimer.current) {
-      clearTimeout(servicesCloseTimer.current);
-      servicesCloseTimer.current = null;
-    }
-
-    setServicesOpen(true);
-  };
-
-  const closeServices = () => {
-    if (servicesCloseTimer.current) {
-      clearTimeout(servicesCloseTimer.current);
-    }
-
-    servicesCloseTimer.current = setTimeout(() => {
-      setServicesOpen(false);
-      servicesCloseTimer.current = null;
-    }, 140);
+  const resetMediaMenu = () => {
+    setCoverageHovered(false);
+    setWinnerHovered(false);
   };
 
   const closeMobileMenu = () => {
     setMobileOpen(false);
-    setServicesOpen(false);
+    setAdvisoryOpen(false);
+    setRedCarpetOpen(false);
+    setMediaOpen(false);
+    resetMediaMenu();
     setIsHidden(false);
+  };
+
+  const openDropdown = (type: 'advisory' | 'redCarpet' | 'media') => {
+    if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
+    setAdvisoryOpen(type === 'advisory');
+    setRedCarpetOpen(type === 'redCarpet');
+    setMediaOpen(type === 'media');
+    if (type !== 'media') resetMediaMenu();
+  };
+
+  const closeDropdowns = () => {
+    if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
+    dropdownTimer.current = setTimeout(() => {
+      setAdvisoryOpen(false);
+      setRedCarpetOpen(false);
+      setMediaOpen(false);
+      resetMediaMenu();
+    }, 140);
   };
 
   useEffect(() => {
@@ -59,20 +69,11 @@ export default function Navbar() {
       const diff = currentScrollY - lastScrollY.current;
 
       if (Math.abs(diff) < 8) return;
-
-      if (hideTimer.current) {
-        clearTimeout(hideTimer.current);
-        hideTimer.current = null;
-      }
-
-      if (diff < 0) {
-        setIsHidden(false);
-      }
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+      if (diff < 0) setIsHidden(false);
 
       if (diff > 0 && currentScrollY > 140 && !mobileOpen) {
-        hideTimer.current = setTimeout(() => {
-          setIsHidden(true);
-        }, 180);
+        hideTimer.current = setTimeout(() => setIsHidden(true), 180);
       }
 
       lastScrollY.current = currentScrollY;
@@ -82,14 +83,8 @@ export default function Navbar() {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-
-      if (hideTimer.current) {
-        clearTimeout(hideTimer.current);
-      }
-
-      if (servicesCloseTimer.current) {
-        clearTimeout(servicesCloseTimer.current);
-      }
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+      if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
     };
   }, [mobileOpen]);
 
@@ -112,96 +107,199 @@ export default function Navbar() {
           </Link>
 
           <div
-            className={`nav-dropdown ${servicesOpen ? 'open' : ''}`}
-            onMouseEnter={openServices}
-            onMouseLeave={closeServices}
+            className={`nav-dropdown ${advisoryOpen ? 'open' : ''}`}
+            onMouseEnter={() => openDropdown('advisory')}
+            onMouseLeave={closeDropdowns}
           >
             <button
               type="button"
-              className={`nav-link ${isServicesPage ? 'active' : ''}`}
-              aria-expanded={servicesOpen}
-              onClick={() => setServicesOpen((s) => !s)}
+              className={`nav-link ${pathname?.startsWith('/advisory-panel') ? 'active' : ''}`}
+              onClick={() => setAdvisoryOpen((s) => !s)}
             >
-              Services
+              Advisory Panel
               <ChevronDown
                 size={16}
                 style={{
-                  transform: servicesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transform: advisoryOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: '0.3s ease',
                 }}
               />
             </button>
 
-            <div className="mega-panel" onMouseEnter={openServices} onMouseLeave={closeServices}>
-              <div className="mega-column">
-                <ul>
-                  <li>
-                    <Link href="/survey-study" className="mega-item" onClick={closeMobileMenu}>
-                      <span className="mega-icon" aria-hidden />
-                      <span>Survey / Study</span>
+            <div className="mega-panel nav-year-dropdown">
+              <ul>
+                {advisoryYears.map((year) => (
+                  <li key={year}>
+                    <Link
+                      href={`/advisory-panel-${year}`}
+                      className="mega-item"
+                      onClick={closeMobileMenu}
+                    >
+                      Advisory Panel {year}
                     </Link>
                   </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
-                  <li>
-                    <Link href="/video" className="mega-item" onClick={closeMobileMenu}>
-                      <span className="mega-icon" aria-hidden />
-                      <span>Videos</span>
-                    </Link>
-                  </li>
+          {/* <Link href="/process" className={`nav-link ${pathname === '/process' ? 'active' : ''}`} onClick={closeMobileMenu}>
+            Process
+          </Link> */}
 
-                  <li>
-                    <Link href="/bespoke-events" className="mega-item" onClick={closeMobileMenu}>
-                      <span className="mega-icon" aria-hidden />
-                      <span>Bespoke Events</span>
-                    </Link>
-                  </li>
+          <div
+            className={`nav-dropdown ${redCarpetOpen ? 'open' : ''}`}
+            onMouseEnter={() => openDropdown('redCarpet')}
+            onMouseLeave={closeDropdowns}
+          >
+            <button
+              type="button"
+              className={`nav-link ${pathname?.startsWith('/red-carpet-night') ? 'active' : ''}`}
+              onClick={() => setRedCarpetOpen((s) => !s)}
+            >
+              Red Carpet Night
+              <ChevronDown
+                size={16}
+                style={{
+                  transform: redCarpetOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: '0.3s ease',
+                }}
+              />
+            </button>
 
-                  <li>
-                    <Link href="/social-media" className="mega-item" onClick={closeMobileMenu}>
-                      <span className="mega-icon" aria-hidden />
-                      <span>Social Media</span>
+            <div className="mega-panel nav-year-dropdown">
+              <ul>
+                {redCarpetYears.map((year) => (
+                  <li key={year}>
+                    <Link
+                      href={`/red-carpet-night/red-carpet-night-${year}`}
+                      className="mega-item"
+                      onClick={closeMobileMenu}
+                    >
+                      Red Carpet Night {year}
                     </Link>
                   </li>
-                </ul>
-              </div>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <Link href="/recognized-brands" className="nav-link" onClick={closeMobileMenu}>
+            Recognized Brands
+          </Link>
+
+          <Link href="/blog" className="nav-link" onClick={closeMobileMenu}>
+            Blogs
+          </Link>
+
+          <Link href="/events" className="nav-link" onClick={closeMobileMenu}>
+            Events
+          </Link>
+
+          <Link href="/gallery" className="nav-link" onClick={closeMobileMenu}>
+            Gallery
+          </Link>
+
+          <div
+            className={`nav-dropdown media-nav-dropdown ${mediaOpen ? 'open' : ''}`}
+            onMouseEnter={() => openDropdown('media')}
+            onMouseLeave={closeDropdowns}
+          >
+            <button
+              type="button"
+              className={`nav-link ${pathname?.startsWith('/media') ? 'active' : ''}`}
+              onClick={() => {
+                setMediaOpen((s) => !s);
+                if (mediaOpen) resetMediaMenu();
+              }}
+            >
+              Media
+              <ChevronDown
+                size={16}
+                style={{
+                  transform: mediaOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: '0.3s ease',
+                }}
+              />
+            </button>
+
+            <div className="mega-panel nav-year-dropdown media-mega-panel">
+              <ul className="media-main-list">
+                <li
+                  className="media-menu-item has-flyout-left"
+                  onMouseEnter={() => setCoverageHovered(true)}
+                  onMouseLeave={() => setCoverageHovered(false)}
+                >
+                  <span
+                    className="mega-item media-menu-label"
+                    onClick={() => setCoverageHovered((s) => !s)}
+                    onKeyDown={(e) => e.key === 'Enter' && setCoverageHovered((s) => !s)}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <ChevronLeft size={14} />
+                    Media Coverage
+                  </span>
+                  <div
+                    className={`media-flyout media-flyout-left ${coverageHovered ? 'visible' : ''}`}
+                  >
+                    <ul>
+                      {mediaYears.map((year) => (
+                        <li key={year}>
+                          <Link
+                            href={`/media/media-coverage/${year}-media-coverage`}
+                            className="mega-item"
+                            onClick={closeMobileMenu}
+                          >
+                            Media Coverage {year}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+                <li
+                  className="media-menu-item has-flyout-left"
+                  onMouseEnter={() => setWinnerHovered(true)}
+                  onMouseLeave={() => setWinnerHovered(false)}
+                >
+                  <span
+                    className="mega-item media-menu-label"
+                    onClick={() => setWinnerHovered((s) => !s)}
+                    onKeyDown={(e) => e.key === 'Enter' && setWinnerHovered((s) => !s)}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <ChevronLeft size={14} />
+                    Winning Brand Videos
+                  </span>
+                  <div
+                    className={`media-flyout media-flyout-left ${winnerHovered ? 'visible' : ''}`}
+                  >
+                    <ul>
+                      {mediaYears.map((year) => (
+                        <li key={year}>
+                          <Link
+                            href={`/media/winning-brand-videos/${year}`}
+                            className="mega-item"
+                            onClick={closeMobileMenu}
+                          >
+                            {year}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
 
           <Link
-            href="/blog"
-            className={`nav-link ${pathname === '/blog' ? 'active' : ''}`}
+            href="/contact"
+            className={`nav-link ${pathname === '/contact' ? 'active' : ''}`}
             onClick={closeMobileMenu}
           >
-            Blog
-          </Link>
-
-          <Link
-            href="/events"
-            className={`nav-link ${pathname === '/events' ? 'active' : ''}`}
-            onClick={closeMobileMenu}
-          >
-            Event
-          </Link>
-          <Link
-            href="/videos"
-            className={`nav-link ${pathname === '/videos' ? 'active' : ''}`}
-            onClick={closeMobileMenu}
-          >
-            Video
-          </Link>
-
-          <Link
-            href="/register"
-            className={`nav-link ${pathname === '/register' ? 'active' : ''}`}
-            onClick={closeMobileMenu}
-          >
-            Registration
-          </Link>
-          <Link href="/nominate" className="nav-link" onClick={() => setMobileOpen(false)}>
-            Nomination
-          </Link>
-
-          <Link href="/contact" className="nav-link" onClick={closeMobileMenu}>
             Contact
           </Link>
         </nav>
@@ -209,7 +307,6 @@ export default function Navbar() {
         <div className="navbar-actions">
           <Link href="/#contact-section" className="talk-btn" onClick={closeMobileMenu}>
             <span>Let’s Talk</span>
-
             <div className="talk-btn-icon">
               <ArrowUpRight size={18} />
             </div>
@@ -224,7 +321,7 @@ export default function Navbar() {
               setIsHidden(false);
             }}
           >
-            {mobileOpen ? <X size={22} strokeWidth={2} /> : <Menu size={22} strokeWidth={2} />}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
