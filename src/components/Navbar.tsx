@@ -13,8 +13,11 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [advisoryOpen, setAdvisoryOpen] = useState(false);
   const [redCarpetOpen, setRedCarpetOpen] = useState(false);
+  const [recognizedOpen, setRecognizedOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
+  const [processOpen, setProcessOpen] = useState(false);
   const [coverageHovered, setCoverageHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [winnerHovered, setWinnerHovered] = useState(false);
 
   const lastScrollY = useRef(0);
@@ -25,9 +28,12 @@ export default function Navbar() {
     2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
   ];
   const redCarpetYears = [
-    2027, 2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
+    2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
   ];
   const mediaYears = [2019, 2017];
+  const recognizedBrandYears = [
+    2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
+  ];
 
   const resetMediaMenu = () => {
     setCoverageHovered(false);
@@ -35,19 +41,25 @@ export default function Navbar() {
   };
 
   const closeMobileMenu = () => {
+    if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
     setMobileOpen(false);
     setAdvisoryOpen(false);
     setRedCarpetOpen(false);
+    setRecognizedOpen(false);
     setMediaOpen(false);
+    setProcessOpen(false);
     resetMediaMenu();
     setIsHidden(false);
   };
 
-  const openDropdown = (type: 'advisory' | 'redCarpet' | 'media') => {
+  const openDropdown = (type: 'advisory' | 'redCarpet' | 'recognized' | 'media' | 'process') => {
     if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
     setAdvisoryOpen(type === 'advisory');
     setRedCarpetOpen(type === 'redCarpet');
+    setRecognizedOpen(type === 'recognized');
     setMediaOpen(type === 'media');
+    setProcessOpen(type === 'process');
     if (type !== 'media') resetMediaMenu();
   };
 
@@ -56,10 +68,19 @@ export default function Navbar() {
     dropdownTimer.current = setTimeout(() => {
       setAdvisoryOpen(false);
       setRedCarpetOpen(false);
+      setRecognizedOpen(false);
       setMediaOpen(false);
+      setProcessOpen(false);
       resetMediaMenu();
     }, 140);
   };
+
+  useEffect(() => {
+    const updateIsMobile = () => setIsMobile(window.innerWidth <= 992);
+    updateIsMobile();
+    window.addEventListener('resize', updateIsMobile);
+    return () => window.removeEventListener('resize', updateIsMobile);
+  }, []);
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
@@ -107,14 +128,20 @@ export default function Navbar() {
           </Link>
 
           <div
-            className={`nav-dropdown ${advisoryOpen ? 'open' : ''}`}
-            onMouseEnter={() => openDropdown('advisory')}
-            onMouseLeave={closeDropdowns}
+            className={`nav-dropdown advisory-dropdown ${advisoryOpen ? 'open' : ''}`}
+            onMouseEnter={() => !isMobile && openDropdown('advisory')}
+            onMouseLeave={() => !isMobile && closeDropdowns()}
           >
             <button
               type="button"
               className={`nav-link ${pathname?.startsWith('/advisory-panel') ? 'active' : ''}`}
-              onClick={() => setAdvisoryOpen((s) => !s)}
+              aria-expanded={advisoryOpen}
+              onClick={() => {
+                setAdvisoryOpen((s) => !s);
+                setRedCarpetOpen(false);
+                setRecognizedOpen(false);
+                setMediaOpen(false);
+              }}
             >
               Advisory Panel
               <ChevronDown
@@ -131,7 +158,7 @@ export default function Navbar() {
                 {advisoryYears.map((year) => (
                   <li key={year}>
                     <Link
-                      href={`/advisory-panel-${year}`}
+                      href={`/advisory-panel/${year}`}
                       className="mega-item"
                       onClick={closeMobileMenu}
                     >
@@ -143,19 +170,21 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* <Link href="/process" className={`nav-link ${pathname === '/process' ? 'active' : ''}`} onClick={closeMobileMenu}>
-            Process
-          </Link> */}
-
           <div
             className={`nav-dropdown ${redCarpetOpen ? 'open' : ''}`}
-            onMouseEnter={() => openDropdown('redCarpet')}
-            onMouseLeave={closeDropdowns}
+            onMouseEnter={() => !isMobile && openDropdown('redCarpet')}
+            onMouseLeave={() => !isMobile && closeDropdowns()}
           >
             <button
               type="button"
               className={`nav-link ${pathname?.startsWith('/red-carpet-night') ? 'active' : ''}`}
-              onClick={() => setRedCarpetOpen((s) => !s)}
+              aria-expanded={redCarpetOpen}
+              onClick={() => {
+                setRedCarpetOpen((s) => !s);
+                setAdvisoryOpen(false);
+                setRecognizedOpen(false);
+                setMediaOpen(false);
+              }}
             >
               Red Carpet Night
               <ChevronDown
@@ -184,9 +213,92 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link href="/recognized-brands" className="nav-link" onClick={closeMobileMenu}>
-            Recognized Brands
-          </Link>
+          <div
+            className={`nav-dropdown ${recognizedOpen ? 'open' : ''}`}
+            onMouseEnter={() => !isMobile && openDropdown('recognized')}
+            onMouseLeave={() => !isMobile && closeDropdowns()}
+          >
+            <button
+              type="button"
+              className={`nav-link ${pathname?.startsWith('/recognized-brands') ? 'active' : ''}`}
+              aria-expanded={recognizedOpen}
+              onClick={() => {
+                setRecognizedOpen((s) => !s);
+                setAdvisoryOpen(false);
+                setRedCarpetOpen(false);
+                setMediaOpen(false);
+                setProcessOpen(false);
+              }}
+            >
+              Recognized Brands
+              <ChevronDown
+                size={16}
+                style={{
+                  transform: recognizedOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: '0.3s ease',
+                }}
+              />
+            </button>
+
+            <div className="mega-panel nav-year-dropdown">
+              <ul>
+                {recognizedBrandYears.map((year) => (
+                  <li key={year}>
+                    <Link
+                      href={`/recognized-brands/${year}`}
+                      className="mega-item"
+                      onClick={closeMobileMenu}
+                    >
+                      Recognized Brands {year}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div
+            className={`nav-dropdown ${processOpen ? 'open' : ''}`}
+            onMouseEnter={() => !isMobile && openDropdown('process')}
+            onMouseLeave={() => !isMobile && closeDropdowns()}
+          >
+            <button
+              type="button"
+              className={`nav-link ${pathname === '/process' || pathname === '/enter' ? 'active' : ''}`}
+              aria-expanded={processOpen}
+              onClick={() => {
+                setProcessOpen((s) => !s);
+                setAdvisoryOpen(false);
+                setRedCarpetOpen(false);
+                setRecognizedOpen(false);
+                setMediaOpen(false);
+              }}
+            >
+              Process
+              <ChevronDown
+                size={16}
+                style={{
+                  transform: processOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: '0.3s ease',
+                }}
+              />
+            </button>
+
+            <div className="mega-panel nav-year-dropdown">
+              <ul>
+                <li>
+                  <Link href="/process-flow" className="mega-item" onClick={closeMobileMenu}>
+                    Process and Flow
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/enter" className="mega-item" onClick={closeMobileMenu}>
+                    Enter
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
 
           <Link href="/blog" className="nav-link" onClick={closeMobileMenu}>
             Blogs
@@ -202,14 +314,18 @@ export default function Navbar() {
 
           <div
             className={`nav-dropdown media-nav-dropdown ${mediaOpen ? 'open' : ''}`}
-            onMouseEnter={() => openDropdown('media')}
-            onMouseLeave={closeDropdowns}
+            onMouseEnter={() => !isMobile && openDropdown('media')}
+            onMouseLeave={() => !isMobile && closeDropdowns()}
           >
             <button
               type="button"
               className={`nav-link ${pathname?.startsWith('/media') ? 'active' : ''}`}
+              aria-expanded={mediaOpen}
               onClick={() => {
                 setMediaOpen((s) => !s);
+                setAdvisoryOpen(false);
+                setRedCarpetOpen(false);
+                setRecognizedOpen(false);
                 if (mediaOpen) resetMediaMenu();
               }}
             >
@@ -295,13 +411,13 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link
+          {/* <Link
             href="/contact"
             className={`nav-link ${pathname === '/contact' ? 'active' : ''}`}
             onClick={closeMobileMenu}
           >
             Contact
-          </Link>
+          </Link> */}
         </nav>
 
         <div className="navbar-actions">
