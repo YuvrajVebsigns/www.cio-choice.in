@@ -1,21 +1,139 @@
+// import { API_ENDPOINTS } from '@/constants/api';
+// import {
+//   buildWebsiteAuthHeaders,
+//   clearWebsiteAuth,
+//   ensureWebsiteAuth,
+//   getApiErrorStatus,
+//   getWebsiteDomain,
+//   readStoredWebsiteAuth,
+// } from '@/lib/website-auth';
+// import { apiFetch } from '@/services/apiFetch';
+
+// export type WebsiteEvent = {
+//   id: string;
+//   title?: string;
+//   name?: string;
+//   eventName?: string;
+//   description?: string;
+//   startsAt?: string;
+//   startDate?: string;
+//   image?: string;
+//   heroImage?: string;
+//   banner?: string;
+//   category?: string;
+//   [key: string]: unknown;
+// };
+
+// type RawEvent = Record<string, unknown>;
+
+// function isRecord(value: unknown): value is Record<string, unknown> {
+//   return typeof value === 'object' && value !== null;
+// }
+
+// function normalizeEventsResponse(res: unknown): WebsiteEvent[] {
+//   const items = isRecord(res) ? (res.data ?? res.items ?? res.results ?? []) : (res ?? []);
+
+//   if (!Array.isArray(items)) return [];
+
+//   return (items as RawEvent[]).map((it) => ({
+//     id: String(it.id ?? it._id ?? it.eventId ?? it.uid ?? ''),
+//     title:
+//       typeof it.title === 'string'
+//         ? it.title
+//         : typeof it.name === 'string'
+//           ? it.name
+//           : typeof it.eventName === 'string'
+//             ? it.eventName
+//             : undefined,
+//     description: typeof it.description === 'string' ? it.description : undefined,
+//     startsAt:
+//       typeof it.startsAt === 'string'
+//         ? it.startsAt
+//         : typeof it.startDate === 'string'
+//           ? it.startDate
+//           : undefined,
+//     ...it,
+//   }));
+// }
+
+// export async function fetchWebsiteEvents(): Promise<WebsiteEvent[]> {
+//   if (typeof window === 'undefined') return [];
+
+//   const domain = getWebsiteDomain();
+//   let auth = readStoredWebsiteAuth();
+
+//   if (!auth?.token || !auth.websiteId) {
+//     try {
+//       auth = await ensureWebsiteAuth(domain);
+//     } catch {
+//       return [];
+//     }
+//   }
+
+//   if (!auth?.token || !auth.websiteId) return [];
+
+//   const headers = buildWebsiteAuthHeaders(auth);
+
+//   try {
+//     const res = await apiFetch<unknown>(`${API_ENDPOINTS.WEBSITE.EVENTS.BASE}?page=1&limit=100`, {
+//       method: 'GET',
+//       requireAuth: false,
+//       headers,
+//     });
+
+//     return normalizeEventsResponse(res);
+//   } catch (error: unknown) {
+//     const statusCode = getApiErrorStatus(error);
+
+//     if (statusCode === 401) {
+//       clearWebsiteAuth();
+
+//       try {
+//         const freshAuth = await ensureWebsiteAuth(domain);
+//         const retryHeaders = buildWebsiteAuthHeaders(freshAuth);
+
+//         const res = await apiFetch<unknown>(
+//           `${API_ENDPOINTS.WEBSITE.EVENTS.BASE}?page=1&limit=100`,
+//           {
+//             method: 'GET',
+//             requireAuth: false,
+//             headers: retryHeaders,
+//           },
+//         );
+
+//         return normalizeEventsResponse(res);
+//       } catch {
+//         return [];
+//       }
+//     }
+
+//     return [];
+//   }
+// }
+
 import { API_ENDPOINTS } from '@/constants/api';
 import {
   buildWebsiteAuthHeaders,
-  ensureWebsiteAuth as obtainWebsiteAuth,
+  clearWebsiteAuth,
+  ensureWebsiteAuth,
+  getApiErrorStatus,
   getWebsiteDomain,
+  readStoredWebsiteAuth,
 } from '@/lib/website-auth';
 import { apiFetch } from '@/services/apiFetch';
-
-type WebsiteAuth = {
-  token: string;
-  websiteId: string;
-};
 
 export type WebsiteEvent = {
   id: string;
   title?: string;
+  name?: string;
+  eventName?: string;
   description?: string;
   startsAt?: string;
+  startDate?: string;
+  image?: string;
+  heroImage?: string;
+  banner?: string;
+  category?: string;
   [key: string]: unknown;
 };
 
@@ -25,285 +143,141 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-function getRecordValue(source: unknown, key: string): unknown {
-  return isRecord(source) ? source[key] : undefined;
+function normalizeEvent(data: RawEvent, fallbackId = ''): WebsiteEvent {
+  return {
+    id: String(data.id ?? data._id ?? data.eventId ?? data.uid ?? data.slug ?? fallbackId),
+    title:
+      typeof data.title === 'string'
+        ? data.title
+        : typeof data.name === 'string'
+          ? data.name
+          : typeof data.eventName === 'string'
+            ? data.eventName
+            : undefined,
+    description: typeof data.description === 'string' ? data.description : undefined,
+    startsAt:
+      typeof data.startsAt === 'string'
+        ? data.startsAt
+        : typeof data.startDate === 'string'
+          ? data.startDate
+          : undefined,
+    ...data,
+  };
 }
 
-function getStringValue(value: unknown): string | undefined {
-  return typeof value === 'string' ? value : undefined;
+function normalizeEventsResponse(res: unknown): WebsiteEvent[] {
+  const items = isRecord(res) ? (res.data ?? res.items ?? res.results ?? []) : (res ?? []);
+
+  if (!Array.isArray(items)) return [];
+
+  return (items as RawEvent[]).map((item) => normalizeEvent(item));
 }
 
-export function readStoredWebsiteAuth(): WebsiteAuth | null {
-  if (typeof window === 'undefined') return null;
+export async function fetchWebsiteEvents(): Promise<WebsiteEvent[]> {
+  if (typeof window === 'undefined') return [];
 
-  const raw = window.localStorage.getItem('websiteAuth');
-  if (!raw) return null;
-
-  try {
-    const parsed: unknown = JSON.parse(raw);
-
-    if (
-      typeof parsed === 'object' &&
-      parsed !== null &&
-      'token' in parsed &&
-      'websiteId' in parsed &&
-      typeof (parsed as { token?: unknown }).token === 'string' &&
-      typeof (parsed as { websiteId?: unknown }).websiteId === 'string'
-    ) {
-      return {
-        token: (parsed as { token: string }).token,
-        websiteId: (parsed as { websiteId: string }).websiteId,
-      };
-    }
-  } catch {
-    return null;
-  }
-
-  return null;
-}
-
-async function ensureWebsiteAuth(domain: string) {
-  if (typeof window === 'undefined') return null;
-
-  const stored = readStoredWebsiteAuth();
-  if (stored) return stored;
-
-  const tokenRes = await apiFetch<unknown>(
-    `/api/v1/website/token?domain=${encodeURIComponent(domain)}`,
-    {
-      method: 'POST',
-      requireAuth: false,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-website-domain': domain,
-      },
-      body: JSON.stringify({ domain }),
-    },
-  );
-
-  const token =
-    getStringValue(getRecordValue(tokenRes, 'token')) ??
-    getStringValue(getRecordValue(getRecordValue(tokenRes, 'data'), 'token')) ??
-    getStringValue(
-      getRecordValue(getRecordValue(getRecordValue(tokenRes, 'data'), 'data'), 'token'),
-    ) ??
-    getStringValue(getRecordValue(getRecordValue(tokenRes, 'website'), 'token')) ??
-    null;
-
-  const websiteId =
-    getStringValue(getRecordValue(tokenRes, 'websiteId')) ??
-    getStringValue(getRecordValue(getRecordValue(tokenRes, 'website'), 'id')) ??
-    getStringValue(
-      getRecordValue(getRecordValue(getRecordValue(tokenRes, 'data'), 'website'), 'id'),
-    ) ??
-    getStringValue(getRecordValue(getRecordValue(tokenRes, 'data'), 'websiteId')) ??
-    getStringValue(getRecordValue(tokenRes, 'id')) ??
-    null;
-
-  if (token && websiteId) {
-    const value: WebsiteAuth = { token, websiteId };
-    window.localStorage.setItem('websiteAuth', JSON.stringify(value));
-    return value;
-  }
-
-  return null;
-}
-
-function getApiErrorStatus(error: unknown) {
-  if (typeof error === 'object' && error !== null && 'statusCode' in error) {
-    const statusCode = (error as { statusCode?: unknown }).statusCode;
-    return typeof statusCode === 'number' ? statusCode : Number(statusCode);
-  }
-
-  if (typeof error === 'object' && error !== null && 'status' in error) {
-    const status = (error as { status?: unknown }).status;
-    return typeof status === 'number' ? status : Number(status);
-  }
-
-  return undefined;
-}
-
-export async function fetchWebsiteEvents(websiteId?: string): Promise<WebsiteEvent[]> {
   const domain = getWebsiteDomain();
-  let auth: WebsiteAuth | null = null;
+  let auth = readStoredWebsiteAuth();
 
-  if (!websiteId) {
-    auth = await ensureWebsiteAuth(domain);
-    websiteId = auth?.websiteId ?? undefined;
-  } else {
-    // try to read token for headers if available
-    auth = readStoredWebsiteAuth();
+  if (!auth?.token || !auth.websiteId) {
+    try {
+      auth = await ensureWebsiteAuth(domain);
+    } catch {
+      return [];
+    }
   }
 
-  const headers: Record<string, string> = {};
-  if (auth?.token) headers.Authorization = `Bearer ${auth.token}`;
-  if (websiteId) headers['x-website-id'] = websiteId;
+  if (!auth?.token || !auth.websiteId) return [];
 
   try {
-    const url = websiteId
-      ? `${API_ENDPOINTS.WEBSITE.EVENTS.BASE}?websiteId=${encodeURIComponent(websiteId)}`
-      : API_ENDPOINTS.WEBSITE.EVENTS.BASE;
-
-    const res = await apiFetch<unknown>(url, {
+    const res = await apiFetch<unknown>(`${API_ENDPOINTS.WEBSITE.EVENTS.BASE}?page=1&limit=100`, {
       method: 'GET',
       requireAuth: false,
-      headers,
+      headers: buildWebsiteAuthHeaders(auth),
     });
 
-    // Normalize response shapes
-    const items = isRecord(res) ? (res.data ?? res.items ?? res.results ?? []) : (res ?? []);
-
-    if (!Array.isArray(items)) return [];
-
-    return (items as RawEvent[]).map((it) => ({
-      id: String(it['id'] ?? it['_id'] ?? it['eventId'] ?? it['uid'] ?? ''),
-      title:
-        (it['title'] as string) ??
-        (it['name'] as string) ??
-        (it['eventName'] as string) ??
-        undefined,
-      description: (it['description'] as string) ?? undefined,
-      startsAt: (it['startsAt'] as string) ?? (it['startDate'] as string) ?? undefined,
-      ...it,
-    }));
+    return normalizeEventsResponse(res);
   } catch (error: unknown) {
     const statusCode = getApiErrorStatus(error);
 
-    if (statusCode === 401 && typeof window !== 'undefined') {
-      window.localStorage.removeItem('websiteAuth');
+    if (statusCode === 401) {
+      clearWebsiteAuth();
 
-      const freshAuth = await ensureWebsiteAuth(domain);
-
-      if (freshAuth?.token) {
-        const retryHeaders: Record<string, string> = {
-          Authorization: `Bearer ${freshAuth.token}`,
-          'x-website-id': freshAuth.websiteId,
-        };
+      try {
+        const freshAuth = await ensureWebsiteAuth(domain);
 
         const res = await apiFetch<unknown>(
-          `${API_ENDPOINTS.WEBSITE.EVENTS.BASE}?websiteId=${encodeURIComponent(freshAuth.websiteId)}`,
+          `${API_ENDPOINTS.WEBSITE.EVENTS.BASE}?page=1&limit=100`,
           {
             method: 'GET',
             requireAuth: false,
-            headers: retryHeaders,
+            headers: buildWebsiteAuthHeaders(freshAuth),
           },
         );
 
-        const items = isRecord(res) ? (res.data ?? res.items ?? res.results ?? []) : (res ?? []);
-        if (!Array.isArray(items)) return [];
-
-        return (items as RawEvent[]).map((it) => ({
-          id: String(it['id'] ?? it['_id'] ?? it['eventId'] ?? it['uid'] ?? ''),
-          title:
-            (it['title'] as string) ??
-            (it['name'] as string) ??
-            (it['eventName'] as string) ??
-            undefined,
-          description: (it['description'] as string) ?? undefined,
-          startsAt: (it['startsAt'] as string) ?? (it['startDate'] as string) ?? undefined,
-          ...it,
-        }));
+        return normalizeEventsResponse(res);
+      } catch {
+        return [];
       }
     }
 
-    throw error;
+    return [];
   }
 }
 
 export async function fetchWebsiteEventByIdOrSlug(idOrSlug: string): Promise<WebsiteEvent | null> {
-  const domain = getWebsiteDomain();
-  let auth: WebsiteAuth | null = readStoredWebsiteAuth();
+  if (typeof window === 'undefined') return null;
 
-  if (!auth?.token) {
+  const domain = getWebsiteDomain();
+  let auth = readStoredWebsiteAuth();
+
+  if (!auth?.token || !auth.websiteId) {
     try {
-      auth = await obtainWebsiteAuth(domain);
+      auth = await ensureWebsiteAuth(domain);
     } catch {
-      auth = null;
+      return null;
     }
   }
 
-  const headers: Record<string, string> = auth ? buildWebsiteAuthHeaders(auth) : {};
+  if (!auth?.token || !auth.websiteId) return null;
 
   try {
-    const url = API_ENDPOINTS.WEBSITE.EVENTS.BY_ID(encodeURIComponent(idOrSlug));
-
-    const res = await apiFetch<unknown>(url, {
+    const res = await apiFetch<unknown>(API_ENDPOINTS.WEBSITE.EVENTS.BY_ID(idOrSlug), {
       method: 'GET',
       requireAuth: false,
-      headers,
+      headers: buildWebsiteAuthHeaders(auth),
     });
 
-    const data = isRecord(res) ? (res.data ?? res) : null;
-    if (!data) return null;
+    if (!isRecord(res)) return null;
 
-    return {
-      id: String(
-        getRecordValue(data, 'id') ??
-          getRecordValue(data, '_id') ??
-          getRecordValue(data, 'slug') ??
-          idOrSlug,
-      ),
-      title:
-        getStringValue(getRecordValue(data, 'title')) ??
-        getStringValue(getRecordValue(data, 'name')) ??
-        getStringValue(getRecordValue(data, 'eventName')) ??
-        undefined,
-      description:
-        getStringValue(getRecordValue(data, 'description')) ??
-        getStringValue(getRecordValue(data, 'summary')) ??
-        undefined,
-      startsAt:
-        getStringValue(getRecordValue(data, 'startsAt')) ??
-        getStringValue(getRecordValue(data, 'startDate')) ??
-        undefined,
-      ...(data as RawEvent),
-    };
+    const data = isRecord(res.data) ? res.data : res;
+
+    return normalizeEvent(data as RawEvent, idOrSlug);
   } catch (error: unknown) {
-    const status = getRecordValue(error, 'status');
-    if ((status === 401 || status === '401') && typeof window !== 'undefined') {
-      window.localStorage.removeItem('websiteAuth');
+    const statusCode = getApiErrorStatus(error);
 
-      const freshAuth = await ensureWebsiteAuth(domain);
-      if (freshAuth?.token) {
-        const retryHeaders: Record<string, string> = {
-          Authorization: `Bearer ${freshAuth.token}`,
-          'x-website-id': freshAuth.websiteId,
-        };
+    if (statusCode === 401) {
+      clearWebsiteAuth();
 
-        const url = API_ENDPOINTS.WEBSITE.EVENTS.BY_ID(encodeURIComponent(idOrSlug));
-        const res = await apiFetch<unknown>(url, {
+      try {
+        const freshAuth = await ensureWebsiteAuth(domain);
+
+        const res = await apiFetch<unknown>(API_ENDPOINTS.WEBSITE.EVENTS.BY_ID(idOrSlug), {
           method: 'GET',
           requireAuth: false,
-          headers: retryHeaders,
+          headers: buildWebsiteAuthHeaders(freshAuth),
         });
 
-        const data = isRecord(res) ? (res.data ?? res) : null;
-        if (!data) return null;
-        return {
-          id: String(
-            getRecordValue(data, 'id') ??
-              getRecordValue(data, '_id') ??
-              getRecordValue(data, 'slug') ??
-              idOrSlug,
-          ),
-          title:
-            getStringValue(getRecordValue(data, 'title')) ??
-            getStringValue(getRecordValue(data, 'name')) ??
-            getStringValue(getRecordValue(data, 'eventName')) ??
-            undefined,
-          description:
-            getStringValue(getRecordValue(data, 'description')) ??
-            getStringValue(getRecordValue(data, 'summary')) ??
-            undefined,
-          startsAt:
-            getStringValue(getRecordValue(data, 'startsAt')) ??
-            getStringValue(getRecordValue(data, 'startDate')) ??
-            undefined,
-          ...(data as RawEvent),
-        };
+        if (!isRecord(res)) return null;
+
+        const data = isRecord(res.data) ? res.data : res;
+
+        return normalizeEvent(data as RawEvent, idOrSlug);
+      } catch {
+        return null;
       }
     }
 
-    throw error;
+    return null;
   }
 }

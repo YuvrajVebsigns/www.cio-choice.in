@@ -170,7 +170,7 @@
 // }
 
 // export async function submitWebsiteContact(payload: ContactSubmission) {
-//   const domain = 'coremediagroup.com';
+//   const domain = 'https://ciochoice.com';
 //   const auth = await ensureWebsiteAuth(domain);
 
 //   const headers: Record<string, string> = {};

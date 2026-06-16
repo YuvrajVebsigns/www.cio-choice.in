@@ -1,3 +1,5 @@
+import { ensureWebsiteAuth, getApiErrorStatus } from '@/lib/website-auth';
+
 export interface WebsiteBlogWebsite {
   name: string;
   domain: string;
@@ -118,171 +120,7 @@ function extractCommentItems(response: unknown): WebsiteBlogComment[] {
     if (nestedArray) return nestedArray;
   }
 
-  return tryArray(payload.items) || tryArray(payload.comments) || tryArray(payload.results) || [];
-}
-
-type WebsiteAuth = {
-  token: string;
-  websiteId: string;
-};
-
-function readStoredWebsiteAuth(): WebsiteAuth | null {
-  if (typeof window === 'undefined') return null;
-
-  const raw = window.localStorage.getItem('websiteAuth');
-
-  if (!raw) return null;
-
-  try {
-    const parsed: unknown = JSON.parse(raw);
-
-    if (
-      typeof parsed === 'object' &&
-      parsed !== null &&
-      'token' in parsed &&
-      'websiteId' in parsed &&
-      typeof (parsed as { token?: unknown }).token === 'string' &&
-      typeof (parsed as { websiteId?: unknown }).websiteId === 'string'
-    ) {
-      return {
-        token: (parsed as { token: string }).token,
-        websiteId: (parsed as { websiteId: string }).websiteId,
-      };
-    }
-  } catch {
-    return null;
-  }
-
-  return null;
-}
-
-function extractWebsiteToken(response: {
-  token?: string;
-  data?: {
-    token?: string;
-    data?: {
-      token?: string;
-      website?: {
-        token?: string;
-      };
-      websiteId?: string;
-      id?: string;
-    };
-    website?: {
-      token?: string;
-      id?: string;
-    };
-    websiteId?: string;
-    id?: string;
-  };
-  website?: {
-    token?: string;
-    id?: string;
-  };
-  websiteId?: string;
-}) {
-  return (
-    response.token ??
-    response.data?.token ??
-    response.data?.data?.token ??
-    response.data?.website?.token ??
-    response.data?.data?.website?.token ??
-    null
-  );
-}
-
-function extractWebsiteId(response: {
-  data?: {
-    data?: {
-      website?: {
-        id?: string;
-      };
-      websiteId?: string;
-      id?: string;
-    };
-    website?: {
-      id?: string;
-    };
-    websiteId?: string;
-    id?: string;
-  };
-  website?: {
-    id?: string;
-  };
-  websiteId?: string;
-  id?: string;
-}) {
-  return (
-    response.websiteId ??
-    response.website?.id ??
-    response.data?.website?.id ??
-    response.data?.data?.website?.id ??
-    response.data?.websiteId ??
-    response.data?.data?.websiteId ??
-    response.data?.id ??
-    response.id ??
-    null
-  );
-}
-
-async function ensureWebsiteAuth(domain: string) {
-  if (typeof window === 'undefined') return null;
-
-  const stored = readStoredWebsiteAuth();
-  if (stored) return stored;
-
-  const { apiFetch } = await import('@/services/apiFetch');
-
-  const tokenRes = await apiFetch<{
-    token?: string;
-    websiteId?: string;
-    website?: { id?: string };
-    data?: {
-      token?: string;
-      websiteId?: string;
-      id?: string;
-      website?: { token?: string; id?: string };
-      data?: {
-        token?: string;
-        websiteId?: string;
-        id?: string;
-        website?: { token?: string; id?: string };
-      };
-    };
-  }>(`/api/v1/website/token?domain=${encodeURIComponent(domain)}`, {
-    method: 'POST',
-    requireAuth: false,
-    headers: {
-      'Content-Type': 'application/json',
-      'x-website-domain': domain,
-    },
-    body: JSON.stringify({}),
-  });
-
-  const token = extractWebsiteToken(tokenRes);
-  const websiteId = extractWebsiteId(tokenRes);
-
-  if (token && websiteId) {
-    const value: WebsiteAuth = { token, websiteId };
-    window.localStorage.setItem('websiteAuth', JSON.stringify(value));
-    return value;
-  }
-
-  return null;
-}
-
-function getApiErrorStatus(error: unknown) {
-  if (typeof error === 'object' && error !== null && 'statusCode' in error) {
-    const statusCode = (error as { statusCode?: unknown }).statusCode;
-    return typeof statusCode === 'number' ? statusCode : Number(statusCode);
-  }
-
-  if (typeof error === 'object' && error !== null && 'status' in error) {
-    const status = (error as { status?: unknown }).status;
-    return typeof status === 'number' ? status : Number(status);
-  }
-
-  return undefined;
+  return [];
 }
 
 const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
@@ -301,8 +139,8 @@ const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
         id: '6a0e1fb4957cec506662dd69',
       },
       {
-        name: 'CORE Media Group',
-        domain: 'https://coremediagroup.com',
+        name: 'CIO Choice',
+        domain: 'https://ciochoice.com',
         logo: '',
         id: '6a0e1fb4957cec506662dd71',
       },
@@ -343,7 +181,7 @@ const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
       },
       {
         name: 'CORE Media Group',
-        domain: 'https://coremediagroup.com',
+        domain: 'https://ciochoice.com',
         logo: '',
         id: '6a0e1fb4957cec506662dd71',
       },
@@ -383,8 +221,8 @@ const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
         id: '6a0e1fb4957cec506662dd6b',
       },
       {
-        name: 'CORE Media Group',
-        domain: 'https://coremediagroup.com',
+        name: 'CIO Choice',
+        domain: 'https://ciochoice.com',
         logo: '',
         id: '6a0e1fb4957cec506662dd71',
       },
@@ -424,8 +262,8 @@ const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
         id: '6a0e1fb4957cec506662dd6c',
       },
       {
-        name: 'CORE Media Group',
-        domain: 'https://coremediagroup.com',
+        name: 'CIO Choice',
+        domain: 'https://ciochoice.com',
         logo: '',
         id: '6a0e1fb4957cec506662dd71',
       },
@@ -465,8 +303,8 @@ const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
         id: '6a0e1fb4957cec506662dd6d',
       },
       {
-        name: 'CORE Media Group',
-        domain: 'https://coremediagroup.com',
+        name: 'CIO Choice',
+        domain: 'https://ciochoice.com',
         logo: '',
         id: '6a0e1fb4957cec506662dd71',
       },
@@ -506,8 +344,8 @@ const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
         id: '6a0e1fb4957cec506662dd70',
       },
       {
-        name: 'CORE Media Group',
-        domain: 'https://coremediagroup.com',
+        name: 'CIO Choice',
+        domain: 'https://ciochoice.com',
         logo: '',
         id: '6a0e1fb4957cec506662dd71',
       },
@@ -541,8 +379,8 @@ const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
     featureImage: 'https://picsum.photos/seed/11/1200/630',
     websites: [
       {
-        name: 'CORE Media Group',
-        domain: 'https://coremediagroup.com',
+        name: 'CIO Choice',
+        domain: 'https://ciochoice.com',
         logo: '',
         id: '6a0e1fb4957cec506662dd71',
       },
@@ -582,8 +420,8 @@ const FALLBACK_WEBSITE_BLOGS: WebsiteBlogItem[] = [
         id: '6a0e1fb4957cec506662dd67',
       },
       {
-        name: 'CORE Media Group',
-        domain: 'https://coremediagroup.com',
+        name: 'CIO Choice',
+        domain: 'https://ciochoice.com',
         logo: '',
         id: '6a0e1fb4957cec506662dd71',
       },
@@ -656,22 +494,35 @@ export async function fetchWebsiteBlogs(page = 1, limit = 10, search = '') {
 
   // Try the real backend first. If it fails (network/404/etc), return fallback.
   try {
+    if (typeof window === 'undefined') {
+      // Server-side: return fallback
+      return fallback;
+    }
+
     // Import here to avoid circulars in some bundlers
     const { apiFetch } = await import('@/services/apiFetch');
 
-    const domain = 'coremediagroup.com';
+    const domain = 'ciochoice.com';
     const auth = await ensureWebsiteAuth(domain);
+
+    if (!auth?.token) {
+      return fallback;
+    }
 
     const url = `/api/v1/website/blogs?${searchParams.toString()}`;
 
-    const headers: Record<string, string> = {};
-    if (auth?.token) headers['Authorization'] = `Bearer ${auth.token}`;
-    if (auth?.websiteId) headers['x-website-id'] = String(auth.websiteId);
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${auth.token}`,
+      'x-website-id': String(auth.websiteId),
+    };
 
     try {
-      const response = await apiFetch<WebsiteBlogsResponse>(url, { requireAuth: false, headers });
+      const response = await apiFetch<WebsiteBlogsResponse>(url, {
+        requireAuth: false,
+        headers,
+      });
 
-      if (response && response.success && response.data?.data) {
+      if (response && response.success && response.data?.data && response.data.data.length > 0) {
         return response;
       }
     } catch (err: unknown) {
@@ -698,7 +549,12 @@ export async function fetchWebsiteBlogs(page = 1, limit = 10, search = '') {
               requireAuth: false,
               headers: retryHeaders,
             });
-            if (retryRes && retryRes.success && retryRes.data?.data) {
+            if (
+              retryRes &&
+              retryRes.success &&
+              retryRes.data?.data &&
+              retryRes.data.data.length > 0
+            ) {
               return retryRes;
             }
           }
@@ -719,49 +575,63 @@ export async function fetchWebsiteBlogBySlug(idOrSlug: string) {
 
   if (!slug) return null;
 
-  const { apiFetch } = await import('@/services/apiFetch');
-  const domain = 'coremediagroup.com';
-  const auth = await ensureWebsiteAuth(domain);
-
-  const headers: Record<string, string> = {};
-  if (auth?.token) headers.Authorization = `Bearer ${auth.token}`;
-  if (auth?.websiteId) headers['x-website-id'] = auth.websiteId;
-
-  const endpoint = `/api/v1/website/blogs/${encodeURIComponent(slug)}`;
+  if (typeof window === 'undefined') {
+    // Server-side: cannot fetch
+    return null;
+  }
 
   try {
-    const response = await apiFetch<WebsiteBlogDetailResponse>(endpoint, {
-      requireAuth: false,
-      headers,
-    });
+    const { apiFetch } = await import('@/services/apiFetch');
+    const domain = 'ciochoice.com';
+    const auth = await ensureWebsiteAuth(domain);
 
-    if (response?.success && response.data) {
-      return response.data;
+    if (!auth?.token) {
+      return null;
     }
-  } catch (error: unknown) {
-    const statusCode = getApiErrorStatus(error);
 
-    if (statusCode === 401 && typeof window !== 'undefined') {
-      window.localStorage.removeItem('websiteAuth');
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${auth.token}`,
+      'x-website-id': auth.websiteId,
+    };
 
-      const freshAuth = await ensureWebsiteAuth(domain);
+    const endpoint = `/api/v1/website/blogs/${encodeURIComponent(slug)}`;
 
-      if (freshAuth?.token) {
-        const retryHeaders: Record<string, string> = {
-          Authorization: `Bearer ${freshAuth.token}`,
-          'x-website-id': freshAuth.websiteId,
-        };
+    try {
+      const response = await apiFetch<WebsiteBlogDetailResponse>(endpoint, {
+        requireAuth: false,
+        headers,
+      });
 
-        const retryResponse = await apiFetch<WebsiteBlogDetailResponse>(endpoint, {
-          requireAuth: false,
-          headers: retryHeaders,
-        });
+      if (response?.success && response.data) {
+        return response.data;
+      }
+    } catch (error: unknown) {
+      const statusCode = getApiErrorStatus(error);
 
-        if (retryResponse?.success && retryResponse.data) {
-          return retryResponse.data;
+      if (statusCode === 401 && typeof window !== 'undefined') {
+        window.localStorage.removeItem('websiteAuth');
+
+        const freshAuth = await ensureWebsiteAuth(domain);
+
+        if (freshAuth?.token) {
+          const retryHeaders: Record<string, string> = {
+            Authorization: `Bearer ${freshAuth.token}`,
+            'x-website-id': freshAuth.websiteId,
+          };
+
+          const retryResponse = await apiFetch<WebsiteBlogDetailResponse>(endpoint, {
+            requireAuth: false,
+            headers: retryHeaders,
+          });
+
+          if (retryResponse?.success && retryResponse.data) {
+            return retryResponse.data;
+          }
         }
       }
     }
+  } catch (error) {
+    // Keep silent
   }
 
   return null;
@@ -772,7 +642,7 @@ export async function fetchWebsiteBlogComments(blogId: string) {
     return { success: true, message: 'No blog id', data: [] } as WebsiteBlogCommentsResponse;
 
   const { apiFetch } = await import('@/services/apiFetch');
-  const domain = 'coremediagroup.com';
+  const domain = 'ciochoice.com';
   const auth = await ensureWebsiteAuth(domain);
 
   const headers: Record<string, string> = {};
@@ -833,7 +703,7 @@ export async function submitWebsiteBlogComment(
   blogId: string,
   payload: { name: string; email?: string; message: string },
 ) {
-  const domain = 'coremediagroup.com';
+  const domain = 'ciochoice.com';
   const auth = await ensureWebsiteAuth(domain);
 
   const headers: Record<string, string> = {};
@@ -890,7 +760,7 @@ export async function submitWebsiteBlogComment(
 export async function submitWebsiteBlogLike(blogId: string) {
   if (!blogId) throw new Error('Missing blog id');
 
-  const domain = 'coremediagroup.com';
+  const domain = 'ciochoice.com';
   const auth = await ensureWebsiteAuth(domain);
 
   const headers: Record<string, string> = {};

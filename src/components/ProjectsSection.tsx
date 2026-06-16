@@ -3,26 +3,55 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { fetchWebsiteEvents, WebsiteEvent } from '@/services/events.service';
 
-function getStoredWebsiteId(): string | undefined {
-  if (typeof window === 'undefined') return undefined;
+// function getStoredWebsiteId(): string | undefined {
+//   if (typeof window === 'undefined') return undefined;
 
-  try {
-    const raw = window.localStorage.getItem('websiteAuth');
-    if (!raw) return undefined;
+//   try {
+//     const raw = window.localStorage.getItem('websiteAuth');
+//     if (!raw) return undefined;
 
-    const parsed = JSON.parse(raw) as { websiteId?: unknown };
-    return typeof parsed.websiteId === 'string' ? parsed.websiteId : undefined;
-  } catch {
-    return undefined;
-  }
-}
+//     const parsed: unknown = JSON.parse(raw);
+//     if (typeof parsed === 'object' && parsed !== null && 'websiteId' in parsed) {
+//       const websiteId = (parsed as { websiteId?: unknown }).websiteId;
+//       return typeof websiteId === 'string' ? websiteId : undefined;
+//     }
+//   } catch {
+//     return undefined;
+//   }
+
+//   return undefined;
+// }
 
 export default function ProjectsSection() {
+  // const [activeVideo, setActiveVideo] = useState<number | null>(null);
+
   const [events, setEvents] = useState<WebsiteEvent[] | null>(null);
+
+  useEffect(() => {
+    fetchWebsiteEvents()
+      .then((data) => {
+        if (Array.isArray(data) && data.length) setEvents(data);
+        else setEvents([]);
+      })
+      .catch(() => setEvents([]));
+  }, []);
+
+  // const videos = [
+  //   {
+  //     category: 'Videos',
+  //     title: 'Interactive Learning Platform',
+  //     videoUrl: 'https://www.youtube.com/embed/o4LM01aE1PQ',
+  //   },
+  //   {
+  //     category: 'Videos',
+  //     title: 'Environmental Impact Dashboard',
+  //     videoUrl: 'https://www.youtube.com/embed/aQbU67vShTo',
+  //   },
+  // ];
 
   const customLeftRef = useScrollAnimation<HTMLDivElement>({
     animationClass: 'animate-fade-in-left',
@@ -36,15 +65,17 @@ export default function ProjectsSection() {
     threshold: 0.12,
   });
 
-  useEffect(() => {
-    fetchWebsiteEvents(getStoredWebsiteId())
-      .then((data) => {
-        setEvents(Array.isArray(data) ? data : []);
-      })
-      .catch(() => {
-        setEvents([]);
-      });
-  }, []);
+  // const videoLeftRef = useScrollAnimation<HTMLDivElement>({
+  //   animationClass: 'animate-fade-in-left',
+  //   initialTransform: 'translateX(-40px)',
+  //   threshold: 0.12,
+  // });
+
+  // const videoRightRef = useScrollAnimation<HTMLDivElement>({
+  //   animationClass: 'animate-fade-in-right',
+  //   initialTransform: 'translateX(40px)',
+  //   threshold: 0.12,
+  // });
 
   return (
     <section className="project-section">
@@ -67,38 +98,41 @@ export default function ProjectsSection() {
         </div>
 
         <div className="project-grid">
-          {events === null && <div className="events-loading">Loading events…</div>}
-
-          {events !== null && events.length === 0 && (
+          {events === null ? (
+            <div className="events-loading">Loading events…</div>
+          ) : events.length === 0 ? (
             <div className="events-empty">No events available.</div>
-          )}
-
-          {events !== null &&
-            events.slice(0, 2).map((item, index) => {
-              const title = item.title || String(item.name || item.eventName || 'Event');
-
+          ) : (
+            // show only the first two events
+            events.slice(0, 2).map((item: WebsiteEvent, index: number) => {
+              const title = String(
+                item.title ??
+                  (item['name'] as unknown) ??
+                  (item['eventName'] as unknown) ??
+                  'Event',
+              );
               const slug =
-                typeof item.id === 'string'
-                  ? item.id
+                item.id && typeof item.id === 'string'
+                  ? String(item.id)
                   : title
                       .toLowerCase()
                       .replace(/\s+/g, '-')
                       .replace(/[^a-z0-9-]/g, '');
 
-              const imageSrc =
-                item.image || item.heroImage || item.banner || '/assets/blogs/blog-1.webp';
-
-              const category = item.category || 'Events';
+              const imageSrc = String(
+                item.image ?? item.heroImage ?? item.banner ?? '/assets/blogs/blog-1.webp',
+              );
+              const category = String(item.category ?? 'Events');
 
               return (
-                <Link key={slug} href={`/events/${slug}`} className="project-link">
+                <Link key={slug} href={`/events/${slug}`}>
                   <div className="project-card" ref={index === 0 ? customLeftRef : customRightRef}>
                     <div className="project-image-wrap">
-                      <Image src={String(imageSrc)} alt={title} fill className="project-image" />
+                      <Image src={imageSrc} alt={title} fill className="project-image" />
                     </div>
 
                     <div className="project-overlay">
-                      <span className="project-category">{String(category)}</span>
+                      <span className="project-category">{category}</span>
 
                       <div className="project-content">
                         <h3>{title}</h3>
@@ -107,8 +141,65 @@ export default function ProjectsSection() {
                   </div>
                 </Link>
               );
-            })}
+            })
+          )}
         </div>
+        {/* 
+        <div className="project-top-bar">
+          <h6 className="project-subtitle">⬢ Video Showcase</h6>
+
+          <Link href="/videos" className="talk-btn">
+            <span>More Videos</span>
+            <div className="talk-btn-icon">
+              <ArrowUpRight size={18} />
+            </div>
+          </Link>
+        </div> */}
+
+        {/* <div className="project-grid">
+          {videos.map((item, index) => (
+            <div
+              key={index}
+              className="project-card"
+              ref={index === 0 ? videoLeftRef : videoRightRef}
+            > */}
+        {/* <div className="project-video-wrap" style={{ position: 'relative' }}>
+                <iframe
+                  key={activeVideo === index ? `play-${index}` : `pause-${index}`}
+                  src={
+                    activeVideo === index
+                      ? `${item.videoUrl}?autoplay=1&rel=0`
+                      : `${item.videoUrl}?rel=0`
+                  }
+                  title={item.title}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+
+                {activeVideo !== index && (
+                  <div
+                    onClick={() => setActiveVideo(index)}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      cursor: 'pointer',
+                      zIndex: 5,
+                    }}
+                  />
+                )}
+              </div> */}
+
+        {/* <div className="project-overlay">
+                <span className="project-category">{item.category}</span>
+
+                <div className="project-content">
+                  <h3>{item.title}</h3>
+                </div>
+              </div> */}
+        {/* </div>
+          ))}
+        </div> */}
       </div>
     </section>
   );

@@ -1,19 +1,70 @@
-import Link from 'next/link';
+'use client';
 
-export const metadata = {
-  title: 'Red Carpet Night 2025',
-  description:
-    'Celebrate Red Carpet Night 2025 with CIO Choice recognition and curated brand honors.',
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { fetchWebsitePageBySlug, type WebsitePage } from '@/services/pages.services';
+
+type Testimonial = {
+  author?: string;
+  role?: string;
+  quote?: string;
+  avatar?: string;
 };
 
+type ContentBlock = {
+  data?: {
+    testimonials?: Testimonial[];
+  };
+};
+
+function extractTestimonials(page: WebsitePage | null): Testimonial[] {
+  const blocks = page?.content?.blocks as ContentBlock[] | undefined;
+
+  if (!Array.isArray(blocks)) return [];
+
+  return blocks.flatMap((block: ContentBlock) => {
+    const testimonials = block?.data?.testimonials;
+    return Array.isArray(testimonials) ? testimonials : [];
+  });
+}
+
 export default function RedCarpetNight2025Page() {
+  const [page, setPage] = useState<WebsitePage | null>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPage() {
+      try {
+        const data = await fetchWebsitePageBySlug('red-carpet-night-2025');
+
+        setPage(data);
+        setTestimonials(extractTestimonials(data));
+      } catch (error) {
+        // Handle error silently
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadPage();
+  }, []);
+
+  if (isLoading) {
+    return <div className="rcn-loading">Loading...</div>;
+  }
+
   return (
     <main className="rcn-main">
       <section className="rcn-hero">
         <div className="rcn-hero-overlay" />
+
         <div className="rcn-hero-content">
           <span className="rcn-hero-badge">Red Carpet Night</span>
-          <h1 className="rcn-title">Red Carpet Night 2025</h1>
+
+          <h1 className="rcn-title">{page?.title || 'Red Carpet Night 2025'}</h1>
+
           <p className="rcn-subtitle">
             A premium CIO Choice gala that honors the top ICT brands and leaders in the industry for
             2025.
@@ -23,6 +74,7 @@ export default function RedCarpetNight2025Page() {
             <Link href="/contact" className="rcn-cta-button">
               Book Your Spotlight
             </Link>
+
             <span className="rcn-cta-note">
               Explore the event detail page for year-specific recognition and participation updates.
             </span>
@@ -30,54 +82,35 @@ export default function RedCarpetNight2025Page() {
         </div>
       </section>
 
-      <section className="rcn-cards-section">
-        <div className="rcn-cards-grid">
-          <article className="rcn-card">
-            <h2>Exclusive Gala</h2>
-            <p>
-              Experience the premier CIO Choice event where brands receive live recognition in front
-              of industry leaders.
-            </p>
-          </article>
-          <article className="rcn-card">
-            <h2>Yearly Honors</h2>
-            <p>
-              The 2025 edition celebrates innovation, trust, and customer excellence across the CIO
-              ecosystem.
-            </p>
-          </article>
-          <article className="rcn-card">
-            <h2>Brand Spotlight</h2>
-            <p>
-              Showcase your company on the red carpet and gain visibility with a curated CIO
-              audience.
-            </p>
-          </article>
-        </div>
-      </section>
+      <section className="rcn-event-section">
+        <div className="rcn-event-container">
+          {testimonials.length === 0 ? (
+            <p className="rcn-empty">No API data available.</p>
+          ) : (
+            <div className="rcn-event-grid">
+              {testimonials.map((item, index) => (
+                <article key={index} className="rcn-event-card">
+                  {item.avatar ? (
+                    <div className="rcn-event-image-wrap">
+                      <Image
+                        src={item.avatar}
+                        alt={item.author || 'Event image'}
+                        fill
+                        className="rcn-event-image"
+                        unoptimized
+                      />
+                    </div>
+                  ) : null}
 
-      <section className="rcn-summary-section">
-        <div className="rcn-summary-content">
-          <h2>Why Red Carpet Night Matters</h2>
-          <p>
-            Red Carpet Night is the flagship event for CIO Choice recognition. It brings together
-            technology leaders, industry experts, and celebrated brands under one premium
-            experience.
-          </p>
-          <div className="rcn-summary-list">
-            <div className="rcn-summary-item">
-              <span>01</span>
-              <p>Exclusive awards for top performing ICT brands.</p>
+                  <div className="rcn-event-content">
+                    {item.quote ? <blockquote>{item.quote}</blockquote> : null}
+                    {item.author ? <h3>{item.author}</h3> : null}
+                    {item.role ? <p>{item.role}</p> : null}
+                  </div>
+                </article>
+              ))}
             </div>
-            <div className="rcn-summary-item">
-              <span>02</span>
-              <p>High-value networking and media exposure for participants.</p>
-            </div>
-            <div className="rcn-summary-item">
-              <span>03</span>
-              <p>Official recognition from CIO Choice trusted community and panels.</p>
-            </div>
-          </div>
+          )}
         </div>
       </section>
     </main>
