@@ -1,116 +1,3 @@
-// import { API_ENDPOINTS } from '@/constants/api';
-// import {
-//   buildWebsiteAuthHeaders,
-//   clearWebsiteAuth,
-//   ensureWebsiteAuth,
-//   getApiErrorStatus,
-//   getWebsiteDomain,
-//   readStoredWebsiteAuth,
-// } from '@/lib/website-auth';
-// import { apiFetch } from '@/services/apiFetch';
-
-// export type WebsiteEvent = {
-//   id: string;
-//   title?: string;
-//   name?: string;
-//   eventName?: string;
-//   description?: string;
-//   startsAt?: string;
-//   startDate?: string;
-//   image?: string;
-//   heroImage?: string;
-//   banner?: string;
-//   category?: string;
-//   [key: string]: unknown;
-// };
-
-// type RawEvent = Record<string, unknown>;
-
-// function isRecord(value: unknown): value is Record<string, unknown> {
-//   return typeof value === 'object' && value !== null;
-// }
-
-// function normalizeEventsResponse(res: unknown): WebsiteEvent[] {
-//   const items = isRecord(res) ? (res.data ?? res.items ?? res.results ?? []) : (res ?? []);
-
-//   if (!Array.isArray(items)) return [];
-
-//   return (items as RawEvent[]).map((it) => ({
-//     id: String(it.id ?? it._id ?? it.eventId ?? it.uid ?? ''),
-//     title:
-//       typeof it.title === 'string'
-//         ? it.title
-//         : typeof it.name === 'string'
-//           ? it.name
-//           : typeof it.eventName === 'string'
-//             ? it.eventName
-//             : undefined,
-//     description: typeof it.description === 'string' ? it.description : undefined,
-//     startsAt:
-//       typeof it.startsAt === 'string'
-//         ? it.startsAt
-//         : typeof it.startDate === 'string'
-//           ? it.startDate
-//           : undefined,
-//     ...it,
-//   }));
-// }
-
-// export async function fetchWebsiteEvents(): Promise<WebsiteEvent[]> {
-//   if (typeof window === 'undefined') return [];
-
-//   const domain = getWebsiteDomain();
-//   let auth = readStoredWebsiteAuth();
-
-//   if (!auth?.token || !auth.websiteId) {
-//     try {
-//       auth = await ensureWebsiteAuth(domain);
-//     } catch {
-//       return [];
-//     }
-//   }
-
-//   if (!auth?.token || !auth.websiteId) return [];
-
-//   const headers = buildWebsiteAuthHeaders(auth);
-
-//   try {
-//     const res = await apiFetch<unknown>(`${API_ENDPOINTS.WEBSITE.EVENTS.BASE}?page=1&limit=100`, {
-//       method: 'GET',
-//       requireAuth: false,
-//       headers,
-//     });
-
-//     return normalizeEventsResponse(res);
-//   } catch (error: unknown) {
-//     const statusCode = getApiErrorStatus(error);
-
-//     if (statusCode === 401) {
-//       clearWebsiteAuth();
-
-//       try {
-//         const freshAuth = await ensureWebsiteAuth(domain);
-//         const retryHeaders = buildWebsiteAuthHeaders(freshAuth);
-
-//         const res = await apiFetch<unknown>(
-//           `${API_ENDPOINTS.WEBSITE.EVENTS.BASE}?page=1&limit=100`,
-//           {
-//             method: 'GET',
-//             requireAuth: false,
-//             headers: retryHeaders,
-//           },
-//         );
-
-//         return normalizeEventsResponse(res);
-//       } catch {
-//         return [];
-//       }
-//     }
-
-//     return [];
-//   }
-// }
-
 import { API_ENDPOINTS } from '@/constants/api';
 import {
   buildWebsiteAuthHeaders,
@@ -166,11 +53,25 @@ function normalizeEvent(data: RawEvent, fallbackId = ''): WebsiteEvent {
 }
 
 function normalizeEventsResponse(res: unknown): WebsiteEvent[] {
-  const items = isRecord(res) ? (res.data ?? res.items ?? res.results ?? []) : (res ?? []);
+  let items: unknown = [];
+
+  if (isRecord(res)) {
+    if (isRecord(res.data) && Array.isArray(res.data.data)) {
+      items = res.data.data;
+    } else if (Array.isArray(res.data)) {
+      items = res.data;
+    } else if (Array.isArray(res.items)) {
+      items = res.items;
+    } else if (Array.isArray(res.results)) {
+      items = res.results;
+    }
+  } else if (Array.isArray(res)) {
+    items = res;
+  }
 
   if (!Array.isArray(items)) return [];
 
-  return (items as RawEvent[]).map((item) => normalizeEvent(item));
+  return items.map((item) => normalizeEvent(item as RawEvent));
 }
 
 export async function fetchWebsiteEvents(): Promise<WebsiteEvent[]> {

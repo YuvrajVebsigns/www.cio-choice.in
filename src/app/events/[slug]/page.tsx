@@ -418,8 +418,8 @@ export default function EventDetailsPage() {
 
             <div style={{ marginTop: 24 }}>
               {/* <Link href="/register" className="talk-btn">
-                Registration
-              </Link> */}
+                    Registration
+                  </Link> */}
               <Link href="/register" className="talk-btn">
                 <span>Registration</span>
 
