@@ -1,6 +1,7 @@
 'use client';
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import Image from 'next/image';
 
 export default function AboutCioChoiceSection() {
   const sectionRef = useScrollAnimation<HTMLDivElement>({
@@ -66,7 +67,13 @@ export default function AboutCioChoiceSection() {
       <div className="about-cio-container">
         <div className="about-cio-heading">
           <div className="about-cio-label">
-            <span className="about-cio-label-icon">⬢</span>
+            <Image
+              src="/assets/icon.png"
+              alt="Key Clients"
+              width={20}
+              height={20}
+              className="expertise-label-icon"
+            />
             <span className="about-cio-label-text">About Us</span>
           </div>
 

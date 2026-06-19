@@ -78,7 +78,7 @@ export default function ContactSection() {
         <div className="contact-map-area">
           <div className="contact-map">
             <Image
-              src="/assets/map.svg"
+              src="/assets/map3.png"
               alt="Global Map"
               width={700}
               height={500}
@@ -110,7 +110,17 @@ export default function ContactSection() {
           ) : null}
 
           {/* Badge */}
-          <div className="contact-badge">⬢ GET IN TOUCH</div>
+
+          <div className="contact-badge">
+            <Image
+              src="/assets/icon.png"
+              alt="Key Clients"
+              width={20}
+              height={20}
+              className="expertise-label-icon"
+            />
+            GET IN TOUCH
+          </div>
 
           {/* Title */}
           <h2 className="contact-title">Let’s Start a Conversation</h2>
