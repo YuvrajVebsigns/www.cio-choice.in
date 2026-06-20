@@ -416,7 +416,7 @@ export default function BlogDetailsPage() {
           </AnimatedBlock>
 
           <aside className="blog-comments-side-card">
-            <h3 style={{ margin: '0 0 16px' }}>Comments</h3>
+            <h3 className="blog-comments-side-card-title">Comments</h3>
 
             {blog.id ? (
               <BlogCommentsPanel blogId={String(blog.id)} />

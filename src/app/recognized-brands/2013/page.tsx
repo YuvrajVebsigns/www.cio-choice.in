@@ -108,14 +108,14 @@ export default function RecognizedBrands2013Page() {
           ) : (
             <div className="advisory-grid">
               {items.map((item, index) => (
-                <article key={`${item.author}-${index}`} className="advisory-card rcn-brand-card">
+                <article key={`${item.author}-${index}`} className="advisory-card1 rcn-brand-card">
                   {item.avatar ? (
                     <Image
                       src={item.avatar}
                       alt={item.author}
                       width={128}
                       height={128}
-                      className="advisory-avatar"
+                      className="advisory-avatar1"
                       unoptimized
                     />
                   ) : (

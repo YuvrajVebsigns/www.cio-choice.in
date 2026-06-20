@@ -1,7 +1,12 @@
 import Link from 'next/link';
 
 const mediaItems = [
+  { href: '/media/media-coverage/2024-media-coverage', title: 'Media Coverage 2024' },
+  { href: '/media/media-coverage/2023-media-coverage', title: 'Media Coverage 2023' },
+  { href: '/media/media-coverage/2021-media-coverage', title: 'Media Coverage 2021' },
+  { href: '/media/media-coverage/2020-media-coverage', title: 'Media Coverage 2020' },
   { href: '/media/media-coverage/2019-media-coverage', title: 'Media Coverage 2019' },
+  { href: '/media/media-coverage/2018-media-coverage', title: 'Media Coverage 2018' },
   { href: '/media/media-coverage/2017-media-coverage', title: 'Media Coverage 2017' },
   { href: '/media/winning-brand-videos/2019', title: 'Winning Brand Videos 2019' },
   { href: '/media/winning-brand-videos/2017', title: 'Winning Brand Videos 2017' },

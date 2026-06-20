@@ -116,8 +116,8 @@ export default function AdvisoryPanel2013Page() {
                     <Image
                       src={member.avatar}
                       alt={member.author}
-                      width={120}
-                      height={120}
+                      width={230}
+                      height={230}
                       className="advisory-avatar"
                       unoptimized
                     />

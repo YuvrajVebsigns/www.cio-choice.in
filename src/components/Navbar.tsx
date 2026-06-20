@@ -19,6 +19,7 @@ export default function Navbar() {
   const [coverageHovered, setCoverageHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [winnerHovered, setWinnerHovered] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
 
   const lastScrollY = useRef(0);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -53,7 +54,9 @@ export default function Navbar() {
     setIsHidden(false);
   };
 
-  const openDropdown = (type: 'advisory' | 'redCarpet' | 'recognized' | 'media' | 'process') => {
+  const openDropdown = (
+    type: 'advisory' | 'redCarpet' | 'recognized' | 'media' | 'process' | 'gallery',
+  ) => {
     if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
     setAdvisoryOpen(type === 'advisory');
     setRedCarpetOpen(type === 'redCarpet');
@@ -314,9 +317,58 @@ export default function Navbar() {
             Events
           </Link>
 
-          <Link href="/gallery" className="nav-link" onClick={closeMobileMenu}>
-            Gallery
-          </Link>
+          <div
+            className={`nav-dropdown ${galleryOpen ? 'open' : ''}`}
+            onMouseEnter={() => !isMobile && openDropdown('gallery')}
+            onMouseLeave={() => !isMobile && closeDropdowns()}
+          >
+            <button
+              type="button"
+              className={`nav-link ${pathname?.startsWith('/gallery') ? 'active' : ''}`}
+              aria-expanded={galleryOpen}
+              onClick={() => {
+                setGalleryOpen((s) => !s);
+                setProcessOpen(false);
+                setAdvisoryOpen(false);
+                setRedCarpetOpen(false);
+                setRecognizedOpen(false);
+                setMediaOpen(false);
+              }}
+            >
+              Gallery
+              <ChevronDown
+                size={16}
+                style={{
+                  transform: galleryOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: '0.3s ease',
+                }}
+              />
+            </button>
+
+            <div className="mega-panel nav-year-dropdown">
+              <ul>
+                <li>
+                  <Link
+                    href="/gallery/video-gallery"
+                    className="mega-item"
+                    onClick={closeMobileMenu}
+                  >
+                    Video Gallery
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/gallery/photo-gallery"
+                    className="mega-item"
+                    onClick={closeMobileMenu}
+                  >
+                    Photo Gallery
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
 
           <div
             className={`nav-dropdown media-nav-dropdown ${mediaOpen ? 'open' : ''}`}

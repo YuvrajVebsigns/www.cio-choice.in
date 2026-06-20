@@ -296,7 +296,7 @@ export default function BlogCommentsPanel({ blogId }: BlogCommentsPanelProps) {
           type="button"
           onClick={() => setShowForm((prev) => !prev)}
           style={{
-            background: '#a40000',
+            background: '#8E0101',
             color: '#ffffff',
             border: 'none',
             borderRadius: '999px',
