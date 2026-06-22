@@ -11,13 +11,12 @@ const mediaItems = [
   { href: '/media/winning-brand-videos/2019', title: 'Winning Brand Videos 2019' },
   { href: '/media/winning-brand-videos/2017', title: 'Winning Brand Videos 2017' },
 ];
-
 export default function MediaPage() {
   return (
     <main className="page-container">
       <section className="page-header">
         <h1>Media</h1>
-        <p>Explore CORE Media coverage and winning brand video highlights from 2017 and 2019.</p>
+        <p>Explore CORE Media coverage and winning brand video highlights from 2017 - 2019.</p>
       </section>
 
       <section className="media-overview-links">

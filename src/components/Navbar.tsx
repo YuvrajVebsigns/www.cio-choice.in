@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, ChevronDown, ChevronLeft, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronRight, ArrowUpRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -16,10 +16,12 @@ export default function Navbar() {
   const [recognizedOpen, setRecognizedOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
   const [processOpen, setProcessOpen] = useState(false);
-  const [coverageHovered, setCoverageHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [winnerHovered, setWinnerHovered] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
+
+  const [coverageHovered, setCoverageHovered] = useState(false);
+  const [winnerHovered, setWinnerHovered] = useState(false);
+  const [photoGalleryHovered, setPhotoGalleryHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const lastScrollY = useRef(0);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -28,29 +30,40 @@ export default function Navbar() {
   const advisoryYears = [
     2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
   ];
+
   const redCarpetYears = [
     2027, 2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
   ];
-  const mediaYears = [2019, 2017];
+
   const recognizedBrandYears = [
     2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
   ];
 
-  const resetMediaMenu = () => {
+  const photoGalleryYears = [
+    2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
+  ];
+
+  const mediaCoverageYears = [2024, 2023, 2021, 2020, 2019, 2018, 2017];
+  const winningBrandYears = [2019, 2017];
+
+  const resetFlyouts = () => {
     setCoverageHovered(false);
     setWinnerHovered(false);
+    setPhotoGalleryHovered(false);
   };
 
   const closeMobileMenu = () => {
     if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
     if (hideTimer.current) clearTimeout(hideTimer.current);
+
     setMobileOpen(false);
     setAdvisoryOpen(false);
     setRedCarpetOpen(false);
     setRecognizedOpen(false);
     setMediaOpen(false);
     setProcessOpen(false);
-    resetMediaMenu();
+    setGalleryOpen(false);
+    resetFlyouts();
     setIsHidden(false);
   };
 
@@ -58,29 +71,42 @@ export default function Navbar() {
     type: 'advisory' | 'redCarpet' | 'recognized' | 'media' | 'process' | 'gallery',
   ) => {
     if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
+
     setAdvisoryOpen(type === 'advisory');
     setRedCarpetOpen(type === 'redCarpet');
     setRecognizedOpen(type === 'recognized');
     setMediaOpen(type === 'media');
     setProcessOpen(type === 'process');
-    if (type !== 'media') resetMediaMenu();
+    setGalleryOpen(type === 'gallery');
+
+    if (type !== 'media') {
+      setCoverageHovered(false);
+      setWinnerHovered(false);
+    }
+
+    if (type !== 'gallery') {
+      setPhotoGalleryHovered(false);
+    }
   };
 
   const closeDropdowns = () => {
     if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
+
     dropdownTimer.current = setTimeout(() => {
       setAdvisoryOpen(false);
       setRedCarpetOpen(false);
       setRecognizedOpen(false);
       setMediaOpen(false);
       setProcessOpen(false);
-      resetMediaMenu();
+      setGalleryOpen(false);
+      resetFlyouts();
     }, 140);
   };
 
   useEffect(() => {
     const updateIsMobile = () => setIsMobile(window.innerWidth <= 992);
     updateIsMobile();
+
     window.addEventListener('resize', updateIsMobile);
     return () => window.removeEventListener('resize', updateIsMobile);
   }, []);
@@ -93,7 +119,9 @@ export default function Navbar() {
       const diff = currentScrollY - lastScrollY.current;
 
       if (Math.abs(diff) < 8) return;
+
       if (hideTimer.current) clearTimeout(hideTimer.current);
+
       if (diff < 0) setIsHidden(false);
 
       if (diff > 0 && currentScrollY > 140 && !mobileOpen) {
@@ -145,21 +173,10 @@ export default function Navbar() {
               type="button"
               className={`nav-link ${pathname?.startsWith('/advisory-panel') ? 'active' : ''}`}
               aria-expanded={advisoryOpen}
-              onClick={() => {
-                setAdvisoryOpen((s) => !s);
-                setRedCarpetOpen(false);
-                setRecognizedOpen(false);
-                setMediaOpen(false);
-              }}
+              onClick={() => openDropdown('advisory')}
             >
               Advisory Panel
-              <ChevronDown
-                size={16}
-                style={{
-                  transform: advisoryOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: '0.3s ease',
-                }}
-              />
+              <ChevronDown size={16} />
             </button>
 
             <div className="mega-panel nav-year-dropdown">
@@ -188,21 +205,10 @@ export default function Navbar() {
               type="button"
               className={`nav-link ${pathname?.startsWith('/red-carpet-night') ? 'active' : ''}`}
               aria-expanded={redCarpetOpen}
-              onClick={() => {
-                setRedCarpetOpen((s) => !s);
-                setAdvisoryOpen(false);
-                setRecognizedOpen(false);
-                setMediaOpen(false);
-              }}
+              onClick={() => openDropdown('redCarpet')}
             >
               Red Carpet Night
-              <ChevronDown
-                size={16}
-                style={{
-                  transform: redCarpetOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: '0.3s ease',
-                }}
-              />
+              <ChevronDown size={16} />
             </button>
 
             <div className="mega-panel nav-year-dropdown">
@@ -231,22 +237,10 @@ export default function Navbar() {
               type="button"
               className={`nav-link ${pathname?.startsWith('/recognized-brands') ? 'active' : ''}`}
               aria-expanded={recognizedOpen}
-              onClick={() => {
-                setRecognizedOpen((s) => !s);
-                setAdvisoryOpen(false);
-                setRedCarpetOpen(false);
-                setMediaOpen(false);
-                setProcessOpen(false);
-              }}
+              onClick={() => openDropdown('recognized')}
             >
               Recognized Brands
-              <ChevronDown
-                size={16}
-                style={{
-                  transform: recognizedOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: '0.3s ease',
-                }}
-              />
+              <ChevronDown size={16} />
             </button>
 
             <div className="mega-panel nav-year-dropdown">
@@ -273,24 +267,14 @@ export default function Navbar() {
           >
             <button
               type="button"
-              className={`nav-link ${pathname === '/process' || pathname === '/enter' ? 'active' : ''}`}
+              className={`nav-link ${
+                pathname === '/process-flow' || pathname === '/enter' ? 'active' : ''
+              }`}
               aria-expanded={processOpen}
-              onClick={() => {
-                setProcessOpen((s) => !s);
-                setAdvisoryOpen(false);
-                setRedCarpetOpen(false);
-                setRecognizedOpen(false);
-                setMediaOpen(false);
-              }}
+              onClick={() => openDropdown('process')}
             >
               Process
-              <ChevronDown
-                size={16}
-                style={{
-                  transform: processOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: '0.3s ease',
-                }}
-              />
+              <ChevronDown size={16} />
             </button>
 
             <div className="mega-panel nav-year-dropdown">
@@ -309,16 +293,8 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link href="/blog" className="nav-link" onClick={closeMobileMenu}>
-            Blogs
-          </Link>
-
-          <Link href="/events" className="nav-link" onClick={closeMobileMenu}>
-            Events
-          </Link>
-
           <div
-            className={`nav-dropdown ${galleryOpen ? 'open' : ''}`}
+            className={`nav-dropdown media-nav-dropdown ${galleryOpen ? 'open' : ''}`}
             onMouseEnter={() => !isMobile && openDropdown('gallery')}
             onMouseLeave={() => !isMobile && closeDropdowns()}
           >
@@ -326,27 +302,14 @@ export default function Navbar() {
               type="button"
               className={`nav-link ${pathname?.startsWith('/gallery') ? 'active' : ''}`}
               aria-expanded={galleryOpen}
-              onClick={() => {
-                setGalleryOpen((s) => !s);
-                setProcessOpen(false);
-                setAdvisoryOpen(false);
-                setRedCarpetOpen(false);
-                setRecognizedOpen(false);
-                setMediaOpen(false);
-              }}
+              onClick={() => openDropdown('gallery')}
             >
               Gallery
-              <ChevronDown
-                size={16}
-                style={{
-                  transform: galleryOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: '0.3s ease',
-                }}
-              />
+              <ChevronDown size={16} />
             </button>
 
-            <div className="mega-panel nav-year-dropdown">
-              <ul>
+            <div className="mega-panel nav-year-dropdown media-mega-panel">
+              <ul className="media-main-list">
                 <li>
                   <Link
                     href="/gallery/video-gallery"
@@ -357,14 +320,41 @@ export default function Navbar() {
                   </Link>
                 </li>
 
-                <li>
-                  <Link
-                    href="/gallery/photo-gallery"
-                    className="mega-item"
-                    onClick={closeMobileMenu}
+                <li
+                  className="media-menu-item has-flyout-left"
+                  onMouseEnter={() => setPhotoGalleryHovered(true)}
+                  onMouseLeave={() => setPhotoGalleryHovered(false)}
+                >
+                  <span
+                    className="mega-item media-menu-label"
+                    onClick={() => setPhotoGalleryHovered((s) => !s)}
+                    onKeyDown={(e) => e.key === 'Enter' && setPhotoGalleryHovered((s) => !s)}
+                    role="button"
+                    tabIndex={0}
                   >
-                    Photo Gallery
-                  </Link>
+                    <span>Photo Gallery</span>
+                    <ChevronRight size={14} />
+                  </span>
+
+                  <div
+                    className={`media-flyout media-flyout-left ${
+                      photoGalleryHovered ? 'visible' : ''
+                    }`}
+                  >
+                    <ul>
+                      {photoGalleryYears.map((year) => (
+                        <li key={year}>
+                          <Link
+                            href={`/gallery/photo-gallery/${year}`}
+                            className="mega-item"
+                            onClick={closeMobileMenu}
+                          >
+                            Photo Gallery {year}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -379,22 +369,10 @@ export default function Navbar() {
               type="button"
               className={`nav-link ${pathname?.startsWith('/media') ? 'active' : ''}`}
               aria-expanded={mediaOpen}
-              onClick={() => {
-                setMediaOpen((s) => !s);
-                setAdvisoryOpen(false);
-                setRedCarpetOpen(false);
-                setRecognizedOpen(false);
-                if (mediaOpen) resetMediaMenu();
-              }}
+              onClick={() => openDropdown('media')}
             >
               Media
-              <ChevronDown
-                size={16}
-                style={{
-                  transform: mediaOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: '0.3s ease',
-                }}
-              />
+              <ChevronDown size={16} />
             </button>
 
             <div className="mega-panel nav-year-dropdown media-mega-panel">
@@ -411,14 +389,15 @@ export default function Navbar() {
                     role="button"
                     tabIndex={0}
                   >
-                    <ChevronLeft size={14} />
-                    Media Coverage
+                    <span>Media Coverage</span>
+                    <ChevronRight size={14} />
                   </span>
+
                   <div
                     className={`media-flyout media-flyout-left ${coverageHovered ? 'visible' : ''}`}
                   >
                     <ul>
-                      {mediaYears.map((year) => (
+                      {mediaCoverageYears.map((year) => (
                         <li key={year}>
                           <Link
                             href={`/media/media-coverage/${year}-media-coverage`}
@@ -432,6 +411,7 @@ export default function Navbar() {
                     </ul>
                   </div>
                 </li>
+
                 <li
                   className="media-menu-item has-flyout-left"
                   onMouseEnter={() => setWinnerHovered(true)}
@@ -444,21 +424,22 @@ export default function Navbar() {
                     role="button"
                     tabIndex={0}
                   >
-                    <ChevronLeft size={14} />
-                    Winning Brand Videos
+                    <span>Winning Brand Videos</span>
+                    <ChevronRight size={14} />
                   </span>
+
                   <div
                     className={`media-flyout media-flyout-left ${winnerHovered ? 'visible' : ''}`}
                   >
                     <ul>
-                      {mediaYears.map((year) => (
+                      {winningBrandYears.map((year) => (
                         <li key={year}>
                           <Link
                             href={`/media/winning-brand-videos/${year}`}
                             className="mega-item"
                             onClick={closeMobileMenu}
                           >
-                            {year}
+                            Winning Brand Videos {year}
                           </Link>
                         </li>
                       ))}
@@ -469,13 +450,21 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* <Link
-            href="/contact"
-            className={`nav-link ${pathname === '/contact' ? 'active' : ''}`}
+          <Link
+            href="/blog"
+            className={`nav-link ${pathname?.startsWith('/blog') ? 'active' : ''}`}
             onClick={closeMobileMenu}
           >
-            Contact
-          </Link> */}
+            Blogs
+          </Link>
+
+          <Link
+            href="/events"
+            className={`nav-link ${pathname?.startsWith('/events') ? 'active' : ''}`}
+            onClick={closeMobileMenu}
+          >
+            Events
+          </Link>
         </nav>
 
         <div className="navbar-actions">
