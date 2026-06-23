@@ -1,57 +1,104 @@
 'use client';
 
-import { useState } from 'react';
-// import Link from 'next/link';
+// const leaders = [
+//   {
+//     image: '/assets/photogallery/2022/image1.png',
+//     name: 'Aarti Singh',
+//     designation: 'Enterprise CIO',
+//     company: 'Mahindra Group',
+//   },
+//   {
+//     image: '/assets/photogallery/2022/image2.png',
+//     name: 'Gautam Datta',
+//     designation: 'Chief Digital Officer',
+//     company: 'Bajaj Allianz',
+//   },
+//   {
+//     image: '/assets/photogallery/2022/image3.png',
+//     name: 'Jayant Goyal',
+//     designation: 'CIO',
+//     company: 'Coforge',
+//   },
+//   {
+//     image: '/assets/photogallery/2022/image4.png',
+//     name: 'Aarti Singh',
+//     designation: 'Enterprise CIO',
+//     company: 'Mahindra Group',
+//   },
+//   {
+//     image: '/assets/photogallery/2022/image5.png',
+//     name: 'Gautam Datta',
+//     designation: 'Chief Digital Officer',
+//     company: 'Bajaj Allianz',
+//   },
+//   {
+//     image: '/assets/photogallery/2022/image6.png',
+//     name: 'Jayant Goyal',
+//     designation: 'CIO',
+//     company: 'Coforge',
+//   },
+//   {
+//     image: '/assets/photogallery/2022/image7.png',
+//     name: 'Aarti Singh',
+//     designation: 'Enterprise CIO',
+//     company: 'Mahindra Group',
+//   },
+//   {
+//     image: '/assets/photogallery/2022/image8.png',
+//     name: 'Gautam Datta',
+//     designation: 'Chief Digital Officer',
+//     company: 'Bajaj Allianz',
+//   },
+//   {
+//     image: '/assets/photogallery/2022/image9.png',
+//     name: 'Jayant Goyal',
+//     designation: 'CIO',
+//     company: 'Coforge',
+//   },
+// ];
 
-const tabs = ['Overview', 'Press Highlights', 'Impact'];
-
-const content = {
-  Overview: [
-    '2017 set the stage for CORE Media’s strategic media presence with strong coverage in regional business press.',
-    'This page captures the major media moments and storytelling themes from that year.',
-  ],
-  'Press Highlights': [
-    'Profile stories in industry publications about leadership and innovation.',
-    'Thought pieces on the future of digital media and branding.',
-    'Event coverage from keynote sessions and partner announcements.',
-  ],
-  Impact: [
-    'Increased brand recognition across enterprise and marketing audiences.',
-    'Broader press syndication and social amplification of every major announcement.',
-    'Stronger media credibility through evergreen coverage and interviews.',
-  ],
-};
+const highlights = Array.from({ length: 40 }, (_, index) => ({
+  image: `/assets/photogallery/2022/photo${index + 1}.jpg`,
+  name: `CIO-Choice ${index + 1}`,
+  date: '2022',
+}));
 
 export default function MediaCoverage2017Page() {
-  const [activeTab, setActiveTab] = useState('Overview');
-
   return (
     <main className="page-container">
       <section className="page-header">
-        <h1>Media Coverage - 2017</h1>
-        <p>Interactive recap of CORE Media’s 2017 media coverage and press momentum.</p>
+        <h1>Gallery of Excellence – 2022</h1>
+        <p>Snapshots of innovation, recognition, and industry leadership throughout the year.</p>
       </section>
 
-      <section className="media-coverage-tabs">
-        <div className="tab-buttons">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              className={`tab-button ${activeTab === tab ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+      <section className="media-two-sections">
+        {/* <div className="media-section-card">
+          <h2>Advisory Leaders</h2>
 
-        <div className="tab-content">
-          <ul>
-            {content[activeTab as keyof typeof content].map((item, index) => (
-              <li key={index}>{item}</li>
+          <div className="leaders-grid">
+            {leaders.map((item) => (
+              <div className="media-profile-card" key={item.name}>
+                <img src={item.image} alt={item.name} />
+                <h3>{item.name}</h3>
+                <p>{item.designation}</p>
+                <span>{item.company}</span>
+              </div>
             ))}
-          </ul>
+          </div>
+        </div>      */}
+
+        <div className="media-section-card">
+          <h2>Media Highlights</h2>
+
+          <div className="highlights-grid">
+            {highlights.map((item) => (
+              <div className="media-profile-card" key={item.image}>
+                <img src={item.image} alt={item.name} />
+                <h3>{item.name}</h3>
+                <p>{item.date}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </main>

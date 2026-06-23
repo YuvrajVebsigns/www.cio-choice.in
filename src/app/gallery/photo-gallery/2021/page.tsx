@@ -1,57 +1,104 @@
 'use client';
 
-import { useState } from 'react';
-// import Link from 'next/link';
+const leaders = [
+  {
+    image: '/assets/photogallery/2021/image1.png',
+    name: 'GOUTAM DATTA',
+    designation: 'CIO & CDO',
+    company: 'BAJAJ ALLIANZ LIFE INSURANCE',
+  },
+  {
+    image: '/assets/photogallery/2021/image2.png',
+    name: 'NITIN AGARWAL',
+    designation: 'PRESIDENT & GROUP CIO, CTO & CDO',
+    company: 'EDELWEISS FINANCIAL SERVICES',
+  },
+  {
+    image: '/assets/photogallery/2021/image3.png',
+    name: 'PRAKASH RAMCHANDRAN',
+    designation: 'CTO',
+    company: "BYJU'S",
+  },
+  {
+    image: '/assets/photogallery/2021/image4.png',
+    name: 'PRASAD BADIWALE',
+    designation: 'JOINT PRESIDENT',
+    company: 'BIRLA MANAGEMENT SERVICES',
+  },
+  {
+    image: '/assets/photogallery/2021/image5.png',
+    name: 'SANJAY KOTHA',
+    designation: 'JOINT PRESIDENT & GROUP CIO',
+    company: 'ADANI ENTERPRISES',
+  },
+  {
+    image: '/assets/photogallery/2021/image6.png',
+    name: 'SREEJI GOPINATH',
+    designation: 'GLOBAL CIO',
+    company: 'LUPIN',
+  },
+  {
+    image: '/assets/photogallery/2021/image7.png',
+    name: 'TARUN ANAND',
+    designation: 'HEAD - GLOBAL IT',
+    company: 'DABUR',
+  },
+  {
+    image: '/assets/photogallery/2021/image8.png',
+    name: 'VINOD SIVARAMA KRISHNAN',
+    designation: 'CIO',
+    company: 'INDUS TOWERS',
+  },
+  {
+    image: '/assets/photogallery/2021/image9.png',
+    name: 'VV BALAJI',
+    designation: 'HEAD - BUSINESS TECHNOLOGY GROUP',
+    company: 'ICICI BANK',
+  },
+];
 
-const tabs = ['Overview', 'Press Highlights', 'Impact'];
-
-const content = {
-  Overview: [
-    '2017 set the stage for CORE Media’s strategic media presence with strong coverage in regional business press.',
-    'This page captures the major media moments and storytelling themes from that year.',
-  ],
-  'Press Highlights': [
-    'Profile stories in industry publications about leadership and innovation.',
-    'Thought pieces on the future of digital media and branding.',
-    'Event coverage from keynote sessions and partner announcements.',
-  ],
-  Impact: [
-    'Increased brand recognition across enterprise and marketing audiences.',
-    'Broader press syndication and social amplification of every major announcement.',
-    'Stronger media credibility through evergreen coverage and interviews.',
-  ],
-};
+const highlights = Array.from({ length: 49 }, (_, index) => ({
+  image: `/assets/photogallery/2021/photo${index + 1}.jpg`,
+  name: `CIO-Choice ${index + 1}`,
+  date: '2021',
+}));
 
 export default function MediaCoverage2017Page() {
-  const [activeTab, setActiveTab] = useState('Overview');
-
   return (
     <main className="page-container">
       <section className="page-header">
-        <h1>Media Coverage - 2017</h1>
-        <p>Interactive recap of CORE Media’s 2017 media coverage and press momentum.</p>
+        <h1>Gallery of Excellence – 2021</h1>
+        <p>Snapshots of innovation, recognition, and industry leadership throughout the year.</p>
       </section>
 
-      <section className="media-coverage-tabs">
-        <div className="tab-buttons">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              className={`tab-button ${activeTab === tab ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </button>
-          ))}
+      <section className="media-two-sections">
+        <div className="media-section-card">
+          <h2>Advisory Leaders</h2>
+
+          <div className="leaders-grid">
+            {leaders.map((item) => (
+              <div className="media-profile-card" key={item.name}>
+                <img src={item.image} alt={item.name} />
+                <h3>{item.name}</h3>
+                <p>{item.designation}</p>
+                <span>{item.company}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="tab-content">
-          <ul>
-            {content[activeTab as keyof typeof content].map((item, index) => (
-              <li key={index}>{item}</li>
+        <div className="media-section-card">
+          <h2>Media Highlights</h2>
+
+          <div className="highlights-grid">
+            {highlights.map((item) => (
+              <div className="media-profile-card" key={item.image}>
+                <img src={item.image} alt={item.name} />
+                <h3>{item.name}</h3>
+                <p>{item.date}</p>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </section>
     </main>
