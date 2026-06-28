@@ -475,7 +475,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <button
+          {/* <button
             className={`menu-btn ${mobileOpen ? 'open' : ''}`}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
@@ -485,6 +485,18 @@ export default function Navbar() {
             }}
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button> */}
+          <button
+            className={`menu-btn ${mobileOpen ? 'open' : ''}`}
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+            onClick={() => {
+              setMobileOpen((s) => !s);
+              setIsHidden(false);
+            }}
+          >
+            <Menu size={22} className="menu-icon" />
+            {mobileOpen && <X size={22} className="close-icon" />}
           </button>
         </div>
       </div>
