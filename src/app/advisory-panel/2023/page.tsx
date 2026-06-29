@@ -1,3 +1,145 @@
+// 'use client';
+
+// import Image from 'next/image';
+// import { useEffect, useState } from 'react';
+// import { fetchWebsitePageBySlug, type WebsitePage } from '@/services/pages.services';
+
+// type AdvisoryMember = {
+//   author: string;
+//   role: string;
+//   quote?: string;
+//   avatar?: string;
+// };
+
+// function isRecord(value: unknown): value is Record<string, unknown> {
+//   return typeof value === 'object' && value !== null;
+// }
+
+// function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
+//   if (!page) return [];
+
+//   const allMembers: AdvisoryMember[] = [];
+//   const seen = new Set<string>();
+
+//   function search(value: unknown) {
+//     if (Array.isArray(value)) {
+//       value.forEach(search);
+//       return;
+//     }
+
+//     if (!isRecord(value)) return;
+
+//     const author = typeof value.author === 'string' ? value.author.trim() : '';
+//     const role = typeof value.role === 'string' ? value.role.trim() : '';
+//     const quote = typeof value.quote === 'string' ? value.quote : '';
+//     const avatar = typeof value.avatar === 'string' ? value.avatar : '';
+
+//     if (author) {
+//       const key = `${author.toLowerCase()}-${role.toLowerCase()}`;
+
+//       if (!seen.has(key)) {
+//         seen.add(key);
+
+//         allMembers.push({
+//           author,
+//           role,
+//           quote,
+//           avatar,
+//         });
+//       }
+//     }
+
+//     Object.values(value).forEach(search);
+//   }
+
+//   search(page);
+
+//   return allMembers;
+// }
+
+// export default function AdvisoryPanel2023Page() {
+//   const [page, setPage] = useState<WebsitePage | null>(null);
+//   const [members, setMembers] = useState<AdvisoryMember[]>([]);
+//   const [isLoading, setIsLoading] = useState(true);
+
+//   useEffect(() => {
+//     async function loadPage() {
+//       try {
+//         setIsLoading(true);
+
+//         const data = await fetchWebsitePageBySlug('advisory-panel-2023');
+
+//         setPage(data);
+//         setMembers(extractMembers(data));
+//       } catch (error) {
+//         // Handle error silently
+//       } finally {
+//         setIsLoading(false);
+//       }
+//     }
+
+//     loadPage();
+//   }, []);
+
+//   if (isLoading) {
+//     return <div style={{ padding: 40, textAlign: 'center' }}>Loading...</div>;
+//   }
+
+//   return (
+//     <main className="advisory-page">
+//       <div className="advisory-members-heading-card">
+//         <br />
+//         <h2>{page?.title || 'Advisory Panel 2023'}</h2>
+//         <br />
+//         <p>
+//           Trusted leaders from enterprise and technology who help shape the CIO Choice recognition
+//           program.
+//         </p>
+//       </div>
+
+//       <section className="advisory-panel-section">
+//         <div className="advisory-container">
+//           {members.length === 0 ? (
+//             <p
+//               style={{
+//                 textAlign: 'center',
+//                 padding: '40px 0',
+//               }}
+//             >
+//               No advisory panel members available.
+//             </p>
+//           ) : (
+//             <div className="advisory-grid">
+//               {members.map((member, index) => (
+//                 <article key={`${member.author}-${index}`} className="advisory-card">
+//                   {member.avatar ? (
+//                     <Image
+//                       src={member.avatar}
+//                       alt={member.author}
+//                       width={120}
+//                       height={120}
+//                       className="advisory-avatar"
+//                       unoptimized
+//                     />
+//                   ) : (
+//                     <div className="advisory-avatar advisory-avatar-placeholder" />
+//                   )}
+
+//                   <h3>{member.author}</h3>
+
+//                   <p>{member.role}</p>
+
+//                   {member.quote ? <blockquote>{member.quote}</blockquote> : null}
+//                 </article>
+//               ))}
+//             </div>
+//           )}
+//         </div>
+//       </section>
+//     </main>
+//   );
+// }
+
 'use client';
 
 import Image from 'next/image';
@@ -11,12 +153,47 @@ type AdvisoryMember = {
   avatar?: string;
 };
 
+type AdvisoryAvatarProps = {
+  src?: string;
+  alt: string;
+};
+
+const FALLBACK_AVATAR = '/assets/team/1.jpg';
+
+function AdvisoryAvatar({ src, alt }: AdvisoryAvatarProps) {
+  const [imageSrc, setImageSrc] = useState(src?.trim() || FALLBACK_AVATAR);
+
+  useEffect(() => {
+    setImageSrc(src?.trim() || FALLBACK_AVATAR);
+  }, [src]);
+
+  function handleImageError() {
+    if (imageSrc !== FALLBACK_AVATAR) {
+      setImageSrc(FALLBACK_AVATAR);
+    }
+  }
+
+  return (
+    <Image
+      src={imageSrc}
+      alt={alt}
+      width={120}
+      height={120}
+      className="advisory-avatar"
+      unoptimized
+      onError={handleImageError}
+    />
+  );
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
 function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
-  if (!page) return [];
+  if (!page) {
+    return [];
+  }
 
   const allMembers: AdvisoryMember[] = [];
   const seen = new Set<string>();
@@ -27,12 +204,17 @@ function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
       return;
     }
 
-    if (!isRecord(value)) return;
+    if (!isRecord(value)) {
+      return;
+    }
 
     const author = typeof value.author === 'string' ? value.author.trim() : '';
+
     const role = typeof value.role === 'string' ? value.role.trim() : '';
-    const quote = typeof value.quote === 'string' ? value.quote : '';
-    const avatar = typeof value.avatar === 'string' ? value.avatar : '';
+
+    const quote = typeof value.quote === 'string' ? value.quote.trim() : '';
+
+    const avatar = typeof value.avatar === 'string' ? value.avatar.trim() : '';
 
     if (author) {
       const key = `${author.toLowerCase()}-${role.toLowerCase()}`;
@@ -59,38 +241,65 @@ function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
 
 export default function AdvisoryPanel2023Page() {
   const [page, setPage] = useState<WebsitePage | null>(null);
+
   const [members, setMembers] = useState<AdvisoryMember[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     async function loadPage() {
       try {
         setIsLoading(true);
 
         const data = await fetchWebsitePageBySlug('advisory-panel-2023');
 
+        if (!isMounted) {
+          return;
+        }
+
         setPage(data);
         setMembers(extractMembers(data));
       } catch (error) {
-        // Handle error silently
+        // console.error('Failed to load Advisory Panel 2023:', error);
+
+        if (isMounted) {
+          setPage(null);
+          setMembers([]);
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     }
 
     loadPage();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (isLoading) {
-    return <div style={{ padding: 40, textAlign: 'center' }}>Loading...</div>;
+    return (
+      <div
+        style={{
+          padding: 40,
+          textAlign: 'center',
+        }}
+      >
+        Loading...
+      </div>
+    );
   }
 
   return (
     <main className="advisory-page">
       <div className="advisory-members-heading-card">
-        <br />
         <h2>{page?.title || 'Advisory Panel 2023'}</h2>
-        <br />
+
         <p>
           Trusted leaders from enterprise and technology who help shape the CIO Choice recognition
           program.
@@ -112,22 +321,11 @@ export default function AdvisoryPanel2023Page() {
             <div className="advisory-grid">
               {members.map((member, index) => (
                 <article key={`${member.author}-${index}`} className="advisory-card">
-                  {member.avatar ? (
-                    <Image
-                      src={member.avatar}
-                      alt={member.author}
-                      width={120}
-                      height={120}
-                      className="advisory-avatar"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="advisory-avatar advisory-avatar-placeholder" />
-                  )}
+                  <AdvisoryAvatar src={member.avatar} alt={member.author} />
 
                   <h3>{member.author}</h3>
 
-                  <p>{member.role}</p>
+                  {member.role ? <p>{member.role}</p> : null}
 
                   {member.quote ? <blockquote>{member.quote}</blockquote> : null}
                 </article>

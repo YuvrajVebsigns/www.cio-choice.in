@@ -1,14 +1,516 @@
+// 'use client';
+
+// import Image from 'next/image';
+// import Link from 'next/link';
+// import { useParams } from 'next/navigation';
+// import { ArrowUpRight } from 'lucide-react';
+// import { ArrowUpLeft } from 'lucide-react';
+// import { useEffect, useState } from 'react';
+// import ClientErrorBoundary from '@/components/ClientErrorBoundary';
+// import EventDetailsAnimated from '@/components/EventDetailsAnimated';
+// import EventSponsorsSection from '@/components/EventSponsorsSection';
+// import {
+//   fetchWebsiteEventByIdOrSlug,
+//   fetchWebsiteEvents,
+//   type WebsiteEvent,
+// } from '@/services/events.service';
+
+// type EventSection = {
+//   heading: string;
+//   body: string;
+// };
+
+// function isRecord(value: unknown): value is Record<string, unknown> {
+//   return typeof value === 'object' && value !== null;
+// }
+
+// function getString(value: unknown, fallback = ''): string {
+//   return typeof value === 'string' ? value : fallback;
+// }
+
+// function getEventField(event: WebsiteEvent, key: string): unknown {
+//   return (event as unknown as Record<string, unknown>)[key];
+// }
+
+// function openExternal(url: string) {
+//   try {
+//     window.open(url, '_blank', 'noopener');
+//   } catch (_) {
+//     // ignore
+//   }
+// }
+
+// export default function EventDetailsPage() {
+//   const params = useParams<{ slug?: string | string[] }>();
+
+//   const slug: string = Array.isArray(params?.slug) ? (params.slug[0] ?? '') : (params?.slug ?? '');
+
+//   const [event, setEvent] = useState<WebsiteEvent | null>(null);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+//   const [showShareOptions, setShowShareOptions] = useState(false);
+
+//   function extractTextFromContent(content: unknown): string {
+//     if (!content) return '';
+
+//     const recordContent = isRecord(content)
+//       ? (content as { blocks?: unknown[]; summary?: unknown; description?: unknown })
+//       : null;
+
+//     if (Array.isArray(recordContent?.blocks)) {
+//       return recordContent.blocks
+//         .map((block) => {
+//           if (!isRecord(block)) return '';
+
+//           const blockData = isRecord(block.data) ? block.data : undefined;
+
+//           if (typeof blockData?.text === 'string') return blockData.text;
+//           if (typeof block.text === 'string') return block.text;
+
+//           return '';
+//         })
+//         .filter(Boolean)
+//         .join('\n\n');
+//     }
+
+//     if (Array.isArray(content)) {
+//       return content
+//         .map((item) =>
+//           typeof item === 'string'
+//             ? item
+//             : isRecord(item) && typeof item.body === 'string'
+//               ? item.body
+//               : JSON.stringify(item),
+//         )
+//         .join('\n\n');
+//     }
+
+//     if (typeof content === 'string') return content;
+
+//     if (recordContent) {
+//       return (
+//         getString(recordContent.summary) ||
+//         getString(recordContent.description) ||
+//         JSON.stringify(recordContent)
+//       );
+//     }
+
+//     return String(content);
+//   }
+
+//   useEffect(() => {
+//     let isMounted = true;
+
+//     async function loadEvent() {
+//       if (!slug) {
+//         if (isMounted) {
+//           setError('Event slug is missing.');
+//           setIsLoading(false);
+//         }
+//         return;
+//       }
+
+//       setIsLoading(true);
+//       setError(null);
+
+//       try {
+//         let loadedEvent = await fetchWebsiteEventByIdOrSlug(slug);
+
+//         if (!loadedEvent) {
+//           const list = await fetchWebsiteEvents();
+
+//           const matched = list.find(
+//             (item) =>
+//               String(getEventField(item, 'id')) === slug || getEventField(item, 'slug') === slug,
+//           );
+
+//           if (matched) {
+//             const matchedId = getEventField(matched, 'id');
+
+//             if (matchedId) {
+//               loadedEvent = await fetchWebsiteEventByIdOrSlug(String(matchedId));
+//             }
+//           }
+//         }
+
+//         if (isMounted) {
+//           setEvent(loadedEvent);
+//           setError(loadedEvent ? null : 'Event not found.');
+//         }
+//       } catch (loadError) {
+//         if (isMounted) {
+//           setEvent(null);
+//           setError(loadError instanceof Error ? loadError.message : 'Failed to load event');
+//         }
+//       } finally {
+//         if (isMounted) setIsLoading(false);
+//       }
+//     }
+
+//     loadEvent();
+
+//     return () => {
+//       isMounted = false;
+//     };
+//   }, [slug]);
+
+//   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/events/${slug}` : '';
+//   const displayTitle = event?.title || 'Check this event';
+
+//   async function handleShareWhatsApp() {
+//     const waUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(shareUrl)}`;
+//     openExternal(waUrl);
+//     setShowShareOptions(false);
+//   }
+
+//   async function handleShareFacebook() {
+//     const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+//     openExternal(fbUrl);
+//     setShowShareOptions(false);
+//   }
+
+//   async function handleShareTwitter() {
+//     const twUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(displayTitle || '')}&url=${encodeURIComponent(shareUrl)}`;
+//     openExternal(twUrl);
+//     setShowShareOptions(false);
+//   }
+
+//   async function handleShareInstagram() {
+//     const igWeb = `https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}`;
+//     openExternal(igWeb);
+//     setShowShareOptions(false);
+//   }
+
+//   async function copyLinkToClipboard() {
+//     try {
+//       await navigator.clipboard.writeText(shareUrl);
+//       // Small UX feedback could be added here (toast), kept minimal per request
+//     } catch (_) {
+//       // ignore
+//     }
+//   }
+
+//   // Inline icon components removed (not used) to satisfy linter
+
+//   if (isLoading) {
+//     return (
+//       <main className="event-details-page">
+//         <p style={{ padding: '80px 20px', textAlign: 'center' }}>Loading event...</p>
+//       </main>
+//     );
+//   }
+
+//   if (error || !event) {
+//     return (
+//       <main className="not-found-page">
+//         <Image src="/assets/404.png" alt="Event Not Found" width={700} height={500} />
+
+//         <h1>Event Not Found</h1>
+//         <p>
+//           The event you&apos;re looking for is unavailable or may have been removed. Browse our
+//           latest events to discover what&apos;s coming next.
+//         </p>
+
+//         <Link href="/events" className="backbutton">
+//           <div className="backbutton-icon">
+//             <ArrowUpLeft size={18} />
+//           </div>
+
+//           <span>Back to Events</span>
+//         </Link>
+//       </main>
+//     );
+//   }
+
+//   const readableSlug = slug.replace(/-/g, ' ');
+
+//   const normalizedSections: EventSection[] = [];
+
+//   const eventSections = getEventField(event, 'sections');
+
+//   if (Array.isArray(eventSections)) {
+//     for (const section of eventSections) {
+//       const sectionRecord = isRecord(section) ? section : undefined;
+
+//       const heading =
+//         getString(sectionRecord?.heading) || getString(sectionRecord?.title) || 'Details';
+
+//       const body =
+//         typeof sectionRecord?.body === 'string'
+//           ? sectionRecord.body
+//           : extractTextFromContent(sectionRecord?.body ?? sectionRecord?.content ?? section);
+
+//       normalizedSections.push({ heading, body });
+//     }
+//   } else {
+//     const eventContentForSections = getEventField(event, 'content');
+
+//     if (eventContentForSections) {
+//       normalizedSections.push({
+//         heading: 'Details',
+//         body: extractTextFromContent(eventContentForSections),
+//       });
+//     }
+//   }
+
+//   const featuredEvent = {
+//     title: String(
+//       getEventField(event, 'title') ??
+//         getEventField(event, 'name') ??
+//         getEventField(event, 'eventName') ??
+//         'Event',
+//     ),
+//     author: String(
+//       getEventField(event, 'organizer') ?? getEventField(event, 'author') ?? 'CORE Media',
+//     ),
+//     date: String(getEventField(event, 'startsAt') ?? getEventField(event, 'date') ?? ''),
+//     heroImage: String(
+//       getEventField(event, 'image') ??
+//         getEventField(event, 'heroImage') ??
+//         getEventField(event, 'banner') ??
+//         '/assets/blogs/blog-1.webp',
+//     ),
+//     badge: String(getEventField(event, 'category') ?? 'Events'),
+//     summary: extractTextFromContent(
+//       getEventField(event, 'description') ?? getEventField(event, 'summary') ?? '',
+//     ),
+//     sections: normalizedSections,
+//   };
+
+//   function renderBlock(block: unknown, index: number) {
+//     if (!isRecord(block)) return null;
+
+//     const key =
+//       typeof block.id === 'string' ? block.id : `${String(block.type ?? 'block')}-${index}`;
+
+//     const type = typeof block.type === 'string' ? block.type.toLowerCase() : '';
+//     const data = isRecord(block.data) ? block.data : undefined;
+
+//     if (type === 'header') {
+//       const level = typeof data?.level === 'number' ? data.level : 2;
+//       const text = typeof data?.text === 'string' ? data.text.trim() : '';
+
+//       if (!text) return null;
+
+//       return level <= 2 ? <h2 key={key}>{text}</h2> : <h3 key={key}>{text}</h3>;
+//     }
+
+//     if (type === 'paragraph') {
+//       const text = typeof data?.text === 'string' ? data.text.trim() : '';
+
+//       if (!text) return null;
+
+//       return (
+//         <p
+//           key={key}
+//           style={{ marginBottom: '18px', lineHeight: 1.8 }}
+//           dangerouslySetInnerHTML={{ __html: text }}
+//         />
+//       );
+//     }
+
+//     if (type === 'list') {
+//       const items = Array.isArray(data?.items)
+//         ? data.items.filter((item): item is string => typeof item === 'string')
+//         : [];
+
+//       if (!items.length) return null;
+
+//       return (
+//         <ul key={key} className="overview-list">
+//           {items.map((item) => (
+//             <li key={item}>
+//               <strong>{item}</strong>
+//             </li>
+//           ))}
+//         </ul>
+//       );
+//     }
+
+//     if (type === 'image') {
+//       const file = isRecord(data?.file) ? data.file : undefined;
+//       const url = typeof file?.url === 'string' ? file.url : '';
+
+//       if (!url) return null;
+
+//       return (
+//         <div key={key} style={{ margin: '24px 0' }}>
+//           <Image
+//             src={url}
+//             alt={typeof data?.caption === 'string' ? data.caption : 'Event image'}
+//             width={1200}
+//             height={675}
+//             unoptimized
+//           />
+//         </div>
+//       );
+//     }
+
+//     if (type === 'quote') {
+//       const text = typeof data?.text === 'string' ? data.text.trim() : '';
+
+//       if (!text) return null;
+
+//       return (
+//         <blockquote
+//           key={key}
+//           style={{ margin: '24px 0', paddingLeft: '18px', borderLeft: '3px solid #d11f26' }}
+//         >
+//           {text}
+//         </blockquote>
+//       );
+//     }
+
+//     if (type === 'delimiter') {
+//       return <hr key={key} style={{ margin: '24px 0' }} />;
+//     }
+
+//     const fallbackText = typeof data?.text === 'string' ? data.text.trim() : '';
+
+//     if (!fallbackText) return null;
+
+//     return (
+//       <p
+//         key={key}
+//         style={{ marginBottom: '18px', lineHeight: 1.8 }}
+//         dangerouslySetInnerHTML={{ __html: fallbackText }}
+//       />
+//     );
+//   }
+
+//   const eventContent = getEventField(event, 'content');
+
+//   const contentBlocks =
+//     isRecord(eventContent) && Array.isArray(eventContent.blocks) ? eventContent.blocks : [];
+
+//   return (
+//     <main className="event-details-page">
+//       <div className="event-details-shell">
+//         <ClientErrorBoundary>
+//           <EventDetailsAnimated featuredEvent={featuredEvent} readableSlug={readableSlug} />
+
+//           <EventSponsorsSection />
+
+//           {contentBlocks.length > 0 ? (
+//             <div>{contentBlocks.map((block, index) => renderBlock(block, index))}</div>
+//           ) : null}
+
+//           <div style={{ marginTop: 24 }}>
+//             {featuredEvent.sections.length > 0 ? (
+//               <div style={{ marginTop: 18 }}>
+//                 {featuredEvent.sections.map((section, index) => (
+//                   <section key={`sec-${index}`} style={{ marginTop: 18 }}>
+//                     <h3>{section.heading}</h3>
+
+//                     {String(section.body)
+//                       .split('\n\n')
+//                       .map((paragraph, paragraphIndex) => (
+//                         <p
+//                           key={paragraphIndex}
+//                           style={{ marginBottom: 12 }}
+//                           dangerouslySetInnerHTML={{ __html: paragraph }}
+//                         />
+//                       ))}
+//                   </section>
+//                 ))}
+//               </div>
+//             ) : null}
+
+//             <div style={{ marginTop: 24 }}>
+//               {/* <Link href="/register" className="talk-btn">
+//                     Registration
+//                   </Link> */}
+//               <Link href="/register" className="talk-btn">
+//                 <span>Registration</span>
+
+//                 <div className="talk-btn-icon">
+//                   <ArrowUpRight size={18} />
+//                 </div>
+//               </Link>
+//             </div>
+
+//             <div style={{ marginTop: 24 }}>
+//               <div className="share-container">
+//                 <button
+//                   type="button"
+//                   className="backbutton"
+//                   onClick={() => setShowShareOptions((s) => !s)}
+//                   aria-expanded={showShareOptions}
+//                   aria-haspopup="menu"
+//                   id="share-button"
+//                 >
+//                   <span>Share Event</span>
+//                   <div className="backbutton-icon">
+//                     <ArrowUpRight size={18} />
+//                   </div>
+//                 </button>
+
+//                 <br />
+
+//                 {showShareOptions ? (
+//                   <div className="share-popup" role="menu" aria-labelledby="share-button">
+//                     <button
+//                       type="button"
+//                       onClick={handleShareWhatsApp}
+//                       className="share-option whatsapp"
+//                     >
+//                       <span>WhatsApp</span>
+//                     </button>
+
+//                     <button
+//                       type="button"
+//                       onClick={handleShareFacebook}
+//                       className="share-option facebook"
+//                     >
+//                       <span>Facebook</span>
+//                     </button>
+
+//                     <button
+//                       type="button"
+//                       onClick={handleShareTwitter}
+//                       className="share-option twitter"
+//                     >
+//                       <span>Twitter</span>
+//                     </button>
+
+//                     <button
+//                       type="button"
+//                       onClick={handleShareInstagram}
+//                       className="share-option instagram"
+//                     >
+//                       <span>Instagram</span>
+//                     </button>
+
+//                     <button
+//                       type="button"
+//                       onClick={copyLinkToClipboard}
+//                       className="share-option copy"
+//                     >
+//                       <span>Copy Link</span>
+//                     </button>
+//                   </div>
+//                 ) : null}
+//               </div>
+//             </div>
+//           </div>
+//         </ClientErrorBoundary>
+//       </div>
+//     </main>
+//   );
+// }
+
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowUpRight } from 'lucide-react';
-import { ArrowUpLeft } from 'lucide-react';
+import { ArrowUpLeft, ArrowUpRight, ExternalLink } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
 import ClientErrorBoundary from '@/components/ClientErrorBoundary';
 import EventDetailsAnimated from '@/components/EventDetailsAnimated';
 import EventSponsorsSection from '@/components/EventSponsorsSection';
+
 import {
   fetchWebsiteEventByIdOrSlug,
   fetchWebsiteEvents,
@@ -20,83 +522,346 @@ type EventSection = {
   body: string;
 };
 
+type EventSponsor = {
+  id: string;
+  name: string;
+  logo: string;
+  website: string;
+  tier: string;
+  description: string;
+};
+
+type SponsorLogoProps = {
+  src?: string;
+  alt: string;
+};
+
+const FALLBACK_EVENT_IMAGE = '/assets/blogs/blog-1.webp';
+const FALLBACK_SPONSOR_LOGO = '/assets/logo/Heading.png';
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
 function getString(value: unknown, fallback = ''): string {
-  return typeof value === 'string' ? value : fallback;
+  return typeof value === 'string' ? value.trim() : fallback;
 }
 
 function getEventField(event: WebsiteEvent, key: string): unknown {
   return (event as unknown as Record<string, unknown>)[key];
 }
 
+/**
+ * Normal string URL aur media object dono handle karta hai.
+ */
+function getImageUrl(value: unknown): string {
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+
+  if (!isRecord(value)) {
+    return '';
+  }
+
+  const urlVariants = isRecord(value.urlVariants) ? value.urlVariants : null;
+
+  return (
+    getString(value.url) ||
+    getString(value.original) ||
+    getString(value.large) ||
+    getString(value.medium) ||
+    getString(value.small) ||
+    getString(value.thumbnail) ||
+    getString(urlVariants?.large) ||
+    getString(urlVariants?.medium) ||
+    getString(urlVariants?.small) ||
+    getString(urlVariants?.thumbnail)
+  );
+}
+
+function normalizeExternalUrl(value: unknown): string {
+  const url = getString(value);
+
+  if (!url) {
+    return '';
+  }
+
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+
+  return `https://${url}`;
+}
+
+/**
+ * API sponsors ko display-ready format mein convert karta hai.
+ */
+function extractEventSponsors(event: WebsiteEvent): EventSponsor[] {
+  const rawSponsors = getEventField(event, 'sponsors');
+
+  if (!Array.isArray(rawSponsors)) {
+    return [];
+  }
+
+  const sponsors: EventSponsor[] = [];
+  const seen = new Set<string>();
+
+  rawSponsors.forEach((item, index) => {
+    /*
+     * API sponsor ko string ke roop mein bheje,
+     * to us case ko bhi handle karega.
+     */
+    if (typeof item === 'string') {
+      const name = item.trim();
+
+      if (!name) {
+        return;
+      }
+
+      const duplicateKey = name.toLowerCase();
+
+      if (seen.has(duplicateKey)) {
+        return;
+      }
+
+      seen.add(duplicateKey);
+
+      sponsors.push({
+        id: `sponsor-${index}`,
+        name,
+        logo: '',
+        website: '',
+        tier: '',
+        description: '',
+      });
+
+      return;
+    }
+
+    if (!isRecord(item)) {
+      return;
+    }
+
+    const name =
+      getString(item.name) ||
+      getString(item.title) ||
+      getString(item.companyName) ||
+      getString(item.brandName) ||
+      getString(item.company);
+
+    if (!name) {
+      return;
+    }
+
+    const logo =
+      getImageUrl(item.logo) ||
+      getImageUrl(item.image) ||
+      getImageUrl(item.photo) ||
+      getImageUrl(item.logoImage) ||
+      getImageUrl(item.brandLogo) ||
+      getImageUrl(item.logoId) ||
+      getImageUrl(item.imageId) ||
+      getImageUrl(item.media);
+
+    const website = normalizeExternalUrl(
+      item.website ?? item.websiteUrl ?? item.link ?? item.externalUrl,
+    );
+
+    const tier =
+      getString(item.tier) ||
+      getString(item.category) ||
+      getString(item.sponsorType) ||
+      getString(item.type);
+
+    const description =
+      getString(item.description) || getString(item.excerpt) || getString(item.subtitle);
+
+    const id = getString(item.id) || getString(item._id) || `${name}-${index}`;
+
+    const duplicateKey = `${name.toLowerCase()}-${website.toLowerCase()}`;
+
+    if (seen.has(duplicateKey)) {
+      return;
+    }
+
+    seen.add(duplicateKey);
+
+    sponsors.push({
+      id,
+      name,
+      logo,
+      website,
+      tier,
+      description,
+    });
+  });
+
+  return sponsors;
+}
+
+function SponsorLogo({ src, alt }: SponsorLogoProps) {
+  const [imageSrc, setImageSrc] = useState(src?.trim() || FALLBACK_SPONSOR_LOGO);
+
+  useEffect(() => {
+    setImageSrc(src?.trim() || FALLBACK_SPONSOR_LOGO);
+  }, [src]);
+
+  function handleImageError() {
+    if (imageSrc !== FALLBACK_SPONSOR_LOGO) {
+      setImageSrc(FALLBACK_SPONSOR_LOGO);
+    }
+  }
+
+  return (
+    <Image
+      src={imageSrc}
+      alt={alt}
+      width={220}
+      height={110}
+      className="event-sponsor-logo"
+      unoptimized
+      onError={handleImageError}
+    />
+  );
+}
+
+function DynamicEventSponsorsSection({ sponsors }: { sponsors: EventSponsor[] }) {
+  return (
+    <section className="event-sponsors-section">
+      <div className="event-sponsors-header">
+        <span className="event-sponsors-eyebrow">Our Partners</span>
+
+        <h2>Event Sponsors</h2>
+
+        <p>Meet the organizations supporting this event.</p>
+      </div>
+
+      <div className="event-sponsors-grid">
+        {sponsors.map((sponsor) => {
+          const sponsorContent = (
+            <>
+              {sponsor.tier ? <span className="event-sponsor-tier">{sponsor.tier}</span> : null}
+
+              <div className="event-sponsor-logo-wrap">
+                <SponsorLogo src={sponsor.logo} alt={`${sponsor.name} logo`} />
+              </div>
+
+              <h3>{sponsor.name}</h3>
+
+              {sponsor.description ? <p>{sponsor.description}</p> : null}
+
+              {sponsor.website ? (
+                <span className="event-sponsor-website">
+                  Visit Website
+                  <ExternalLink size={15} />
+                </span>
+              ) : null}
+            </>
+          );
+
+          if (sponsor.website) {
+            return (
+              <a
+                key={sponsor.id}
+                href={sponsor.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="event-sponsor-card"
+              >
+                {sponsorContent}
+              </a>
+            );
+          }
+
+          return (
+            <article key={sponsor.id} className="event-sponsor-card">
+              {sponsorContent}
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function extractTextFromContent(content: unknown): string {
+  if (!content) {
+    return '';
+  }
+
+  if (typeof content === 'string') {
+    return content.trim();
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((item) => {
+        if (typeof item === 'string') {
+          return item.trim();
+        }
+
+        if (isRecord(item) && typeof item.body === 'string') {
+          return item.body.trim();
+        }
+
+        return '';
+      })
+      .filter(Boolean)
+      .join('\n\n');
+  }
+
+  if (!isRecord(content)) {
+    return '';
+  }
+
+  if (Array.isArray(content.blocks)) {
+    return content.blocks
+      .map((block) => {
+        if (!isRecord(block)) {
+          return '';
+        }
+
+        const blockData = isRecord(block.data) ? block.data : null;
+
+        if (typeof blockData?.text === 'string') {
+          return blockData.text.trim();
+        }
+
+        if (typeof block.text === 'string') {
+          return block.text.trim();
+        }
+
+        return '';
+      })
+      .filter(Boolean)
+      .join('\n\n');
+  }
+
+  return getString(content.summary) || getString(content.description);
+}
+
 function openExternal(url: string) {
   try {
-    window.open(url, '_blank', 'noopener');
-  } catch (_) {
-    // ignore
+    window.open(url, '_blank', 'noopener,noreferrer');
+  } catch {
+    // Browser popup blocked.
   }
 }
 
 export default function EventDetailsPage() {
-  const params = useParams<{ slug?: string | string[] }>();
+  const params = useParams<{
+    slug?: string | string[];
+  }>();
 
-  const slug: string = Array.isArray(params?.slug) ? (params.slug[0] ?? '') : (params?.slug ?? '');
+  const slug = Array.isArray(params?.slug) ? (params.slug[0] ?? '') : (params?.slug ?? '');
 
   const [event, setEvent] = useState<WebsiteEvent | null>(null);
+
   const [isLoading, setIsLoading] = useState(true);
+
   const [error, setError] = useState<string | null>(null);
+
   const [showShareOptions, setShowShareOptions] = useState(false);
-
-  function extractTextFromContent(content: unknown): string {
-    if (!content) return '';
-
-    const recordContent = isRecord(content)
-      ? (content as { blocks?: unknown[]; summary?: unknown; description?: unknown })
-      : null;
-
-    if (Array.isArray(recordContent?.blocks)) {
-      return recordContent.blocks
-        .map((block) => {
-          if (!isRecord(block)) return '';
-
-          const blockData = isRecord(block.data) ? block.data : undefined;
-
-          if (typeof blockData?.text === 'string') return blockData.text;
-          if (typeof block.text === 'string') return block.text;
-
-          return '';
-        })
-        .filter(Boolean)
-        .join('\n\n');
-    }
-
-    if (Array.isArray(content)) {
-      return content
-        .map((item) =>
-          typeof item === 'string'
-            ? item
-            : isRecord(item) && typeof item.body === 'string'
-              ? item.body
-              : JSON.stringify(item),
-        )
-        .join('\n\n');
-    }
-
-    if (typeof content === 'string') return content;
-
-    if (recordContent) {
-      return (
-        getString(recordContent.summary) ||
-        getString(recordContent.description) ||
-        JSON.stringify(recordContent)
-      );
-    }
-
-    return String(content);
-  }
 
   useEffect(() => {
     let isMounted = true;
@@ -107,43 +872,61 @@ export default function EventDetailsPage() {
           setError('Event slug is missing.');
           setIsLoading(false);
         }
+
         return;
       }
 
-      setIsLoading(true);
-      setError(null);
-
       try {
+        setIsLoading(true);
+        setError(null);
+
         let loadedEvent = await fetchWebsiteEventByIdOrSlug(slug);
 
+        /*
+         * Direct slug request fail ho to event list se
+         * matching ID/slug find karke details fetch karega.
+         */
         if (!loadedEvent) {
-          const list = await fetchWebsiteEvents();
+          const eventList = await fetchWebsiteEvents();
 
-          const matched = list.find(
-            (item) =>
-              String(getEventField(item, 'id')) === slug || getEventField(item, 'slug') === slug,
-          );
+          const matchedEvent = Array.isArray(eventList)
+            ? eventList.find((item) => {
+                const itemId = getString(getEventField(item, 'id'));
 
-          if (matched) {
-            const matchedId = getEventField(matched, 'id');
+                const itemSlug = getString(getEventField(item, 'slug'));
 
-            if (matchedId) {
-              loadedEvent = await fetchWebsiteEventByIdOrSlug(String(matchedId));
-            }
+                return itemId === slug || itemSlug === slug;
+              })
+            : undefined;
+
+          if (matchedEvent) {
+            const matchedId = getString(getEventField(matchedEvent, 'id'));
+
+            const matchedSlug = getString(getEventField(matchedEvent, 'slug'));
+
+            loadedEvent = await fetchWebsiteEventByIdOrSlug(matchedId || matchedSlug);
           }
         }
 
-        if (isMounted) {
-          setEvent(loadedEvent);
-          setError(loadedEvent ? null : 'Event not found.');
+        if (!isMounted) {
+          return;
         }
+
+        setEvent(loadedEvent);
+
+        setError(loadedEvent ? null : 'Event not found.');
       } catch (loadError) {
-        if (isMounted) {
-          setEvent(null);
-          setError(loadError instanceof Error ? loadError.message : 'Failed to load event');
+        if (!isMounted) {
+          return;
         }
+
+        setEvent(null);
+
+        setError(loadError instanceof Error ? loadError.message : 'Failed to load event.');
       } finally {
-        if (isMounted) setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     }
 
@@ -155,47 +938,60 @@ export default function EventDetailsPage() {
   }, [slug]);
 
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/events/${slug}` : '';
+
   const displayTitle = event?.title || 'Check this event';
 
-  async function handleShareWhatsApp() {
-    const waUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(shareUrl)}`;
-    openExternal(waUrl);
+  function handleShareWhatsApp() {
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`${displayTitle} ${shareUrl}`)}`;
+
+    openExternal(whatsappUrl);
     setShowShareOptions(false);
   }
 
-  async function handleShareFacebook() {
-    const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-    openExternal(fbUrl);
+  function handleShareFacebook() {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      shareUrl,
+    )}`;
+
+    openExternal(facebookUrl);
     setShowShareOptions(false);
   }
 
-  async function handleShareTwitter() {
-    const twUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(displayTitle || '')}&url=${encodeURIComponent(shareUrl)}`;
-    openExternal(twUrl);
+  function handleShareTwitter() {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      displayTitle,
+    )}&url=${encodeURIComponent(shareUrl)}`;
+
+    openExternal(twitterUrl);
     setShowShareOptions(false);
   }
 
-  async function handleShareInstagram() {
-    const igWeb = `https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}`;
-    openExternal(igWeb);
+  function handleShareInstagram() {
+    openExternal('https://www.instagram.com/');
     setShowShareOptions(false);
   }
 
   async function copyLinkToClipboard() {
     try {
       await navigator.clipboard.writeText(shareUrl);
-      // Small UX feedback could be added here (toast), kept minimal per request
-    } catch (_) {
-      // ignore
+
+      setShowShareOptions(false);
+    } catch {
+      // Clipboard permission denied.
     }
   }
-
-  // Inline icon components removed (not used) to satisfy linter
 
   if (isLoading) {
     return (
       <main className="event-details-page">
-        <p style={{ padding: '80px 20px', textAlign: 'center' }}>Loading event...</p>
+        <p
+          style={{
+            padding: '80px 20px',
+            textAlign: 'center',
+          }}
+        >
+          Loading event...
+        </p>
       </main>
     );
   }
@@ -203,18 +999,19 @@ export default function EventDetailsPage() {
   if (error || !event) {
     return (
       <main className="not-found-page">
-        <Image src="/assets/404.png" alt="Event Not Found" width={700} height={500} />
+        <Image src="/assets/404.png" alt="Event not found" width={700} height={500} />
 
         <h1>Event Not Found</h1>
+
         <p>
           The event you&apos;re looking for is unavailable or may have been removed. Browse our
           latest events to discover what&apos;s coming next.
         </p>
 
         <Link href="/events" className="backbutton">
-          <div className="backbutton-icon">
+          <span className="backbutton-icon">
             <ArrowUpLeft size={18} />
-          </div>
+          </span>
 
           <span>Back to Events</span>
         </Link>
@@ -224,34 +1021,51 @@ export default function EventDetailsPage() {
 
   const readableSlug = slug.replace(/-/g, ' ');
 
+  /*
+   * API sponsors available hain to dynamic section,
+   * otherwise existing static section show hoga.
+   */
+  const sponsors = extractEventSponsors(event);
+
   const normalizedSections: EventSection[] = [];
 
   const eventSections = getEventField(event, 'sections');
 
   if (Array.isArray(eventSections)) {
-    for (const section of eventSections) {
-      const sectionRecord = isRecord(section) ? section : undefined;
+    eventSections.forEach((section) => {
+      if (!isRecord(section)) {
+        return;
+      }
 
-      const heading =
-        getString(sectionRecord?.heading) || getString(sectionRecord?.title) || 'Details';
+      const heading = getString(section.heading) || getString(section.title) || 'Details';
 
       const body =
-        typeof sectionRecord?.body === 'string'
-          ? sectionRecord.body
-          : extractTextFromContent(sectionRecord?.body ?? sectionRecord?.content ?? section);
+        typeof section.body === 'string'
+          ? section.body
+          : extractTextFromContent(section.body ?? section.content ?? '');
 
-      normalizedSections.push({ heading, body });
-    }
-  } else {
-    const eventContentForSections = getEventField(event, 'content');
-
-    if (eventContentForSections) {
-      normalizedSections.push({
-        heading: 'Details',
-        body: extractTextFromContent(eventContentForSections),
-      });
-    }
+      if (body) {
+        normalizedSections.push({
+          heading,
+          body,
+        });
+      }
+    });
   }
+
+  const bannerImage =
+    getImageUrl(getEventField(event, 'bannerImage')) ||
+    getImageUrl(getEventField(event, 'bannerImageId')) ||
+    getImageUrl(getEventField(event, 'image')) ||
+    getImageUrl(getEventField(event, 'heroImage')) ||
+    getImageUrl(getEventField(event, 'banner')) ||
+    FALLBACK_EVENT_IMAGE;
+
+  const eventDescription =
+    getEventField(event, 'description') ??
+    getEventField(event, 'content') ??
+    getEventField(event, 'summary') ??
+    '';
 
   const featuredEvent = {
     title: String(
@@ -260,84 +1074,108 @@ export default function EventDetailsPage() {
         getEventField(event, 'eventName') ??
         'Event',
     ),
+
     author: String(
       getEventField(event, 'organizer') ?? getEventField(event, 'author') ?? 'CORE Media',
     ),
-    date: String(getEventField(event, 'startsAt') ?? getEventField(event, 'date') ?? ''),
-    heroImage: String(
-      getEventField(event, 'image') ??
-        getEventField(event, 'heroImage') ??
-        getEventField(event, 'banner') ??
-        '/assets/blogs/blog-1.webp',
+
+    date: String(
+      getEventField(event, 'startDate') ??
+        getEventField(event, 'startsAt') ??
+        getEventField(event, 'date') ??
+        '',
     ),
-    badge: String(getEventField(event, 'category') ?? 'Events'),
-    summary: extractTextFromContent(
-      getEventField(event, 'description') ?? getEventField(event, 'summary') ?? '',
-    ),
+
+    heroImage: bannerImage,
+
+    badge: String(getEventField(event, 'type') ?? getEventField(event, 'category') ?? 'Event'),
+
+    summary: extractTextFromContent(eventDescription) || getString(getEventField(event, 'excerpt')),
+
     sections: normalizedSections,
   };
 
+  const contentSource = getEventField(event, 'description') ?? getEventField(event, 'content');
+
+  const contentBlocks =
+    isRecord(contentSource) && Array.isArray(contentSource.blocks) ? contentSource.blocks : [];
+
   function renderBlock(block: unknown, index: number) {
-    if (!isRecord(block)) return null;
+    if (!isRecord(block)) {
+      return null;
+    }
 
-    const key =
-      typeof block.id === 'string' ? block.id : `${String(block.type ?? 'block')}-${index}`;
+    const key = getString(block.id) || `${String(block.type ?? 'block')}-${index}`;
 
-    const type = typeof block.type === 'string' ? block.type.toLowerCase() : '';
-    const data = isRecord(block.data) ? block.data : undefined;
+    const type = getString(block.type).toLowerCase();
+
+    const data = isRecord(block.data) ? block.data : null;
 
     if (type === 'header') {
       const level = typeof data?.level === 'number' ? data.level : 2;
-      const text = typeof data?.text === 'string' ? data.text.trim() : '';
 
-      if (!text) return null;
+      const text = getString(data?.text);
+
+      if (!text) {
+        return null;
+      }
 
       return level <= 2 ? <h2 key={key}>{text}</h2> : <h3 key={key}>{text}</h3>;
     }
 
     if (type === 'paragraph') {
-      const text = typeof data?.text === 'string' ? data.text.trim() : '';
+      const text = getString(data?.text);
 
-      if (!text) return null;
+      if (!text) {
+        return null;
+      }
 
       return (
         <p
           key={key}
-          style={{ marginBottom: '18px', lineHeight: 1.8 }}
-          dangerouslySetInnerHTML={{ __html: text }}
+          style={{
+            marginBottom: 18,
+            lineHeight: 1.8,
+          }}
+          dangerouslySetInnerHTML={{
+            __html: text,
+          }}
         />
       );
     }
 
     if (type === 'list') {
-      const items = Array.isArray(data?.items)
+      const listItems = Array.isArray(data?.items)
         ? data.items.filter((item): item is string => typeof item === 'string')
         : [];
 
-      if (!items.length) return null;
+      if (!listItems.length) {
+        return null;
+      }
 
       return (
         <ul key={key} className="overview-list">
-          {items.map((item) => (
-            <li key={item}>
-              <strong>{item}</strong>
-            </li>
+          {listItems.map((item, itemIndex) => (
+            <li key={`${item}-${itemIndex}`}>{item}</li>
           ))}
         </ul>
       );
     }
 
     if (type === 'image') {
-      const file = isRecord(data?.file) ? data.file : undefined;
-      const url = typeof file?.url === 'string' ? file.url : '';
+      const file = isRecord(data?.file) ? data.file : null;
 
-      if (!url) return null;
+      const imageUrl = getImageUrl(file) || getImageUrl(data?.image);
+
+      if (!imageUrl) {
+        return null;
+      }
 
       return (
         <div key={key} style={{ margin: '24px 0' }}>
           <Image
-            src={url}
-            alt={typeof data?.caption === 'string' ? data.caption : 'Event image'}
+            src={imageUrl}
+            alt={getString(data?.caption) || 'Event image'}
             width={1200}
             height={675}
             unoptimized
@@ -347,14 +1185,20 @@ export default function EventDetailsPage() {
     }
 
     if (type === 'quote') {
-      const text = typeof data?.text === 'string' ? data.text.trim() : '';
+      const text = getString(data?.text);
 
-      if (!text) return null;
+      if (!text) {
+        return null;
+      }
 
       return (
         <blockquote
           key={key}
-          style={{ margin: '24px 0', paddingLeft: '18px', borderLeft: '3px solid #d11f26' }}
+          style={{
+            margin: '24px 0',
+            paddingLeft: 18,
+            borderLeft: '3px solid #d11f26',
+          }}
         >
           {text}
         </blockquote>
@@ -365,23 +1209,25 @@ export default function EventDetailsPage() {
       return <hr key={key} style={{ margin: '24px 0' }} />;
     }
 
-    const fallbackText = typeof data?.text === 'string' ? data.text.trim() : '';
+    const fallbackText = getString(data?.text);
 
-    if (!fallbackText) return null;
+    if (!fallbackText) {
+      return null;
+    }
 
     return (
       <p
         key={key}
-        style={{ marginBottom: '18px', lineHeight: 1.8 }}
-        dangerouslySetInnerHTML={{ __html: fallbackText }}
+        style={{
+          marginBottom: 18,
+          lineHeight: 1.8,
+        }}
+        dangerouslySetInnerHTML={{
+          __html: fallbackText,
+        }}
       />
     );
   }
-
-  const eventContent = getEventField(event, 'content');
-
-  const contentBlocks =
-    isRecord(eventContent) && Array.isArray(eventContent.blocks) ? eventContent.blocks : [];
 
   return (
     <main className="event-details-page">
@@ -389,108 +1235,118 @@ export default function EventDetailsPage() {
         <ClientErrorBoundary>
           <EventDetailsAnimated featuredEvent={featuredEvent} readableSlug={readableSlug} />
 
-          <EventSponsorsSection />
+          {/* Sponsors condition */}
+          {sponsors.length === 0 ? (
+            /*
+             * API sponsors empty hain:
+             * existing static section show hoga.
+             */
+            <EventSponsorsSection />
+          ) : (
+            /*
+             * API sponsors available hain:
+             * dynamic section show hoga.
+             */
+            <DynamicEventSponsorsSection sponsors={sponsors} />
+          )}
 
           {contentBlocks.length > 0 ? (
-            <div>{contentBlocks.map((block, index) => renderBlock(block, index))}</div>
+            <section className="event-description-content">
+              {contentBlocks.map((block, index) => renderBlock(block, index))}
+            </section>
           ) : null}
 
-          <div style={{ marginTop: 24 }}>
-            {featuredEvent.sections.length > 0 ? (
-              <div style={{ marginTop: 18 }}>
-                {featuredEvent.sections.map((section, index) => (
-                  <section key={`sec-${index}`} style={{ marginTop: 18 }}>
-                    <h3>{section.heading}</h3>
+          {featuredEvent.sections.length > 0 ? (
+            <div className="event-extra-sections">
+              {featuredEvent.sections.map((section, index) => (
+                <section key={`${section.heading}-${index}`} className="event-extra-section">
+                  <h3>{section.heading}</h3>
 
-                    {String(section.body)
-                      .split('\n\n')
-                      .map((paragraph, paragraphIndex) => (
-                        <p
-                          key={paragraphIndex}
-                          style={{ marginBottom: 12 }}
-                          dangerouslySetInnerHTML={{ __html: paragraph }}
-                        />
-                      ))}
-                  </section>
-                ))}
-              </div>
-            ) : null}
-
-            <div style={{ marginTop: 24 }}>
-              {/* <Link href="/register" className="talk-btn">
-                    Registration
-                  </Link> */}
-              <Link href="/register" className="talk-btn">
-                <span>Registration</span>
-
-                <div className="talk-btn-icon">
-                  <ArrowUpRight size={18} />
-                </div>
-              </Link>
+                  {section.body
+                    .split('\n\n')
+                    .filter(Boolean)
+                    .map((paragraph, paragraphIndex) => (
+                      <p
+                        key={paragraphIndex}
+                        dangerouslySetInnerHTML={{
+                          __html: paragraph,
+                        }}
+                      />
+                    ))}
+                </section>
+              ))}
             </div>
+          ) : null}
 
-            <div style={{ marginTop: 24 }}>
-              <div className="share-container">
-                <button
-                  type="button"
-                  className="backbutton"
-                  onClick={() => setShowShareOptions((s) => !s)}
-                  aria-expanded={showShareOptions}
-                  aria-haspopup="menu"
-                  id="share-button"
-                >
-                  <span>Share Event</span>
-                  <div className="backbutton-icon">
-                    <ArrowUpRight size={18} />
-                  </div>
-                </button>
+          <div className="event-actions">
+            <Link
+              href={`/register?event=${encodeURIComponent(
+                String(getEventField(event, 'id') ?? slug),
+              )}`}
+              className="talk-btn"
+            >
+              <span>Registration</span>
 
-                <br />
+              <span className="talk-btn-icon">
+                <ArrowUpRight size={18} />
+              </span>
+            </Link>
 
-                {showShareOptions ? (
-                  <div className="share-popup" role="menu" aria-labelledby="share-button">
-                    <button
-                      type="button"
-                      onClick={handleShareWhatsApp}
-                      className="share-option whatsapp"
-                    >
-                      <span>WhatsApp</span>
-                    </button>
+            <div className="share-container">
+              <button
+                type="button"
+                className="backbutton"
+                onClick={() => setShowShareOptions((current) => !current)}
+                aria-expanded={showShareOptions}
+                aria-haspopup="menu"
+                id="share-button"
+              >
+                <span>Share Event</span>
 
-                    <button
-                      type="button"
-                      onClick={handleShareFacebook}
-                      className="share-option facebook"
-                    >
-                      <span>Facebook</span>
-                    </button>
+                <span className="backbutton-icon">
+                  <ArrowUpRight size={18} />
+                </span>
+              </button>
 
-                    <button
-                      type="button"
-                      onClick={handleShareTwitter}
-                      className="share-option twitter"
-                    >
-                      <span>Twitter</span>
-                    </button>
+              {showShareOptions ? (
+                <div className="share-popup" role="menu" aria-labelledby="share-button">
+                  <button
+                    type="button"
+                    onClick={handleShareWhatsApp}
+                    className="share-option whatsapp"
+                  >
+                    WhatsApp
+                  </button>
 
-                    <button
-                      type="button"
-                      onClick={handleShareInstagram}
-                      className="share-option instagram"
-                    >
-                      <span>Instagram</span>
-                    </button>
+                  <button
+                    type="button"
+                    onClick={handleShareFacebook}
+                    className="share-option facebook"
+                  >
+                    Facebook
+                  </button>
 
-                    <button
-                      type="button"
-                      onClick={copyLinkToClipboard}
-                      className="share-option copy"
-                    >
-                      <span>Copy Link</span>
-                    </button>
-                  </div>
-                ) : null}
-              </div>
+                  <button
+                    type="button"
+                    onClick={handleShareTwitter}
+                    className="share-option twitter"
+                  >
+                    Twitter
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleShareInstagram}
+                    className="share-option instagram"
+                  >
+                    Instagram
+                  </button>
+
+                  <button type="button" onClick={copyLinkToClipboard} className="share-option copy">
+                    Copy Link
+                  </button>
+                </div>
+              ) : null}
             </div>
           </div>
         </ClientErrorBoundary>

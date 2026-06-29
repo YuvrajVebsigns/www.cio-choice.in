@@ -1,17 +1,84 @@
-// import Link from 'next/link';
+// 'use client';
 
-// export const metadata = {
-//   title: 'Advisory Panel 2025',
-//   description:
-//     'Explore the Advisory Panel 2025 page for CIO Choice advisory members, insights, and recognition highlights.',
+// import Image from 'next/image';
+// import { useEffect, useState } from 'react';
+// import { fetchWebsitePageBySlug, type WebsitePage } from '@/services/pages.services';
+
+// type AdvisoryMember = {
+//   author: string;
+//   role: string;
+//   quote?: string;
+//   avatar?: string;
 // };
 
+// function isRecord(value: unknown): value is Record<string, unknown> {
+//   return typeof value === 'object' && value !== null;
+// }
+
+// function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
+//   if (!page) return [];
+
+//   const allMembers: AdvisoryMember[] = [];
+//   const seen = new Set<string>();
+
+//   function search(value: unknown) {
+//     if (Array.isArray(value)) {
+//       value.forEach(search);
+//       return;
+//     }
+
+//     if (!isRecord(value)) return;
+
+//     const author = typeof value.author === 'string' ? value.author.trim() : '';
+//     const role = typeof value.role === 'string' ? value.role.trim() : '';
+//     const quote = typeof value.quote === 'string' ? value.quote : '';
+//     const avatar = typeof value.avatar === 'string' ? value.avatar : '';
+
+//     if (author) {
+//       const key = `${author.toLowerCase()}-${role.toLowerCase()}`;
+
+//       if (!seen.has(key)) {
+//         seen.add(key);
+//         allMembers.push({ author, role, quote, avatar });
+//       }
+//     }
+
+//     Object.values(value).forEach(search);
+//   }
+
+//   search(page);
+
+//   return allMembers;
+// }
+
 // export default function AdvisoryPanel2025Page() {
+//   const [page, setPage] = useState<WebsitePage | null>(null);
+//   const [members, setMembers] = useState<AdvisoryMember[]>([]);
+//   const [isLoading, setIsLoading] = useState(true);
+
+//   useEffect(() => {
+//     async function loadPage() {
+//       setIsLoading(true);
+
+//       const data = await fetchWebsitePageBySlug('advisory-panel-2025');
+
+//       setPage(data);
+//       setMembers(extractMembers(data));
+//       setIsLoading(false);
+//     }
+
+//     loadPage();
+//   }, []);
+
+//   if (isLoading) {
+//     return <div style={{ padding: 40, textAlign: 'center' }}>Loading...</div>;
+//   }
+
 //   return (
 //     <main className="advisory-page">
 //       <div className="advisory-members-heading-card">
 //         <br />
-//         <h2>Advisory Panel 2025</h2>
+//         <h2>{page?.title || 'Advisory Panel 2025'}</h2>
 //         <br />
 //         <p>
 //           Trusted leaders from enterprise and technology who help shape the CIO Choice recognition
@@ -19,49 +86,39 @@
 //         </p>
 //       </div>
 
-//       {/* <section className="advisory-page-section">
-//         <article className="advisory-page-card">
-//           <h2 className="advisory-page-card-heading">Trusted Industry Leadership</h2>
-//           <p className="advisory-page-card-text">
-//             Advisory Panel 2025 unites senior CIOs and IT decision-makers who shape the methodology
-//             and credibility of CIO Choice recognition programs.
-//           </p>
-//         </article>
+//       <section className="advisory-panel-section">
+//         <div className="advisory-container">
+//           {members.length === 0 ? (
+//             <p style={{ textAlign: 'center', padding: '40px 0' }}>
+//               No advisory panel members available.
+//             </p>
+//           ) : (
+//             <div className="advisory-grid">
+//               {members.map((member, index) => (
+//                 <article key={`${member.author}-${index}`} className="advisory-card">
+//                   {member.avatar ? (
+//                     <Image
+//                       src={member.avatar}
+//                       alt={member.author}
+//                       width={120}
+//                       height={120}
+//                       className="advisory-avatar"
+//                       unoptimized
+//                     />
+//                   ) : (
+//                     <div className="advisory-avatar advisory-avatar-placeholder" />
+//                   )}
 
-//         <article className="advisory-page-card">
-//           <h2 className="advisory-page-card-heading">Why This Panel Matters</h2>
-//           <p className="advisory-page-card-text">
-//             The panel validates award selection, supports community-driven research, and ensures
-//             recognition is aligned with real enterprise priorities.
-//           </p>
-//         </article>
+//                   <h3>{member.author}</h3>
+//                   <p>{member.role}</p>
 
-//         <div className="advisory-page-card">
-//           <h2 className="advisory-page-card-heading">Panel Highlights</h2>
-//           <ul className="advisory-page-list">
-//             <li className="advisory-page-list-item">
-//               <span className="advisory-page-list-item-label">01 Expert governance</span>
-//               <p className="advisory-page-list-item-text">
-//                 A curated community of CIO leaders reviewing industry performance and category
-//                 recognition.
-//               </p>
-//             </li>
-//             <li className="advisory-page-list-item">
-//               <span className="advisory-page-list-item-label">02 Strategic insight</span>
-//               <p className="advisory-page-list-item-text">
-//                 Actionable guidance for brands that want to align with CIO priorities and enterprise
-//                 trust.
-//               </p>
-//             </li>
-//             <li className="advisory-page-list-item">
-//               <span className="advisory-page-list-item-label">03 Broad industry credibility</span>
-//               <p className="advisory-page-list-item-text">
-//                 Panel endorsement strengthens recognition value and amplifies member reputation.
-//               </p>
-//             </li>
-//           </ul>
+//                   {member.quote ? <blockquote>{member.quote}</blockquote> : null}
+//                 </article>
+//               ))}
+//             </div>
+//           )}
 //         </div>
-//       </section> */}
+//       </section>
 //     </main>
 //   );
 // }
@@ -79,12 +136,51 @@ type AdvisoryMember = {
   avatar?: string;
 };
 
+type AdvisoryAvatarProps = {
+  src?: string;
+  alt: string;
+};
+
+const FALLBACK_AVATAR = '/assets/team/1.jpg';
+
+/**
+ * API image missing ya broken hone par
+ * automatically static fallback image show karega.
+ */
+function AdvisoryAvatar({ src, alt }: AdvisoryAvatarProps) {
+  const [imageSrc, setImageSrc] = useState(src?.trim() || FALLBACK_AVATAR);
+
+  useEffect(() => {
+    setImageSrc(src?.trim() || FALLBACK_AVATAR);
+  }, [src]);
+
+  function handleImageError() {
+    if (imageSrc !== FALLBACK_AVATAR) {
+      setImageSrc(FALLBACK_AVATAR);
+    }
+  }
+
+  return (
+    <Image
+      src={imageSrc}
+      alt={alt}
+      width={120}
+      height={120}
+      className="advisory-avatar"
+      unoptimized
+      onError={handleImageError}
+    />
+  );
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
 function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
-  if (!page) return [];
+  if (!page) {
+    return [];
+  }
 
   const allMembers: AdvisoryMember[] = [];
   const seen = new Set<string>();
@@ -95,19 +191,30 @@ function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
       return;
     }
 
-    if (!isRecord(value)) return;
+    if (!isRecord(value)) {
+      return;
+    }
 
     const author = typeof value.author === 'string' ? value.author.trim() : '';
+
     const role = typeof value.role === 'string' ? value.role.trim() : '';
-    const quote = typeof value.quote === 'string' ? value.quote : '';
-    const avatar = typeof value.avatar === 'string' ? value.avatar : '';
+
+    const quote = typeof value.quote === 'string' ? value.quote.trim() : '';
+
+    const avatar = typeof value.avatar === 'string' ? value.avatar.trim() : '';
 
     if (author) {
       const key = `${author.toLowerCase()}-${role.toLowerCase()}`;
 
       if (!seen.has(key)) {
         seen.add(key);
-        allMembers.push({ author, role, quote, avatar });
+
+        allMembers.push({
+          author,
+          role,
+          quote,
+          avatar,
+        });
       }
     }
 
@@ -121,33 +228,65 @@ function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
 
 export default function AdvisoryPanel2025Page() {
   const [page, setPage] = useState<WebsitePage | null>(null);
+
   const [members, setMembers] = useState<AdvisoryMember[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     async function loadPage() {
-      setIsLoading(true);
+      try {
+        setIsLoading(true);
 
-      const data = await fetchWebsitePageBySlug('advisory-panel-2025');
+        const data = await fetchWebsitePageBySlug('advisory-panel-2025');
 
-      setPage(data);
-      setMembers(extractMembers(data));
-      setIsLoading(false);
+        if (!isMounted) {
+          return;
+        }
+
+        setPage(data);
+        setMembers(extractMembers(data));
+      } catch (error) {
+        // console.error('Failed to load Advisory Panel 2025:', error);
+
+        if (isMounted) {
+          setPage(null);
+          setMembers([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
     }
 
     loadPage();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (isLoading) {
-    return <div style={{ padding: 40, textAlign: 'center' }}>Loading...</div>;
+    return (
+      <div
+        style={{
+          padding: 40,
+          textAlign: 'center',
+        }}
+      >
+        Loading...
+      </div>
+    );
   }
 
   return (
     <main className="advisory-page">
       <div className="advisory-members-heading-card">
-        <br />
         <h2>{page?.title || 'Advisory Panel 2025'}</h2>
-        <br />
+
         <p>
           Trusted leaders from enterprise and technology who help shape the CIO Choice recognition
           program.
@@ -157,28 +296,23 @@ export default function AdvisoryPanel2025Page() {
       <section className="advisory-panel-section">
         <div className="advisory-container">
           {members.length === 0 ? (
-            <p style={{ textAlign: 'center', padding: '40px 0' }}>
+            <p
+              style={{
+                textAlign: 'center',
+                padding: '40px 0',
+              }}
+            >
               No advisory panel members available.
             </p>
           ) : (
             <div className="advisory-grid">
               {members.map((member, index) => (
                 <article key={`${member.author}-${index}`} className="advisory-card">
-                  {member.avatar ? (
-                    <Image
-                      src={member.avatar}
-                      alt={member.author}
-                      width={120}
-                      height={120}
-                      className="advisory-avatar"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="advisory-avatar advisory-avatar-placeholder" />
-                  )}
+                  <AdvisoryAvatar src={member.avatar} alt={member.author} />
 
                   <h3>{member.author}</h3>
-                  <p>{member.role}</p>
+
+                  {member.role ? <p>{member.role}</p> : null}
 
                   {member.quote ? <blockquote>{member.quote}</blockquote> : null}
                 </article>
