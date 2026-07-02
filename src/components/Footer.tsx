@@ -24,10 +24,10 @@ export default function Footer() {
                 />
               </Link>
 
-              <p className="footer-description">
+              {/* <p className="footer-description">
                 Developing personalized customer journeys to increase customer satisfaction,
                 engagement, and long-term loyalty for business growth.
-              </p>
+              </p> */}
             </div>
 
             {/* COLUMN 2 */}
@@ -84,7 +84,7 @@ export default function Footer() {
                 </button>
               </form>
               <br />
-              <h4>Our Office</h4>
+              <h4>Office Address</h4>
               <p className="footer-description">
                 Units Nos. 3037 – A1 Wing, 3rd Floor, Oberoi Garden Estate, Near Chandivali Studio,
                 Andheri (East), Mumbai – 400072, INDIA
@@ -147,7 +147,7 @@ export default function Footer() {
           </div>
 
           {/* COPYRIGHT */}
-          <div className="footer-copy">© 2026 Core Media. All Rights Reserved.</div>
+          <div className="footer-copy">© 2026 CORE Media.</div>
         </div>
       </div>
     </footer>

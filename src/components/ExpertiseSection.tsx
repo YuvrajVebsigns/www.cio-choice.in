@@ -74,17 +74,16 @@ export default function AboutCioChoiceSection() {
               height={20}
               className="expertise-label-icon"
             />
-            <span className="about-cio-label-text">About Us</span>
+            <span className="about-cio-label-text">ABOUT CIO CHOICE</span>
           </div>
 
-          <h2 className="about-cio-title">
+          {/* <h2 className="about-cio-title">
             ABOUT <span>CIO CHOICE</span>
-          </h2>
+          </h2> */}
 
           <p className="about-cio-description">
-            “CIO CHOICE” is a very powerful tool for organizations in the Information &
-            Communications Technology space to promote and market their products, services and
-            solutions.
+            CIO CHOICE is the GOLD SEAL of Trust, recognizing ICT brands preferred by Indias leading
+            technology decision-makers.
           </p>
         </div>
 

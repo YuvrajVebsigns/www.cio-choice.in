@@ -210,12 +210,12 @@ export default function BlogsSection() {
               height={20}
               className="expertise-label-icon"
             />
-            <span className="blogs-subtitle-text">INSIGHTS & IDEAS</span>
+            <span className="blogs-subtitle-text">BLOGS</span>
           </span>
 
-          <h2 className="blogs-title">
+          {/* <h2 className="blogs-title">
             Our <span>Blogs</span>
-          </h2>
+          </h2> */}
         </div>
 
         <div className="blogs-grid">

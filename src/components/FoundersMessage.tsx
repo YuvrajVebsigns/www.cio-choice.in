@@ -38,16 +38,33 @@ export default function FoundersMessage() {
           </div>
 
           {/* TITLE */}
-          <h2 className="founder-title">
+          {/* <h2 className="founder-title">
             Building Connections in a<br />
             <span>Digital World.</span>
-          </h2>
+          </h2> */}
 
           {/* DESCRIPTION */}
           <p className="founder-description">
-            For 13 years, CORE Media has innovated at the intersection of ICT and marketing. We
-            don’t just deliver messages; we build bespoke ecosystems that drive impactful results
-            for India’s leading stakeholders.
+            At CORE Media, our purpose has always been to create meaningful platforms that bring
+            together technology leaders, enterprises, innovators, and solution providers to exchange
+            ideas, build trusted relationships, and unlock new business opportunities. As the B2B
+            technology landscape continues to evolve, we remain committed to creating experiences
+            that inspire collaboration, encourage innovation, and deliver measurable value for every
+            stakeholder. Our flagship platform, CIO CHOICE, reflects this commitment. As one of
+            Indias most respected technology recognition platforms, it empowers the countrys CIO
+            community to recognize the ICT brands they trust the most. Alongside our portfolio of
+            executive forums, leadership summits, awards, and digital engagement platforms, we
+            continue to build communities that foster knowledge sharing, celebrate excellence, and
+            strengthen the technology ecosystem. Everything we do is driven by a customer-first
+            mindset. From bespoke events and Account-Based Marketing (ABM) programs to executive
+            roundtables and digital content solutions, our focus is on helping brands reach the
+            right decision-makers with relevance, authenticity, and impact. We believe that every
+            engagement should create lasting relationships, meaningful conversations, and measurable
+            business outcomes. As we look ahead, our vision remains clear—to continue building
+            trusted platforms that connect people, ideas, and opportunities. We dont simply organize
+            events or create campaigns; we create environments where partnerships flourish,
+            innovation is recognized, and businesses are empowered to grow. Thank you for being part
+            of our journey. We look forward to shaping the future of technology engagement together.
           </p>
 
           {/* QUOTE */}
