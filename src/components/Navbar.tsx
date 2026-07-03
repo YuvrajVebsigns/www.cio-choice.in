@@ -406,50 +406,6 @@ export default function Navbar() {
               </ul>
             </div>
           </div>
-
-          {/* Process */}
-          <div
-            className={`nav-dropdown ${processOpen ? 'open' : ''}`}
-            onMouseEnter={() => {
-              if (!isMobile) {
-                openDropdown('process');
-              }
-            }}
-            onMouseLeave={() => {
-              if (!isMobile) {
-                scheduleDropdownClose();
-              }
-            }}
-          >
-            <button
-              type="button"
-              className={`nav-link ${
-                pathname === '/process-flow' || pathname === '/enter' ? 'active' : ''
-              }`}
-              aria-expanded={processOpen}
-              onClick={() => handleDropdownClick('process')}
-            >
-              <span>Process</span>
-              <ChevronDown size={16} />
-            </button>
-
-            <div className="mega-panel nav-year-dropdown">
-              <ul>
-                <li>
-                  <Link href="/process-flow" className="mega-item" onClick={closeMobileMenu}>
-                    Process and Flow
-                  </Link>
-                </li>
-
-                <li>
-                  <Link href="/enter" className="mega-item" onClick={closeMobileMenu}>
-                    Enter
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
           {/* Gallery */}
           <div
             className={`nav-dropdown media-nav-dropdown ${galleryOpen ? 'open' : ''}`}
@@ -659,6 +615,49 @@ export default function Navbar() {
                       ))}
                     </ul>
                   </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Process */}
+          <div
+            className={`nav-dropdown ${processOpen ? 'open' : ''}`}
+            onMouseEnter={() => {
+              if (!isMobile) {
+                openDropdown('process');
+              }
+            }}
+            onMouseLeave={() => {
+              if (!isMobile) {
+                scheduleDropdownClose();
+              }
+            }}
+          >
+            <button
+              type="button"
+              className={`nav-link ${
+                pathname === '/process-flow' || pathname === '/enter' ? 'active' : ''
+              }`}
+              aria-expanded={processOpen}
+              onClick={() => handleDropdownClick('process')}
+            >
+              <span>Process</span>
+              <ChevronDown size={16} />
+            </button>
+
+            <div className="mega-panel nav-year-dropdown">
+              <ul>
+                <li>
+                  <Link href="/process-flow" className="mega-item" onClick={closeMobileMenu}>
+                    Process and Flow
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/enter" className="mega-item" onClick={closeMobileMenu}>
+                    Enter
+                  </Link>
                 </li>
               </ul>
             </div>

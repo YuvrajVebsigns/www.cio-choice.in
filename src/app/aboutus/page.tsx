@@ -7,61 +7,78 @@ export default function AboutUsPage() {
 
   return (
     <>
-      {/* <section className="social-media-hero">
-        <div className="social-media-hero-overlay"></div>
-
-        <div className="social-media-hero-content" ref={heroContentRef}>
-          <h1>Social Media</h1>
-
-          <div className="social-media-breadcrumb">
-            <Link href="/" className="social-media-breadcrumb-home">
-              🏦 Home
-            </Link>
-            <span>&gt;</span>
-            <p>Social Media</p>
-          </div>
-        </div>
-      </section> */}
-
       <section className="social-media-section" style={{ padding: '40px 24px' }}>
         <div className="social-media-container">
           <div className="social-media-row">
             <div className="social-media-content">
-              <h2>About us</h2>
+              <h2>About CIO Choice</h2>
 
-              {/* <p>
-                In today&apos;s digital-first world, social media has become one of the most
-                powerful tools for organizations to build brand awareness, engage with their target
-                audience, and drive meaningful business outcomes. A well-planned social media
-                strategy not only increases visibility but also helps businesses establish
-                credibility, strengthen customer relationships, and stay ahead of the competition.
+              <p className="social-media-highlight">
+                <strong>“CIO CHOICE”</strong> is a B2B platform uniquely positioned to recognize and
+                honor products, services and solutions on the back of stated preferences of CIOs and
+                ICT decision makers.
               </p>
 
               <p>
-                At CORE Media, we help organizations create impactful social media strategies and
-                campaigns that amplify their message, enhance audience engagement, and deliver
-                measurable results. Whether your goal is to increase brand awareness, generate
-                leads, promote an event, launch a product, or strengthen customer loyalty, our team
-                develops customized campaigns tailored to your business objectives.
+                CIO Choice platform fosters collaboration between CIOs and ICT vendors, facilitating
+                the exchange of best practices among the leaders of the worlds premiere technology
+                driven enterprises. CIO Choice Honor Title from Centre of Recognition & Excellence
+                is a thoughtful initiative where preferred vendors are recommended and recognized
+                <strong> By the CIOs, For the CIOs.</strong>
               </p>
 
-              <h3>How We Drive Social Media Success</h3>
+              <p>
+                It is a proven industry approach and first-of-its-kind in the ICT industry—one based
+                on trust and cooperation between high performance ICT Business Leaders, CIOs &
+                Customer Centric Vendors so they can continue to adapt and drive innovation across
+                the enterprise. Dedicated to providing actionable value to each of the functional
+                disciplines across the executive suite, it is driven by relevant content and
+                engagements created by and for the CIOs.
+              </p>
 
-              <ul className="social-media-list">
-                <li>
-                  Developing comprehensive social media strategies aligned with your business goals.
-                </li>
-                <li>
-                  Creating engaging and relevant content that resonates with your target audience.
-                </li>
-                <li>Managing multi-platform campaigns across leading social media channels.</li>
-                <li>Building brand awareness and increasing audience engagement.</li>
-              </ul> */}
+              <p>
+                Working to provide an accessible connect through regional, national, global, and
+                virtual platforms, the CIO Choice B2B platform provides the first neutral space in
+                which CIOs & Customer Centric Vendors can safely explore ways to support each other
+                in driving role-based deliverables.
+              </p>
 
               <div className="social-media-back">
                 <Link href="/" className="social-media-back-btn">
                   ← Back
                 </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="social-media-section">
+        <div className="social-media-container">
+          <div className="social-media-row">
+            <div className="social-media-content">
+              <img
+                src="/assets/aboutus/about-core.png"
+                alt="Explore CIO Choice"
+                style={{
+                  width: '100%',
+                  borderRadius: '20px',
+                  marginBottom: '30px',
+                  objectFit: 'cover',
+                }}
+              />
+
+              <h2>Explore CORE Media</h2>
+
+              <div className="social-media-back">
+                <a
+                  href="https://website.uatcoremedia.vebsigns.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-media-back-btn"
+                >
+                  Visit Website
+                </a>
               </div>
             </div>
           </div>
