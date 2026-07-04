@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowUpLeft } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import useScrollAnimation from '../../../hooks/useScrollAnimation';
 import BlogCommentsPanel from '@/components/BlogCommentsPanel';
@@ -219,12 +219,11 @@ export default function BlogDetailsPage() {
         </p>
 
         <Link href="/blog" className="backbutton">
-          <div className="backbutton-icon">
-            <ArrowUpLeft size={18} />
-          </div>
-
           <span>Back to Blog</span>
         </Link>
+        <div className="backbutton-icon">
+          <ArrowUpRight size={18} />
+        </div>
       </main>
     );
   }
@@ -322,11 +321,10 @@ export default function BlogDetailsPage() {
               initialTransform="translateY(18px)"
             >
               <Link href="/blog" className="backbutton">
-                <div className="backbutton-icon">
-                  <ArrowUpLeft size={18} />
-                </div>
-
                 <span>Back to Blog</span>
+                <div className="backbutton-icon">
+                  <ArrowUpRight size={18} />
+                </div>
               </Link>
             </AnimatedBlock>
             <br />
@@ -344,11 +342,10 @@ export default function BlogDetailsPage() {
                   aria-haspopup="menu"
                   id="share-button"
                 >
-                  <div className="backbutton-icon">
-                    <ArrowUpLeft size={18} />
-                  </div>
-
                   <span>Share Blog</span>
+                  <div className="backbutton-icon">
+                    <ArrowUpRight size={18} />
+                  </div>
                 </button>
 
                 <br />

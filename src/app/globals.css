@@ -5462,6 +5462,43 @@ main.advisory-page {
   transform: rotate(90deg);
 }
 
+.contact-popup {
+  position: fixed;
+  top: 134px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 360px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #7a0d0d;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+}
+.contact-popup p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.contact-popup-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #19a65a;
+}
+
+.contact-popup button {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 21px;
+  cursor: pointer;
+}
+
 @keyframes contactToastIn {
   from {
     opacity: 0;
@@ -7054,106 +7091,115 @@ main.advisory-page {
 
 /* registration form */
 
+/* =========================================
+   REGISTRATION PAGE
+========================================= */
+
 .registration-section {
   width: 100%;
   min-height: 100vh;
-  padding: 100px 20px;
-  background: linear-gradient(135deg, #d7cccc 0%, #f3ebeb 40%, #f9f3f3 100%);
+  padding: 110px 20px;
+  background:
+    radial-gradient(circle at 10% 15%, rgba(142, 1, 1, 0.16), transparent 28%),
+    radial-gradient(circle at 90% 85%, rgba(142, 1, 1, 0.12), transparent 26%),
+    linear-gradient(135deg, #ffffff 0%, #f5eeee 55%, #eadede 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.registration-section::before,
-.registration-section::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  z-index: 0;
-}
-
-.registration-section::before {
-  width: 300px;
-  height: 300px;
-  background: rgba(255, 255, 255, 0.12);
-  top: -120px;
-  left: -100px;
-}
-
-.registration-section::after {
-  width: 260px;
-  height: 260px;
-  background: rgba(255, 255, 255, 0.08);
-  bottom: -120px;
-  right: -100px;
+  overflow: visible;
 }
 
 .registration-container {
-  margin-top: 10px;
   width: 100%;
-  max-width: 1050px;
+  max-width: 1180px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
 }
 
 .registration-wrapper {
-  width: 100%;
-  max-width: 800px;
-  height: auto;
-  margin: 15px auto 0;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #9d1111;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.25),
-    inset 0 1px 1px rgba(255, 255, 255, 0.12);
-  overflow: hidden;
   position: relative;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  overflow: visible;
+  border-radius: 34px;
+  background: #ffffff;
+  border: 1px solid rgba(142, 1, 1, 0.16);
+  box-shadow: 0 30px 80px rgba(40, 10, 10, 0.16);
+}
+
+.registration-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 210px;
+  border-radius: 34px 0 0 34px;
+  background:
+    linear-gradient(180deg, rgba(142, 1, 1, 0.95), rgba(70, 0, 0, 0.95)),
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.28), transparent 35%);
 }
 
 .registration-title {
+  position: relative;
   margin: 0;
-  padding: 22px 30px;
-  background: linear-gradient(90deg, #8e0101 0%, #9d1111 100%);
-  color: #ffffff;
-  font-size: 21px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  text-align: left;
+  padding: 36px 42px 18px 250px;
+  background: transparent;
+  color: #8e0101;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   text-transform: uppercase;
 }
 
-.registration-subtitle {
-  margin: 0;
-  padding: 24px 30px 0;
-  grid-column: 1 / -1;
-  color: #3b1212;
+.registration-title::before {
+  content: 'Register';
+  position: absolute;
+  left: 38px;
+  top: 42px;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.registration-title::after {
+  content: 'Complete your details to submit your registration.';
+  display: block;
+  margin-top: 8px;
+  color: #6a5555;
   font-size: 14px;
   font-weight: 500;
-  line-height: 1.5;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.registration-subtitle {
+  position: relative;
+  margin: 0;
+  padding: 0 42px 0 250px;
+  color: #6a5555;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
 }
 
 .registration-form {
+  position: relative;
   width: 100%;
-  padding: 30px 40px 40px;
+  padding: 22px 42px 46px 250px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px 30px;
+  gap: 22px 34px;
 }
 
 .registration-label {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #585555;
+  color: #4b3f3f;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .registration-form input,
@@ -7161,26 +7207,26 @@ main.advisory-page {
 .registration-country-select {
   width: 100%;
   height: 48px;
-  padding: 0 45px 0 16px; /* extra right space for dropdown arrow */
-  border: 2px solid #ddd;
-  border-radius: 999px;
-  background-color: #ffffff;
+  padding: 0 45px 0 15px;
+  border: 1px solid rgba(142, 1, 1, 0.18);
+  border-radius: 14px;
+  background-color: #fffafa;
   outline: none;
-  font-size: 15px;
-  color: #2f2e2e;
+  color: #231f1f;
+  font-size: 14px;
   box-sizing: border-box;
+  transition: 0.25s ease;
 }
 
-/* Move dropdown arrow to the left */
 .registration-form select,
 .registration-country-select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-
+  cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: calc(100% - 25px) center; /* move arrow left */
+  background-position: calc(100% - 18px) center;
   background-size: 14px;
 }
 
@@ -7188,11 +7234,12 @@ main.advisory-page {
 .registration-form select:focus,
 .registration-country-select:focus {
   border-color: #8e0101;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(142, 1, 1, 0.1);
 }
 
-.registration-country-select {
-  cursor: pointer;
-  appearance: auto;
+.registration-form input::placeholder {
+  color: #9b8b8b;
 }
 
 .registration-phone-group {
@@ -7204,75 +7251,60 @@ main.advisory-page {
 
 .registration-dial-code-preview {
   margin-top: 4px;
+  color: #777;
   font-size: 12px;
   font-weight: 500;
-  color: #777;
-}
-
-.registration-form input::placeholder {
-  color: #8f8f8f;
-}
-
-.registration-form input:focus,
-.registration-form select:focus,
-.registration-country-select:focus {
-  border: 2px solid #8e0101;
-  box-shadow: 0 0 0 4px rgba(142, 1, 1, 0.15);
 }
 
 .registration-error {
   margin-top: 4px;
-  font-size: 13px;
-  font-weight: 500;
   color: #8e0101;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .registration-button-wrap {
   grid-column: 1 / -1;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .registration-btn {
-  height: 58px;
-  padding: 0 42px;
+  height: 54px;
+  min-width: 230px;
+  padding: 0 34px;
   border: none;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #8e0101 0%, #9d1111 100%);
+  border-radius: 14px;
+  background: linear-gradient(90deg, #8e0101, #b31919);
   color: #ffffff;
   font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(180, 0, 0, 0.3);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    opacity 0.3s ease;
+  box-shadow: 0 14px 30px rgba(142, 1, 1, 0.28);
+  transition: 0.25s ease;
 }
 
 .registration-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 35px rgba(157, 17, 17, 0.35);
+  box-shadow: 0 18px 38px rgba(142, 1, 1, 0.34);
 }
 
 .registration-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
   transform: none;
 }
 
 .registration-popup {
   position: fixed;
-  top: 24px;
+  top: 134px;
   right: 24px;
   z-index: 9999;
   display: flex;
   align-items: center;
   gap: 12px;
   max-width: 360px;
-  width: auto;
   padding: 14px 16px;
   border-radius: 14px;
   background: #ffffff;
@@ -7298,9 +7330,11 @@ main.advisory-page {
   border: none;
   background: transparent;
   color: inherit;
-  font-size: 20px;
+  font-size: 21px;
   cursor: pointer;
 }
+
+/* DOWNLOAD REPORT PAGE */
 
 .download-report-section {
   width: 100%;
@@ -7309,7 +7343,9 @@ main.advisory-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f0ef 0%, #ffffff 100%);
+  background:
+    radial-gradient(circle at 10% 15%, rgba(142, 1, 1, 0.14), transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, #f5eeee 100%);
 }
 
 .download-report-card {
@@ -7319,8 +7355,8 @@ main.advisory-page {
   text-align: center;
   border-radius: 30px;
   background: #ffffff;
-  box-shadow: 0 36px 80px rgba(48, 25, 25, 0.08);
-  border: 1px solid rgba(157, 17, 17, 0.12);
+  box-shadow: 0 30px 80px rgba(40, 10, 10, 0.16);
+  border: 1px solid rgba(142, 1, 1, 0.16);
 }
 
 .download-report-icon {
@@ -7331,15 +7367,15 @@ main.advisory-page {
   height: 84px;
   margin-bottom: 18px;
   border-radius: 50%;
-  background: #f5f5f5;
+  background: #fffafa;
   font-size: 36px;
 }
 
 .download-report-card h1 {
   margin: 0 0 14px;
   font-size: 26px;
-  font-weight: 700;
-  color: #211f1f;
+  font-weight: 800;
+  color: #8e0101;
 }
 
 .download-report-card p {
@@ -7356,64 +7392,88 @@ main.advisory-page {
   min-width: 220px;
   height: 52px;
   padding: 0 24px;
-  border-radius: 999px;
+  border-radius: 14px;
   border: none;
-  background: #8e0101;
+  background: linear-gradient(90deg, #8e0101, #b31919);
   color: #ffffff;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   text-decoration: none;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: 0.25s ease;
 }
 
 .download-report-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(76, 175, 80, 0.24);
+  box-shadow: 0 18px 38px rgba(142, 1, 1, 0.28);
 }
 
 .download-report-brand {
   margin-top: 28px;
-  color: #20669d;
-  font-weight: 700;
+  color: #8e0101;
+  font-weight: 800;
   letter-spacing: 0.3px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .registration-section {
-    padding: 70px 16px;
+    padding: 80px 16px;
   }
 
   .registration-wrapper {
-    max-width: 100%;
-    border-radius: 22px;
+    border-radius: 26px;
+  }
+
+  .registration-wrapper::before {
+    width: 100%;
+    height: 110px;
+    border-radius: 26px 26px 0 0;
   }
 
   .registration-title {
-    padding: 18px 22px;
-    font-size: 18px;
+    padding: 150px 24px 18px;
+    font-size: 22px;
+  }
+
+  .registration-title::before {
+    top: 38px;
+    left: 24px;
+  }
+
+  .registration-subtitle {
+    padding: 0 24px;
   }
 
   .registration-form {
     padding: 24px;
     grid-template-columns: 1fr;
-    gap: 20px;
   }
 
-  .registration-form input,
-  .registration-form select {
-    height: 52px;
-    font-size: 14px;
-  }
-
-  .registration-button-wrap {
-    justify-content: flex-start;
+  .registration-phone-group {
+    grid-template-columns: 1fr;
   }
 
   .registration-btn {
     width: 100%;
-    height: 54px;
+  }
+}
+
+@media (max-width: 480px) {
+  .registration-section {
+    padding: 60px 12px;
+  }
+
+  .registration-form {
+    padding: 22px 16px;
+  }
+
+  .registration-title {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .registration-subtitle {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
 
@@ -9218,7 +9278,17 @@ s .dialogues-badge-mark {
   padding: 12px 18px;
   border-radius: 16px;
 }
+.footer-logo1 {
+  display: inline-flex;
+  margin-left: -32px;
+  margin-bottom: 24px;
+  width: 400px;
+  height: 130px;
 
+  /* background: #ffffff; */
+  padding: 12px 18px;
+  border-radius: 16px;
+}
 .footer-description {
   max-width: 340px;
   font-size: 15px;

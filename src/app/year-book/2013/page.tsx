@@ -140,7 +140,12 @@ export default function SurveyStudyPage() {
                 <div className="yearbook-card" key={year}>
                   <div className="yearbook-card-image">
                     {/* <img src={`/assets/yearbook/${year}.png`} alt={`CIO Choice Year Book ${year}`} /> */}
-                    <img src={`/assets/book2025/1.png`} alt={`CIO Choice Year Book ${year}`} />
+                    {/* <img src={`/assets/book2025/1.png`} alt={`CIO Choice Year Book ${year}`} /> */}
+
+                    <img
+                      src={`/assets/yearbook/${year}/1.png`}
+                      alt={`CIO Choice Year Book ${year}`}
+                    />
                   </div>
 
                   <h3>{year} Year Book</h3>

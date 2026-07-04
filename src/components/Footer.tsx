@@ -14,9 +14,9 @@ export default function Footer() {
           <div className="footer-grid">
             {/* COLUMN 1 */}
             <div className="footer-widget footer-brand">
-              <Link href="/" className="footer-logo">
+              <Link href="/" className="footer-logo1">
                 <Image
-                  src="/assets/logo/Heading.png"
+                  src="/assets/logo/Headingg.png"
                   alt="Core Media"
                   width={220}
                   height={100}
@@ -119,15 +119,21 @@ export default function Footer() {
             </a>
 
             <div className="footer-contact-item">
-              <span className="footer-contact-icon">
+              {/* <span className="footer-contact-icon">
                 <Mail size={15} />
-              </span>
+              </span> */}
 
               <a
-                href="mailto:contact@core-mediagroup.com?subject=Enquiry"
-                className="footer-contact-text"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-contact-item"
               >
-                contact@core-mediagroup.com
+                <span className="footer-contact-icon">
+                  <Mail size={15} />
+                </span>
+
+                <span className="footer-contact-text">contact@core-mediagroup.com</span>
               </a>
             </div>
           </div>
