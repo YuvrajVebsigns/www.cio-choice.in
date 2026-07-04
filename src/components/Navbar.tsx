@@ -663,8 +663,12 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link href="/nominate" className="nav-link" onClick={() => setMobileOpen(false)}>
-            Nomination
+          <Link
+            href="/nominate"
+            className={`nav-link ${pathname === '/nominate' ? 'active' : ''}`}
+            onClick={closeMobileMenu}
+          >
+            Nominate
           </Link>
         </nav>
 

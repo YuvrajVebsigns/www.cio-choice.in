@@ -64,6 +64,7 @@ export const API_ENDPOINTS = {
   WEBSITE: {
     TOKEN: '/api/v1/website/token',
     CONTACTS: '/api/v1/website/contacts',
+    NOMINATIONS: '/api/v1/website/nominations',
 
     PAGES: {
       BASE: '/api/v1/website/pages',
