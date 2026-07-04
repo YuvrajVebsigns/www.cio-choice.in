@@ -1,91 +1,3 @@
-// 'use client';
-
-// import Link from 'next/link';
-// import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-
-// export default function SurveyStudyPage() {
-//   const heroContentRef = useScrollAnimation<HTMLDivElement>({
-//     animationClass: 'animate-fade-in-left',
-//     initialTransform: 'translateX(-40px)',
-//     threshold: 0.12,
-//     once: false,
-//   });
-
-//   return (
-//     <>
-//       <section className="survey-study-section" style={{ padding: '40px 24px' }}>
-//         <div className="survey-study-container">
-//           <div className="survey-study-row">
-//             <div className="survey-study-content" ref={heroContentRef}>
-//               <h2>CIO Choice 2026 Year Book</h2>
-
-//               <p className="survey-study-intro">
-//                 The <strong>CIO Choice 2026 Year Book</strong> showcases India&apos;s most trusted
-//                 ICT brands recognized by CIO Choice based on the stated preferences of CIOs and
-//                 technology decision-makers.
-//               </p>
-
-//               <div className="survey-study-card">
-//                 <div className="survey-study-book">
-//                   <img
-//                     src="/assets/yearbook/year-book-2026.png"
-//                     alt="CIO Choice Year Book 2026"
-//                     className="survey-study-book-image"
-//                   />
-
-//                   <div className="survey-study-book-content">
-//                     <h3>Year Book 2026</h3>
-
-//                     <p>
-//                       Enterprises honored with the prestigious CIO Choice 2026 Recognition are
-//                       acknowledged for delivering exceptional IT products, services, and solutions.
-//                     </p>
-
-//                     <p>
-//                       CIO Choice is distinguished as a mark of customer satisfaction and endorsement
-//                       by CIOs. Participation in CIO Choice is exclusive and reserved for industry
-//                       leaders in the ICT sector.
-//                     </p>
-
-//                     <p>
-//                       Achieving CIO Choice Recognition enhances brand value and serves as a powerful
-//                       tool for accelerating sales, providing assurance to customers and end users
-//                       alike that they are investing in top-tier offerings within their respective
-//                       categories.
-//                     </p>
-
-//                     <p>
-//                       Recognized organizations are prominently featured in the{' '}
-//                       <strong>CIO Choice 2026 Coffee Table Book.</strong>
-//                     </p>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-
-//       <section className="book-section">
-//   <div className="book-container">
-//     <h2>CIO Choice Year Book</h2>
-
-//     <div className="book-pages">
-//       {[1, 2, 3, 4, 5].map((page) => (
-//         <div className="book-page" key={page}>
-//           <img
-//             src={`/assets/book2025/${page}.png`}
-//             alt={`Year Book Page ${page}`}
-//           />
-//         </div>
-//       ))}
-//     </div>
-//   </div>
-// </section>
-//     </>
-//   );
-// }
-
 'use client';
 
 import { useState } from 'react';
@@ -125,10 +37,10 @@ export default function SurveyStudyPage() {
         <div className="survey-study-container">
           <div className="survey-study-row">
             <div className="survey-study-content" ref={heroContentRef}>
-              <h2>CIO Choice 2026 Year Book</h2>
+              <h2>CIO Choice 2017 Year Book</h2>
 
               <p className="survey-study-intro">
-                The <strong>CIO Choice 2026 Year Book</strong> showcases India&apos;s most trusted
+                The <strong>CIO Choice 2017 Year Book</strong> showcases India&apos;s most trusted
                 ICT brands recognized by CIO Choice based on the stated preferences of CIOs and
                 technology decision-makers.
               </p>
@@ -136,16 +48,16 @@ export default function SurveyStudyPage() {
               <div className="survey-study-card">
                 <div className="survey-study-book">
                   <img
-                    src="/assets/book2025/1.png"
+                    src="/assets/yearbook/2017/1.png"
                     alt="CIO Choice Year Book 2026"
                     className="survey-study-book-image"
                   />
 
                   <div className="survey-study-book-content">
-                    <h3>Year Book 2026</h3>
+                    <h3>Year Book 2017</h3>
 
                     <p>
-                      Enterprises honored with the prestigious CIO Choice 2026 Recognition are
+                      Enterprises honored with the prestigious CIO Choice 2017 Recognition are
                       acknowledged for delivering exceptional IT products, services, and solutions.
                     </p>
 
@@ -164,7 +76,7 @@ export default function SurveyStudyPage() {
 
                     <p>
                       Recognized organizations are prominently featured in the{' '}
-                      <strong>CIO Choice 2026 Coffee Table Book.</strong>
+                      <strong>CIO Choice 2017 Coffee Table Book.</strong>
                     </p>
                   </div>
                 </div>

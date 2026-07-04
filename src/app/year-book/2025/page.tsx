@@ -37,10 +37,10 @@ export default function SurveyStudyPage() {
         <div className="survey-study-container">
           <div className="survey-study-row">
             <div className="survey-study-content" ref={heroContentRef}>
-              <h2>CIO Choice 2026 Year Book</h2>
+              <h2>CIO Choice 2025 Year Book</h2>
 
               <p className="survey-study-intro">
-                The <strong>CIO Choice 2026 Year Book</strong> showcases India&apos;s most trusted
+                The <strong>CIO Choice 2025 Year Book</strong> showcases India&apos;s most trusted
                 ICT brands recognized by CIO Choice based on the stated preferences of CIOs and
                 technology decision-makers.
               </p>
@@ -48,13 +48,13 @@ export default function SurveyStudyPage() {
               <div className="survey-study-card">
                 <div className="survey-study-book">
                   <img
-                    src="/assets/year-book/2025/1.png"
+                    src="/assets/yearbook/2025/1.png"
                     alt="CIO Choice Year Book 2026"
                     className="survey-study-book-image"
                   />
 
                   <div className="survey-study-book-content">
-                    <h3>Year Book 2026</h3>
+                    <h3>Year Book 2025</h3>
 
                     <p>
                       Enterprises honored with the prestigious CIO Choice 2026 Recognition are
@@ -76,7 +76,7 @@ export default function SurveyStudyPage() {
 
                     <p>
                       Recognized organizations are prominently featured in the{' '}
-                      <strong>CIO Choice 2026 Coffee Table Book.</strong>
+                      <strong>CIO Choice 2025 Coffee Table Book.</strong>
                     </p>
                   </div>
                 </div>
@@ -140,7 +140,7 @@ export default function SurveyStudyPage() {
                 <div className="yearbook-card" key={year}>
                   <div className="yearbook-card-image">
                     {/* <img src={`/assets/yearbook/${year}.png`} alt={`CIO Choice Year Book ${year}`} /> */}
-                    <img src={`/assets/book2025/1.png`} alt={`CIO Choice Year Book ${year}`} />
+                    <img src={`/assets/yearbook/2025/1.png`} alt={`CIO Choice Year Book ${year}`} />
                   </div>
 
                   <h3>{year} Year Book</h3>

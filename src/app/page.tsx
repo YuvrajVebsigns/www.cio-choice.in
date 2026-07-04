@@ -8,7 +8,7 @@ import ProjectsSection from '@/components/ProjectsSection';
 // import Brands from '@/components/Brands';
 // import FAQSection from '@/components/FAQSection';
 import ContactSection from '@/components/ContactSection';
-// import BlogsSection from '@/components/BlogsSection';
+import BlogsSection from '@/components/BlogsSection';
 // import DialoguesSection from '@/components/DialoguesSection';
 
 export default function Home() {
@@ -24,7 +24,7 @@ export default function Home() {
       {/* <ResearchSection /> */}
       {/* <Brands />
       <FAQSection /> */}
-      {/* <BlogsSection /> */}
+      <BlogsSection />
       <ContactSection />
 
       {/* <DialoguesSection /> */}

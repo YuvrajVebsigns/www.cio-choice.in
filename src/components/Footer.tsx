@@ -18,8 +18,8 @@ export default function Footer() {
                 <Image
                   src="/assets/logo/Heading.png"
                   alt="Core Media"
-                  width={180}
-                  height={70}
+                  width={220}
+                  height={100}
                   priority
                 />
               </Link>
@@ -59,7 +59,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/blog">Blog</Link>
+                  <Link href="/blog">Blogs</Link>
                 </li>
 
                 <li>
@@ -118,30 +118,35 @@ export default function Footer() {
               <span className="footer-contact-text">+91 7506035537</span>
             </a>
 
-            <a href="mailto:info@coremedia.com" className="footer-contact-item">
+            <div className="footer-contact-item">
               <span className="footer-contact-icon">
                 <Mail size={15} />
               </span>
 
-              <span className="footer-contact-text">contact@core-mediagroup.com</span>
-            </a>
+              <a
+                href="mailto:contact@core-mediagroup.com?subject=Enquiry"
+                className="footer-contact-text"
+              >
+                contact@core-mediagroup.com
+              </a>
+            </div>
           </div>
 
           {/* SOCIAL */}
           <div className="footer-socials">
-            <a href="https://www.facebook.com/" aria-label="Facebook">
+            <a href="https://www.facebook.com/coremediaindia/" aria-label="Facebook">
               <FaFacebookF />
             </a>
 
-            <a href="https://www.instagram.com/" aria-label="Instagram">
+            <a href="https://www.instagram.com/core_media_/" aria-label="Instagram">
               <FaInstagram />
             </a>
 
-            <a href="https://x.com/" aria-label="Twitter">
+            <a href="https://x.com/CIOChoice" aria-label="Twitter">
               <FaXTwitter />
             </a>
 
-            <a href="https://www.linkedin.com/" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/company/core-mediagroup/" aria-label="LinkedIn">
               <FaLinkedinIn />
             </a>
           </div>
