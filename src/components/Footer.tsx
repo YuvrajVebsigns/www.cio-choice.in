@@ -158,7 +158,7 @@ export default function Footer() {
           </div>
 
           {/* COPYRIGHT */}
-          <div className="footer-copy">© 2026 CORE Media.</div>
+          <div className="footer-copy">Copyright © 2026 CORE Media. All Rights Reserved.</div>
         </div>
       </div>
     </footer>

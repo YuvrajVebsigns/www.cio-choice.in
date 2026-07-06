@@ -281,7 +281,7 @@ export default function Navbar() {
             className={`nav-link ${pathname?.startsWith('/aboutus') ? 'active' : ''}`}
             onClick={closeMobileMenu}
           >
-            About US
+            About Us
           </Link>
 
           {/* Advisory Panel */}
