@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import QueryProvider from '@/providers/QueryProvider';
+import TrackingProvider from '@/providers/TrackingProvider';
 import Preloader from '@/components/Preloader';
 import Navbar from '@/components/Navbar';
 import ScrollProgress from '@/components/ScrollProgress';
@@ -33,7 +34,9 @@ export default function RootLayout({
         <Preloader />
         <ScrollProgress />
         <ScrollAnimator />
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <TrackingProvider>{children}</TrackingProvider>
+        </QueryProvider>
         <Footer />
       </body>
     </html>
