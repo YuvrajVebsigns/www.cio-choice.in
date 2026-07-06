@@ -325,6 +325,49 @@ export default function Navbar() {
             </div>
           </div>
 
+          {/* Process */}
+          <div
+            className={`nav-dropdown ${processOpen ? 'open' : ''}`}
+            onMouseEnter={() => {
+              if (!isMobile) {
+                openDropdown('process');
+              }
+            }}
+            onMouseLeave={() => {
+              if (!isMobile) {
+                scheduleDropdownClose();
+              }
+            }}
+          >
+            <button
+              type="button"
+              className={`nav-link ${
+                pathname === '/process-flow' || pathname === '/enter' ? 'active' : ''
+              }`}
+              aria-expanded={processOpen}
+              onClick={() => handleDropdownClick('process')}
+            >
+              <span>Process</span>
+              <ChevronDown size={16} />
+            </button>
+
+            <div className="mega-panel nav-year-dropdown">
+              <ul>
+                <li>
+                  <Link href="/process-flow" className="mega-item" onClick={closeMobileMenu}>
+                    Process and Flow
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/enter" className="mega-item" onClick={closeMobileMenu}>
+                    Enter
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
           {/* Red Carpet Night */}
           <div
             className={`nav-dropdown ${redCarpetOpen ? 'open' : ''}`}
@@ -399,7 +442,7 @@ export default function Navbar() {
                       className="mega-item"
                       onClick={closeMobileMenu}
                     >
-                      Recognized Brands {year}
+                      {year} Recognized Brands
                     </Link>
                   </li>
                 ))}
@@ -562,7 +605,7 @@ export default function Navbar() {
                             className="mega-item"
                             onClick={closeMobileMenu}
                           >
-                            Media Coverage {year}
+                            {year}
                           </Link>
                         </li>
                       ))}
@@ -609,7 +652,7 @@ export default function Navbar() {
                             className="mega-item"
                             onClick={closeMobileMenu}
                           >
-                            Winning Brand Videos {year}
+                            {year}
                           </Link>
                         </li>
                       ))}
@@ -620,55 +663,12 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Process */}
-          <div
-            className={`nav-dropdown ${processOpen ? 'open' : ''}`}
-            onMouseEnter={() => {
-              if (!isMobile) {
-                openDropdown('process');
-              }
-            }}
-            onMouseLeave={() => {
-              if (!isMobile) {
-                scheduleDropdownClose();
-              }
-            }}
-          >
-            <button
-              type="button"
-              className={`nav-link ${
-                pathname === '/process-flow' || pathname === '/enter' ? 'active' : ''
-              }`}
-              aria-expanded={processOpen}
-              onClick={() => handleDropdownClick('process')}
-            >
-              <span>Process</span>
-              <ChevronDown size={16} />
-            </button>
-
-            <div className="mega-panel nav-year-dropdown">
-              <ul>
-                <li>
-                  <Link href="/process-flow" className="mega-item" onClick={closeMobileMenu}>
-                    Process and Flow
-                  </Link>
-                </li>
-
-                <li>
-                  <Link href="/enter" className="mega-item" onClick={closeMobileMenu}>
-                    Enter
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
           <Link
             href="/nominate"
             className={`nav-link ${pathname === '/nominate' ? 'active' : ''}`}
             onClick={closeMobileMenu}
           >
-            Nominate
+            Nomination
           </Link>
         </nav>
 

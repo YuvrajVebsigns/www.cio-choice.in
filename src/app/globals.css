@@ -1512,7 +1512,7 @@ main {
 .media-flyout {
   position: absolute;
   top: 0;
-  left: calc(100% + 10px);
+  left: 100%;
   right: auto;
   z-index: 1300;
   width: 260px;
@@ -1526,6 +1526,12 @@ main {
   border: 1px solid rgba(142, 1, 1, 0.08);
   border-radius: 14px;
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.14);
+}
+
+.media-menu-item:hover .media-flyout,
+.media-flyout:hover,
+.media-flyout.visible {
+  display: block;
 }
 
 .media-flyout.visible {
