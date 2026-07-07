@@ -379,7 +379,7 @@ export default function ContactSection() {
             <span className="map-label label-2">Dubai</span>
 
             <span className="map-dot dot-3"></span>
-            <span className="map-label label-3">Australia</span>
+            <span className="map-label label-3">Singapur</span>
           </div>
         </div>
 
