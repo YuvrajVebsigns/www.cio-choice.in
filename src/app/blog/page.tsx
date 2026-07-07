@@ -27,6 +27,47 @@
 //   return blog.excerpt || blog.seo?.metaDescription || '';
 // }
 
+// const LIKED_KEY = 'likedBlogs';
+
+// function readLikedSet(): Set<string> {
+//   try {
+//     const raw = typeof window !== 'undefined' ? window.localStorage.getItem(LIKED_KEY) : null;
+//     if (!raw) return new Set();
+
+//     const arr = JSON.parse(raw);
+//     if (!Array.isArray(arr)) return new Set();
+
+//     return new Set(arr.map(String));
+//   } catch {
+//     return new Set();
+//   }
+// }
+
+// function markBlogLiked(id: string | number) {
+//   try {
+//     const set = readLikedSet();
+//     set.add(String(id));
+//     window.localStorage.setItem(LIKED_KEY, JSON.stringify(Array.from(set)));
+//   } catch {
+//     // ignore
+//   }
+// }
+
+// function removeBlogLiked(id: string | number) {
+//   try {
+//     const set = readLikedSet();
+//     set.delete(String(id));
+//     window.localStorage.setItem(LIKED_KEY, JSON.stringify(Array.from(set)));
+//   } catch {
+//     // ignore
+//   }
+// }
+
+// function isBlogLiked(id?: string | number) {
+//   if (!id) return false;
+//   return readLikedSet().has(String(id));
+// }
+
 // type AnimatedBlogCardProps = {
 //   blog: WebsiteBlogItem;
 //   index: number;
@@ -44,47 +85,6 @@
 
 //   const [localLikes, setLocalLikes] = useState<number>(likesCount);
 //   const [liked, setLiked] = useState<boolean>(false);
-
-//   const LIKED_KEY = 'likedBlogs';
-
-//   function readLikedSet(): Set<string> {
-//     try {
-//       const raw = typeof window !== 'undefined' ? window.localStorage.getItem(LIKED_KEY) : null;
-//       if (!raw) return new Set();
-
-//       const arr = JSON.parse(raw);
-//       if (!Array.isArray(arr)) return new Set();
-
-//       return new Set(arr.map(String));
-//     } catch {
-//       return new Set();
-//     }
-//   }
-
-//   function markBlogLiked(id: string | number) {
-//     try {
-//       const set = readLikedSet();
-//       set.add(String(id));
-//       window.localStorage.setItem(LIKED_KEY, JSON.stringify(Array.from(set)));
-//     } catch {
-//       // ignore
-//     }
-//   }
-
-//   function removeBlogLiked(id: string | number) {
-//     try {
-//       const set = readLikedSet();
-//       set.delete(String(id));
-//       window.localStorage.setItem(LIKED_KEY, JSON.stringify(Array.from(set)));
-//     } catch {
-//       // ignore
-//     }
-//   }
-
-//   function isBlogLiked(id?: string | number) {
-//     if (!id) return false;
-//     return readLikedSet().has(String(id));
-//   }
 
 //   useEffect(() => {
 //     setLiked(isBlogLiked(blog.id));
@@ -148,7 +148,7 @@
 //           <span className="blogpage-category">{getBlogCategory(blog)}</span>
 //         </div>
 
-//         <h4 className="blogpage-heading">{blog.title}</h4>
+//         <h4 className="blogpage-heading blogpage-heading-fixed">{blog.title}</h4>
 
 //         <div className="blogpage-footer">
 //           <Link href={`/blog/${blog.slug}`} className="blogpage-readmore">
@@ -291,7 +291,7 @@
 //         <div className="blog-hero-overlay"></div>
 
 //         <div className="blog-hero-content" ref={heroContentRef}>
-//           <h1>Read Blog</h1>
+//           <h1>Explore Insights</h1>
 
 //           <div className="blog-breadcrumb">
 //             <Link href="/" className="blog-breadcrumb-home">
@@ -511,7 +511,7 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
       ? 'translateX(40px)'
       : 'translateY(40px)';
 
-  const ref = useScrollAnimation<HTMLDivElement>({
+  const ref = useScrollAnimation<HTMLAnchorElement>({
     animationClass: variant,
     initialTransform,
     threshold: 0.12,
@@ -519,7 +519,12 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
   });
 
   return (
-    <article ref={ref} className="blogpage-card" style={{ transitionDelay: `${index * 60}ms` }}>
+    <Link
+      href={`/blog/${blog.slug}`}
+      ref={ref}
+      className="blogpage-card"
+      style={{ transitionDelay: `${index * 60}ms` }}
+    >
       <div className="blogpage-image-wrap">
         <Image
           src={getBlogImage(blog)}
@@ -539,12 +544,12 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
         <h4 className="blogpage-heading blogpage-heading-fixed">{blog.title}</h4>
 
         <div className="blogpage-footer">
-          <Link href={`/blog/${blog.slug}`} className="blogpage-readmore">
+          <span className="blogpage-readmore">
             Read More
             <span className="blogpage-arrow">
               <ArrowUpRight size={12} />
             </span>
-          </Link>
+          </span>
 
           <span className="blogpage-engagement" aria-label="Blog engagement">
             <button
@@ -564,7 +569,7 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
           </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 

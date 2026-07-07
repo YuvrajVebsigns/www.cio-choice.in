@@ -262,44 +262,69 @@ export default function NominatePage() {
   return (
     <main className="nominate-page-container">
       <section className="nominate-page-content">
-        <h1>CIO Power List 2026: Nominate the Nation&apos;s Most Influential Technology Leaders</h1>
+        <h1>ICT Vendor Recommendation Form</h1>
 
         <p>
-          Your nomination plays a vital role in recognizing CIOs for the exemplary impact they have
-          created and in helping them qualify for the CIO Power List 2026, placing their work firmly
-          in the spotlight.
+          Help us recognize the ICT vendors that have consistently delivered excellence, innovation,
+          and customer-centric solutions. Your recommendation contributes to identifying the most
+          trusted technology partners in the industry.
         </p>
 
-        <h3>Categories</h3>
-        <p>
-          CIOs may be nominated under either of the following categories:{' '}
-          <strong>Business Icon</strong> or <strong>Technology Icon</strong>.
-        </p>
+        <div className="nominate-info-box">
+          <p>
+            <strong>Dear CIO,</strong>
+          </p>
 
-        <h3>Nomination Process &amp; Confirmation</h3>
-        <p>
-          Once you submit your nomination, an automated process will trigger three confirmation
-          emails:
-        </p>
+          <p>You are important and your vote is important.</p>
 
-        <ol>
-          <li>To the CIO Power List (CORE Media) team, sharing the nomination details.</li>
-          <li>To you, acknowledging and summarizing all your nominations.</li>
-          <li>
-            To each nominated CIO, informing them that they have been nominated by you for CIO Power
-            List 2026.
-          </li>
-        </ol>
+          <p>
+            Your recommendation will help and assist ICT Vendors applying for the CIO CHOICE
+            Recognition and enable them to earn the trust and respect of the CIO community.
+          </p>
 
-        <h3>Note</h3>
-        <ol>
-          <li>All nominations are treated with strict confidentiality.</li>
-          <li>CIOs are welcome to nominate themselves.</li>
-          <li>
-            For ICT vendors, there is no commercial or sponsorship obligation associated with
-            nominating.
-          </li>
-        </ol>
+          <p>
+            Vendors from the Technology space can be recommended under categories such as
+            Independent Software Vendors, Software Products, Hardware, Network & Storage Vendors,
+            Data Centre & IT Infrastructure Vendors, Security Vendors, Telecom Services Vendors, DR
+            & BCP Services Vendors, System Integrators, and other related ICT solution providers.
+          </p>
+
+          <p>
+            The approach to vendor recognition is based on a<strong> Customer-Centric</strong>{' '}
+            evaluation model that reflects real customer experience with ICT vendors.
+          </p>
+
+          <h3>Nomination Process &amp; Confirmation</h3>
+
+          <p>
+            Once you complete this form, the following confirmation emails will be automatically
+            triggered:
+          </p>
+
+          <ol>
+            <li>
+              To the <strong>CIO CHOICE Team</strong>, containing your recommendation details.
+            </li>
+
+            <li>
+              To <strong>you</strong>, acknowledging and summarizing your submitted recommendations.
+            </li>
+
+            <li>
+              To each recommended ICT vendor, informing them that they have been recommended by you
+              for <strong>CIO CHOICE 2027</strong>.
+            </li>
+          </ol>
+
+          <p className="nominate-note">
+            <strong>
+              Please note that your referral vote is confidential and will not be shared, displayed,
+              or published in any private or public forum.
+            </strong>
+          </p>
+        </div>
+        <br />
+        <br />
 
         <div className="nominate-wrapper">
           <div className="nominate-card">
