@@ -43,8 +43,18 @@ export default function Footer() {
                   <Link href="/events">Events</Link>
                 </li>
 
-                <li>
+                {/* <li>
                   <Link href="/dialoges">Dialogues</Link>
+                </li> */}
+
+                <li>
+                  <Link
+                    href="https://ciodialogues.com/index.php/category/cio-voice/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Dialogues
+                  </Link>
                 </li>
               </ul>
             </div>
