@@ -10,6 +10,7 @@ import type {
   NominationResponse,
   NominationSubmissionInput,
   SubmitNominationApiBody,
+  WebsiteNominationCategory,
 } from '@/types/nominations.types';
 
 function buildSubmitNominationBody(input: NominationSubmissionInput): SubmitNominationApiBody {
