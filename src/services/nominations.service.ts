@@ -80,6 +80,40 @@ async function postNomination(body: SubmitNominationApiBody) {
   });
 }
 
+export async function fetchWebsiteNominationCategories() {
+  async function getCategories() {
+    const auth = await ensureWebsiteAuth();
+    return apiFetch<{
+      success?: boolean;
+      message?: string;
+      data?: WebsiteNominationCategory[];
+    }>(API_ENDPOINTS.WEBSITE.NOMINATION_CATEGORIES, {
+      method: 'GET',
+      requireAuth: false,
+      headers: buildWebsiteAuthHeaders(auth),
+    });
+  }
+
+  try {
+    const response = await getCategories();
+    if (response.success === false) {
+      throw new Error(response.message || 'Failed to load nomination categories.');
+    }
+    return response.data ?? [];
+  } catch (error: unknown) {
+    const statusCode = getApiErrorStatus(error);
+    if (statusCode === 401) {
+      clearWebsiteAuth();
+      const response = await getCategories();
+      if (response.success === false) {
+        throw new Error(response.message || 'Failed to load nomination categories.');
+      }
+      return response.data ?? [];
+    }
+    throw error;
+  }
+}
+
 export async function submitWebsiteNomination(input: NominationSubmissionInput) {
   const body = buildSubmitNominationBody(input);
 

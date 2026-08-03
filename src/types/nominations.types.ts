@@ -31,6 +31,14 @@ export type SubmitNominationApiBody = {
   }[];
 };
 
+export type WebsiteNominationCategory = {
+  id: string;
+  name: string;
+  slug?: string;
+  isActive?: boolean;
+  sortOrder?: number;
+};
+
 export type NominationResponse = {
   success?: boolean;
   message?: string;

@@ -1,10 +1,14 @@
 //
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { MONGODB_ID_REGEX, NOMINATION_CATEGORY_OPTIONS } from '@/constants/nominations.constants';
-import { submitWebsiteNomination } from '@/services/nominations.service';
+import {
+  submitWebsiteNomination,
+  fetchWebsiteNominationCategories,
+} from '@/services/nominations.service';
+import type { WebsiteNominationCategory } from '@/types/nominations.types';
 
 type CIOEntry = {
   categoryId: string;
@@ -47,10 +51,46 @@ export default function NominatePage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [categories, setCategories] = useState<WebsiteNominationCategory[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
+
   const [animatingCioIndex, setAnimatingCioIndex] = useState<number | null>(null);
   const [animationType, setAnimationType] = useState<'add' | 'remove' | null>(null);
 
   const maxCios = 10;
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadCategories() {
+      setCategoriesLoading(true);
+      setCategoriesError(null);
+
+      try {
+        const response = await fetchWebsiteNominationCategories();
+        if (!isMounted) return;
+        setCategories(response ?? []);
+      } catch (error) {
+        if (!isMounted) return;
+        setCategoriesError(
+          error instanceof Error
+            ? error.message
+            : 'Unable to load categories. Please refresh the page.',
+        );
+      } finally {
+        if (isMounted) {
+          setCategoriesLoading(false);
+        }
+      }
+    }
+
+    loadCategories();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const addCio = () => {
     if (cios.length >= maxCios) return;
@@ -467,15 +507,22 @@ export default function NominatePage() {
                           onChange={(e) => updateCio(idx, 'categoryId', e.target.value)}
                           className="nominate-input-field"
                         >
-                          <option value="">- Select Category -</option>
-                          {NOMINATION_CATEGORY_OPTIONS.map((option) => (
-                            <option key={option.id} value={option.id}>
-                              {option.label}
-                            </option>
-                          ))}
+                          <option value="">
+                            {categoriesLoading ? 'Loading categories...' : '- Select Category -'}
+                          </option>
+                          {(categories.length > 0 ? categories : NOMINATION_CATEGORY_OPTIONS).map(
+                            (option) => (
+                              <option key={option.id} value={option.id}>
+                                {'name' in option ? option.name : option.label}
+                              </option>
+                            ),
+                          )}
                         </select>
                         {errors.cios?.[idx]?.categoryId && (
                           <div className="registration-error">{errors.cios[idx].categoryId}</div>
+                        )}
+                        {categoriesError && (
+                          <div className="registration-error">{categoriesError}</div>
                         )}
                       </label>
 
