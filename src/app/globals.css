@@ -7689,6 +7689,24 @@ main.advisory-page {
   grid-column: 1 / -1;
 }
 
+.nominate-category-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+  width: 100%;
+}
+
+.nominate-category-row .nominate-label {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .nominate-category-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .nominate-cio-block {
