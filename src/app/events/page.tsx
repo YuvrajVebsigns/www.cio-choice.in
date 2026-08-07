@@ -91,7 +91,7 @@ export default function EventsPage() {
         <div className="blog-hero-content" ref={heroContentRef}>
           <h1>Event Calendar</h1>
 
-          <div className="blog-breadcrumb">
+          {/* <div className="blog-breadcrumb">
             <Link href="/" className="blog-breadcrumb-home">
               🏦 Home
             </Link>
@@ -99,6 +99,23 @@ export default function EventsPage() {
             <span>&gt;</span>
 
             <p>Events</p>
+          </div> */}
+
+          <div className="blog-breadcrumb">
+            <Link href="/" className="blog-breadcrumb-home">
+              <Image
+                src="/assets/home/home.png" // Replace with your image path
+                alt="Home"
+                width={38}
+                height={48}
+                className="blog-home-icon"
+              />
+              <span>Home</span>
+            </Link>
+
+            <span>&gt;</span>
+
+            <p>Event</p>
           </div>
         </div>
       </section>

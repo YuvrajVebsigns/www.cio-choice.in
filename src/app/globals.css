@@ -5763,7 +5763,7 @@ main.advisory-page {
   margin: 0;
   color: white;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 26px;
   font-weight: 700;
 }
 
@@ -7439,7 +7439,8 @@ main.advisory-page {
   gap: 8px;
   color: #4b3f3f;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
+  position: relative;
 }
 
 .nominate-label span {
@@ -7452,20 +7453,31 @@ main.advisory-page {
   width: 100%;
 }
 
+/* Input & Select */
+
 .nominate-input-field,
 .nominate-form select {
   width: 100%;
-  height: 48px;
-  padding: 0 15px;
+  height: 52px;
+  padding: 0 18px;
   border: 1px solid rgba(142, 1, 1, 0.18);
   border-radius: 14px;
-  background: #fffafa;
-  outline: none;
+  background: #fff;
   color: #231f1f;
   font-size: 14px;
+  font-weight: 500;
   box-sizing: border-box;
-  transition: 0.25s ease;
+  outline: none;
+  transition: all 0.3s ease;
 }
+
+/* Placeholder */
+
+.nominate-input-field::placeholder {
+  color: #9b8b8b;
+}
+
+/* Input Focus */
 
 .nominate-input-field:focus,
 .nominate-form select:focus {
@@ -7474,7 +7486,44 @@ main.advisory-page {
   box-shadow: 0 0 0 4px rgba(142, 1, 1, 0.1);
 }
 
-.nominate-input-field::placeholder {
+/* ===========================
+   Custom Dropdown
+=========================== */
+
+.nominate-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+
+  padding-right: 52px;
+
+  background-color: #fff;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%238e0101' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  background-size: 18px;
+}
+
+.nominate-form select:hover {
+  border-color: rgba(142, 1, 1, 0.45);
+  background-color: #fffdfd;
+}
+
+.nominate-form select:focus {
+  border-color: #8e0101;
+  background-color: #fff;
+}
+
+.nominate-form select option {
+  background: #ffffff;
+  color: #333;
+  padding: 12px;
+}
+
+.nominate-form select option:first-child {
   color: #9b8b8b;
 }
 
@@ -7615,6 +7664,41 @@ main.advisory-page {
   color: #8e0101;
   font-weight: 800;
   text-decoration: none;
+}
+
+/* Category occupies full width */
+.nominate-category-field {
+  grid-column: 1 / -1;
+}
+
+/* CIO form grid */
+.nominate-cio-block .nominate-fieldset,
+.nominate-cio-block {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+}
+
+/* Header spans both columns */
+.nominate-cio-top {
+  grid-column: 1 / -1;
+}
+
+/* Category spans both columns */
+.nominate-category-field {
+  grid-column: 1 / -1;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .nominate-cio-block {
+    grid-template-columns: 1fr;
+  }
+
+  .nominate-category-field,
+  .nominate-cio-top {
+    grid-column: auto;
+  }
 }
 
 @media (max-width: 900px) {
@@ -12107,5 +12191,181 @@ s .dialogues-badge-mark {
 
   .cookie-consent-preference-item {
     flex-direction: column;
+  }
+}
+
+/* ==========================================================
+   PRIVACY POLICY PAGE
+========================================================== */
+
+.privacy-policy-section {
+  width: 100%;
+  padding: 120px 24px 70px;
+  background: #ffffff;
+}
+
+.privacy-policy-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.privacy-policy-wrapper {
+  width: 100%;
+}
+
+.privacy-policy-label {
+  display: inline-block;
+  color: #8e0101;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.privacy-policy-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.privacy-policy-subtitle {
+  max-width: 800px;
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.privacy-policy-card {
+  width: 100%;
+}
+
+.privacy-policy-block {
+  margin-bottom: 24px;
+}
+
+.privacy-policy-block h2 {
+  font-size: 25px;
+  color: #8e0101;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+.privacy-policy-block h3 {
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.privacy-policy-block p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.privacy-policy-block strong {
+  color: #8e0101;
+  font-weight: 600;
+}
+
+.privacy-policy-block:not(:last-child) {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+/* ==========================
+   Tablet
+========================== */
+
+@media (max-width: 768px) {
+  .privacy-policy-section {
+    padding: 90px 20px 60px;
+  }
+
+  .privacy-policy-title {
+    font-size: 26px;
+  }
+
+  .privacy-policy-subtitle {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .privacy-policy-block {
+    margin-bottom: 20px;
+  }
+
+  .privacy-policy-block h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .privacy-policy-block h3 {
+    font-size: 19px;
+    margin-bottom: 8px;
+  }
+
+  .privacy-policy-block p {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 480px) {
+  .privacy-policy-section {
+    padding: 80px 16px 50px;
+  }
+
+  .privacy-policy-label {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .privacy-policy-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .privacy-policy-subtitle {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .privacy-policy-block {
+    margin-bottom: 18px;
+  }
+
+  .privacy-policy-block h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .privacy-policy-block h3 {
+    font-size: 17px;
+    margin-bottom: 6px;
+  }
+
+  .privacy-policy-block p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .privacy-policy-block:not(:last-child) {
+    padding-bottom: 14px;
   }
 }
