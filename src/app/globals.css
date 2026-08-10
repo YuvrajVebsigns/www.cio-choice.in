@@ -12384,6 +12384,6 @@ s .dialogues-badge-mark {
   }
 
   .privacy-policy-block:not(:last-child) {
-    padding-bottom: 14px;
+    padding-bottom: 16px;
   }
 }
