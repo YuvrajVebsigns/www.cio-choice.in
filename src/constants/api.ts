@@ -77,6 +77,8 @@ export const API_ENDPOINTS = {
 
     NOMINATION_SUB_CATEGORIES: '/api/v1/website/nominations/sub-categories',
 
+    SUBSCRIBES: '/api/v1/website/subscribes',
+
     PAGES: {
       BASE: '/api/v1/website/pages',
 
