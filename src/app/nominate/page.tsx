@@ -3,11 +3,19 @@
 // import Select, { StylesConfig } from 'react-select';
 // import { useEffect, useState } from 'react';
 // import Link from 'next/link';
+
 // import { MONGODB_ID_REGEX, NOMINATION_CATEGORY_OPTIONS } from '@/constants/nominations.constants';
+
 // import {
 //   submitWebsiteNomination,
 //   fetchWebsiteNominationCategories,
 // } from '@/services/nominations.service';
+
+// import { ensureWebsiteAuth, buildWebsiteAuthHeaders } from '@/lib/website-auth';
+
+// import { apiFetch } from '@/services/apiFetch';
+// import { API_ENDPOINTS } from '@/constants/api';
+
 // import type { WebsiteNominationCategory } from '@/types/nominations.types';
 
 // type CIOEntry = {
@@ -47,22 +55,21 @@
 //   label: string;
 // };
 
-// type CategoryWithSubcategories = WebsiteNominationCategory & {
-//   subcategories?: Array<{
-//     id: string;
-//     name?: string;
-//     label?: string;
-//   }>;
-//   subCategories?: Array<{
-//     id: string;
-//     name?: string;
-//     label?: string;
-//   }>;
-//   children?: Array<{
-//     id: string;
-//     name?: string;
-//     label?: string;
-//   }>;
+// type WebsiteNominationSubcategory = {
+//   id: string;
+//   name?: string;
+//   label?: string;
+//   categoryId?: string;
+//   categoryID?: string;
+//   category?: {
+//     id?: string;
+//   };
+// };
+
+// type SubcategoryApiResponse = {
+//   success?: boolean;
+//   message?: string;
+//   data?: WebsiteNominationSubcategory[];
 // };
 
 // export default function NominatePage() {
@@ -91,11 +98,18 @@
 //   const [categories, setCategories] = useState<WebsiteNominationCategory[]>([]);
 //   const [categoriesError, setCategoriesError] = useState<string | null>(null);
 
+//   const [subcategories, setSubcategories] = useState<WebsiteNominationSubcategory[]>([]);
+//   const [subcategoriesError, setSubcategoriesError] = useState<string | null>(null);
+//   const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
+
 //   const [animatingCioIndex, setAnimatingCioIndex] = useState<number | null>(null);
 //   const [animationType, setAnimationType] = useState<'add' | 'remove' | null>(null);
 
 //   const maxCios = 10;
 
+//   /*
+//    * Scroll to top after successful submission.
+//    */
 //   useEffect(() => {
 //     if (submitted) {
 //       window.scrollTo({
@@ -105,6 +119,9 @@
 //     }
 //   }, [submitted]);
 
+//   /*
+//    * Load nomination categories.
+//    */
 //   useEffect(() => {
 //     let isMounted = true;
 
@@ -135,6 +152,63 @@
 //     };
 //   }, []);
 
+//   /*
+//    * Load nomination subcategories.
+//    *
+//    * Swagger endpoint:
+//    * GET /api/v1/website/nominations/sub-categories
+//    */
+//   useEffect(() => {
+//     let isMounted = true;
+
+//     async function loadSubcategories() {
+//       setSubcategoriesError(null);
+//       setIsLoadingSubcategories(true);
+
+//       try {
+//         const auth = await ensureWebsiteAuth();
+
+//         const response = await apiFetch<SubcategoryApiResponse>(
+//           API_ENDPOINTS.WEBSITE.NOMINATION_SUB_CATEGORIES,
+//           {
+//             method: 'GET',
+//             requireAuth: false,
+//             headers: buildWebsiteAuthHeaders(auth),
+//           },
+//         );
+
+//         if (!isMounted) return;
+
+//         if (response.success === false) {
+//           throw new Error(response.message || 'Failed to load nomination subcategories.');
+//         }
+
+//         setSubcategories(response.data ?? []);
+//       } catch (error) {
+//         if (!isMounted) return;
+
+//         setSubcategoriesError(
+//           error instanceof Error
+//             ? error.message
+//             : 'Unable to load subcategories. Please refresh the page.',
+//         );
+//       } finally {
+//         if (isMounted) {
+//           setIsLoadingSubcategories(false);
+//         }
+//       }
+//     }
+
+//     loadSubcategories();
+
+//     return () => {
+//       isMounted = false;
+//     };
+//   }, []);
+
+//   /*
+//    * Add CIO.
+//    */
 //   const addCio = () => {
 //     if (cios.length >= maxCios) return;
 
@@ -165,6 +239,9 @@
 //     });
 //   };
 
+//   /*
+//    * Remove CIO.
+//    */
 //   const removeCio = (idx: number) => {
 //     setAnimationType('remove');
 //     setAnimatingCioIndex(idx);
@@ -174,6 +251,7 @@
 
 //       if (errors.cios?.[idx]) {
 //         const nextCioErrors = { ...errors.cios };
+
 //         delete nextCioErrors[idx];
 
 //         setErrors({
@@ -187,6 +265,9 @@
 //     }, 600);
 //   };
 
+//   /*
+//    * Update a CIO field.
+//    */
 //   const updateCio = (idx: number, key: keyof CIOEntry, value: string) => {
 //     setCios((prev) =>
 //       prev.map((c, i) =>
@@ -213,6 +294,9 @@
 //     }
 //   };
 
+//   /*
+//    * Submit nomination.
+//    */
 //   const handleSubmit = async (e: React.FormEvent) => {
 //     e.preventDefault();
 
@@ -223,6 +307,9 @@
 //     const nextErrors: FormErrors = {};
 //     let hasErrors = false;
 
+//     /*
+//      * Nominator validation.
+//      */
 //     if (!nominatorName.trim()) {
 //       nextErrors.nominatorName = 'Nominator name is required.';
 //       hasErrors = true;
@@ -254,11 +341,17 @@
 //       hasErrors = true;
 //     }
 
+//     /*
+//      * CIO validation.
+//      */
 //     const cioErrorsMap: NonNullable<FormErrors['cios']> = {};
 
 //     cios.forEach((c, idx) => {
 //       const currentCioErrors: NonNullable<FormErrors['cios']>[number] = {};
 
+//       /*
+//        * Category.
+//        */
 //       if (!c.categoryId) {
 //         currentCioErrors.categoryId = 'Please select a category.';
 //         hasErrors = true;
@@ -267,6 +360,20 @@
 //         hasErrors = true;
 //       }
 
+//       /*
+//        * Subcategory is optional.
+//        *
+//        * If your backend requires subcategory,
+//        * change this validation accordingly.
+//        */
+//       if (c.subcategoryId && !MONGODB_ID_REGEX.test(c.subcategoryId)) {
+//         currentCioErrors.subcategoryId = 'Invalid subcategory. Please select again.';
+//         hasErrors = true;
+//       }
+
+//       /*
+//        * Contact name.
+//        */
 //       if (!c.name.trim()) {
 //         currentCioErrors.name = 'CIO name is required.';
 //         hasErrors = true;
@@ -275,11 +382,17 @@
 //         hasErrors = true;
 //       }
 
+//       /*
+//        * Company.
+//        */
 //       if (!c.company.trim()) {
 //         currentCioErrors.company = 'CIO company is required.';
 //         hasErrors = true;
 //       }
 
+//       /*
+//        * Email.
+//        */
 //       if (!c.email.trim()) {
 //         currentCioErrors.email = 'Email is required.';
 //         hasErrors = true;
@@ -288,6 +401,9 @@
 //         hasErrors = true;
 //       }
 
+//       /*
+//        * Mobile.
+//        */
 //       if (c.mobile && !phoneRegex.test(c.mobile)) {
 //         currentCioErrors.mobile = 'Enter a valid 10-digit mobile number.';
 //         hasErrors = true;
@@ -320,9 +436,16 @@
 //         nominatorContact,
 //         nominatorEmail,
 
-//         // Existing API payload kept unchanged.
+//         /*
+//          * Subcategory ID is now included.
+//          *
+//          * IMPORTANT:
+//          * This requires subcategoryId to be supported
+//          * by the POST API type/schema.
+//          */
 //         nominees: cios.map((cio) => ({
 //           categoryId: cio.categoryId,
+//           subcategoryId: cio.subcategoryId,
 //           contactName: cio.name,
 //           companyName: cio.company,
 //           contactEmail: cio.email,
@@ -351,6 +474,9 @@
 //     }
 //   };
 
+//   /*
+//    * Success screen.
+//    */
 //   if (submitted) {
 //     return (
 //       <main className="nominate-page-container">
@@ -370,6 +496,9 @@
 //     );
 //   }
 
+//   /*
+//    * Category options.
+//    */
 //   const categoryOptions: CategoryOption[] = (
 //     categories.length > 0 ? categories : NOMINATION_CATEGORY_OPTIONS
 //   ).map((option) => ({
@@ -377,6 +506,9 @@
 //     label: 'name' in option ? option.name : option.label,
 //   }));
 
+//   /*
+//    * React Select styles.
+//    */
 //   const customSelectStyles: StylesConfig<CategoryOption, false> = {
 //     control: (provided, state) => ({
 //       ...provided,
@@ -509,6 +641,10 @@
 //               </p>
 
 //               <form id="nominate-form" onSubmit={handleSubmit} className="nominate-form" noValidate>
+//                 {/* =========================
+//                     NOMINATOR DETAILS
+//                 ========================== */}
+
 //                 <fieldset className="nominate-fieldset">
 //                   <legend className="nominate-legend">Nominator details</legend>
 
@@ -627,39 +763,37 @@
 //                   </label>
 //                 </fieldset>
 
+//                 {/* =========================
+//                     CIO DETAILS
+//                 ========================== */}
+
 //                 <fieldset className="nominate-fieldset">
 //                   <legend className="nominate-legend">You can recommend (up to {maxCios})</legend>
 
 //                   {cios.map((c, idx) => {
 //                     /*
-//                      * Find the currently selected category
-//                      * for this particular CIO.
-//                      */
-//                     const selectedCategory = categories.find(
-//                       (category) => category.id === c.categoryId,
-//                     ) as CategoryWithSubcategories | undefined;
-
-//                     /*
-//                      * Read subcategories from the
-//                      * selected category.
+//                      * Filter the independently loaded
+//                      * subcategory API response according
+//                      * to the selected category.
 //                      *
 //                      * Supports:
-//                      * - subcategories
-//                      * - subCategories
-//                      * - children
+//                      * categoryId
+//                      * categoryID
+//                      * category.id
 //                      */
-//                     const rawSubcategories =
-//                       selectedCategory?.subcategories ??
-//                       selectedCategory?.subCategories ??
-//                       selectedCategory?.children ??
-//                       [];
+//                     const subcategoryOptions: SubcategoryOption[] = subcategories
+//                       .filter((subcategory) => {
+//                         const subcategoryCategoryId =
+//                           subcategory.categoryId ??
+//                           subcategory.categoryID ??
+//                           subcategory.category?.id;
 
-//                     const subcategoryOptions: SubcategoryOption[] = rawSubcategories.map(
-//                       (subcategory) => ({
+//                         return subcategoryCategoryId === c.categoryId;
+//                       })
+//                       .map((subcategory) => ({
 //                         value: subcategory.id,
 //                         label: subcategory.name ?? subcategory.label ?? '',
-//                       }),
-//                     );
+//                       }));
 
 //                     return (
 //                       <div
@@ -686,7 +820,10 @@
 //                           )}
 //                         </div>
 
-//                         {/* CATEGORY + SUBCATEGORY */}
+//                         {/* =========================
+//                             CATEGORY + SUBCATEGORY
+//                         ========================== */}
+
 //                         <div className="nominate-category-row">
 //                           <label className="nominate-label">
 //                             Recommended ICT Vendor by Category *
@@ -701,9 +838,8 @@
 //                               }
 //                               onChange={(selected) => {
 //                                 /*
-//                                  * When category changes:
-//                                  * 1. Update category.
-//                                  * 2. Clear old subcategory.
+//                                  * Change category and clear
+//                                  * previously selected subcategory.
 //                                  */
 //                                 updateCio(idx, 'categoryId', selected?.value || '');
 
@@ -726,10 +862,18 @@
 //                               styles={customSelectStyles}
 //                               options={subcategoryOptions}
 //                               placeholder={
-//                                 c.categoryId ? 'Select Subcategory' : 'Select Category First'
+//                                 !c.categoryId
+//                                   ? 'Select Category First'
+//                                   : isLoadingSubcategories
+//                                     ? 'Loading Subcategories...'
+//                                     : 'Select Subcategory'
 //                               }
 //                               isSearchable
-//                               isDisabled={!c.categoryId || subcategoryOptions.length === 0}
+//                               isDisabled={
+//                                 !c.categoryId ||
+//                                 isLoadingSubcategories ||
+//                                 subcategoryOptions.length === 0
+//                               }
 //                               value={
 //                                 subcategoryOptions.find(
 //                                   (option) => option.value === c.subcategoryId,
@@ -739,18 +883,33 @@
 //                                 updateCio(idx, 'subcategoryId', selected?.value || '')
 //                               }
 //                             />
-//                             {c.categoryId && subcategoryOptions.length === 0 && (
-//                               <small
-//                                 style={{
-//                                   color: '#999',
-//                                   marginTop: '5px',
-//                                 }}
-//                               >
-//                                 No subcategories available
-//                               </small>
+//                             {subcategoriesError && (
+//                               <div className="registration-error">{subcategoriesError}</div>
+//                             )}
+//                             {c.categoryId &&
+//                               !isLoadingSubcategories &&
+//                               subcategoryOptions.length === 0 &&
+//                               !subcategoriesError && (
+//                                 <small
+//                                   style={{
+//                                     color: '#999',
+//                                     marginTop: '5px',
+//                                   }}
+//                                 >
+//                                   No subcategories available
+//                                 </small>
+//                               )}
+//                             {errors.cios?.[idx]?.subcategoryId && (
+//                               <div className="registration-error">
+//                                 {errors.cios[idx].subcategoryId}
+//                               </div>
 //                             )}
 //                           </label>
 //                         </div>
+
+//                         {/* =========================
+//                             CONTACT NAME
+//                         ========================== */}
 
 //                         <label className="nominate-label">
 //                           ICT Vendor Contact Name *
@@ -766,6 +925,10 @@
 //                           )}
 //                         </label>
 
+//                         {/* =========================
+//                             COMPANY
+//                         ========================== */}
+
 //                         <label className="nominate-label">
 //                           ICT Company Name *
 //                           <input
@@ -777,6 +940,10 @@
 //                             <div className="registration-error">{errors.cios[idx].company}</div>
 //                           )}
 //                         </label>
+
+//                         {/* =========================
+//                             EMAIL
+//                         ========================== */}
 
 //                         <label className="nominate-label">
 //                           Contact Email *
@@ -790,6 +957,10 @@
 //                             <div className="registration-error">{errors.cios[idx].email}</div>
 //                           )}
 //                         </label>
+
+//                         {/* =========================
+//                             MOBILE
+//                         ========================== */}
 
 //                         <label className="nominate-label">
 //                           Mobile No.
@@ -812,6 +983,10 @@
 //                   })}
 //                 </fieldset>
 
+//                 {/* =========================
+//                     ADD CIO
+//                 ========================== */}
+
 //                 <div className="nominate-add-wrap">
 //                   <button
 //                     type="button"
@@ -826,6 +1001,10 @@
 //             </div>
 //           </div>
 //         </div>
+
+//         {/* =========================
+//             SUBMIT
+//         ========================== */}
 
 //         <div className="nominate-submit-row">
 //           {status && (
@@ -871,6 +1050,7 @@ import { MONGODB_ID_REGEX, NOMINATION_CATEGORY_OPTIONS } from '@/constants/nomin
 import {
   submitWebsiteNomination,
   fetchWebsiteNominationCategories,
+  fetchWebsiteNominationStatus,
 } from '@/services/nominations.service';
 
 import { ensureWebsiteAuth, buildWebsiteAuthHeaders } from '@/lib/website-auth';
@@ -967,10 +1147,113 @@ export default function NominatePage() {
   const [animatingCioIndex, setAnimatingCioIndex] = useState<number | null>(null);
   const [animationType, setAnimationType] = useState<'add' | 'remove' | null>(null);
 
+  /*
+   * =========================================================
+   * NOMINATION STATUS
+   *
+   * null  = checking status
+   * true  = nomination active
+   * false = nomination inactive / closed
+   * =========================================================
+   */
+  const [nominationActive, setNominationActive] = useState<boolean | null>(null);
+
   const maxCios = 10;
 
   /*
-   * Scroll to top after successful submission.
+   * =========================================================
+   * CHECK NOMINATION STATUS
+   * =========================================================
+   */
+  useEffect(() => {
+    let isMounted = true;
+
+    async function checkNominationStatus() {
+      try {
+        const response = await fetchWebsiteNominationStatus();
+
+        if (!isMounted) {
+          return;
+        }
+
+        const data = response?.data;
+
+        /*
+         * Supports:
+         *
+         * data: true
+         * data: false
+         *
+         * data: {
+         *   isActive: true
+         * }
+         *
+         * data: {
+         *   active: true
+         * }
+         *
+         * data: {
+         *   status: "ACTIVE"
+         * }
+         */
+        if (typeof data === 'boolean') {
+          setNominationActive(data);
+          return;
+        }
+
+        if (typeof data === 'object' && data !== null) {
+          const statusData = data as {
+            isActive?: unknown;
+            active?: unknown;
+            status?: unknown;
+          };
+
+          if (typeof statusData.isActive === 'boolean') {
+            setNominationActive(statusData.isActive);
+            return;
+          }
+
+          if (typeof statusData.active === 'boolean') {
+            setNominationActive(statusData.active);
+            return;
+          }
+
+          if (typeof statusData.status === 'string') {
+            setNominationActive(statusData.status.toLowerCase() === 'active');
+            return;
+          }
+        }
+
+        /*
+         * If the API response cannot be understood,
+         * keep the nomination closed for safety.
+         */
+        setNominationActive(false);
+        // } catch (error) {
+        //   console.error('Failed to fetch nomination status:', error);
+
+        //   if (isMounted) {
+        //     setNominationActive(false);
+        //   }
+        // }
+      } catch (error) {
+        if (isMounted) {
+          setNominationActive(false);
+        }
+      }
+    }
+
+    checkNominationStatus();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  /*
+   * =========================================================
+   * SCROLL TO TOP AFTER SUCCESSFUL SUBMISSION
+   * =========================================================
    */
   useEffect(() => {
     if (submitted) {
@@ -982,9 +1265,18 @@ export default function NominatePage() {
   }, [submitted]);
 
   /*
-   * Load nomination categories.
+   * =========================================================
+   * LOAD NOMINATION CATEGORIES
+   * =========================================================
    */
   useEffect(() => {
+    /*
+     * Don't load the form data while nomination is closed.
+     */
+    if (nominationActive !== true) {
+      return;
+    }
+
     let isMounted = true;
 
     async function loadCategories() {
@@ -1012,15 +1304,24 @@ export default function NominatePage() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [nominationActive]);
 
   /*
-   * Load nomination subcategories.
+   * =========================================================
+   * LOAD NOMINATION SUBCATEGORIES
    *
    * Swagger endpoint:
    * GET /api/v1/website/nominations/sub-categories
+   * =========================================================
    */
   useEffect(() => {
+    /*
+     * Don't load subcategories while nomination is closed.
+     */
+    if (nominationActive !== true) {
+      return;
+    }
+
     let isMounted = true;
 
     async function loadSubcategories() {
@@ -1066,10 +1367,12 @@ export default function NominatePage() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [nominationActive]);
 
   /*
-   * Add CIO.
+   * =========================================================
+   * ADD CIO
+   * =========================================================
    */
   const addCio = () => {
     if (cios.length >= maxCios) return;
@@ -1102,7 +1405,9 @@ export default function NominatePage() {
   };
 
   /*
-   * Remove CIO.
+   * =========================================================
+   * REMOVE CIO
+   * =========================================================
    */
   const removeCio = (idx: number) => {
     setAnimationType('remove');
@@ -1128,7 +1433,9 @@ export default function NominatePage() {
   };
 
   /*
-   * Update a CIO field.
+   * =========================================================
+   * UPDATE CIO FIELD
+   * =========================================================
    */
   const updateCio = (idx: number, key: keyof CIOEntry, value: string) => {
     setCios((prev) =>
@@ -1157,10 +1464,21 @@ export default function NominatePage() {
   };
 
   /*
-   * Submit nomination.
+   * =========================================================
+   * SUBMIT NOMINATION
+   * =========================================================
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    /*
+     * Extra protection:
+     * Do not submit if nomination is inactive.
+     */
+    if (nominationActive !== true) {
+      setStatus('Nominations are currently closed.');
+      return;
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^[0-9]{10}$/;
@@ -1170,7 +1488,9 @@ export default function NominatePage() {
     let hasErrors = false;
 
     /*
-     * Nominator validation.
+     * =======================================================
+     * NOMINATOR VALIDATION
+     * =======================================================
      */
     if (!nominatorName.trim()) {
       nextErrors.nominatorName = 'Nominator name is required.';
@@ -1204,7 +1524,9 @@ export default function NominatePage() {
     }
 
     /*
-     * CIO validation.
+     * =======================================================
+     * CIO VALIDATION
+     * =======================================================
      */
     const cioErrorsMap: NonNullable<FormErrors['cios']> = {};
 
@@ -1212,7 +1534,7 @@ export default function NominatePage() {
       const currentCioErrors: NonNullable<FormErrors['cios']>[number] = {};
 
       /*
-       * Category.
+       * Category
        */
       if (!c.categoryId) {
         currentCioErrors.categoryId = 'Please select a category.';
@@ -1224,9 +1546,6 @@ export default function NominatePage() {
 
       /*
        * Subcategory is optional.
-       *
-       * If your backend requires subcategory,
-       * change this validation accordingly.
        */
       if (c.subcategoryId && !MONGODB_ID_REGEX.test(c.subcategoryId)) {
         currentCioErrors.subcategoryId = 'Invalid subcategory. Please select again.';
@@ -1234,7 +1553,7 @@ export default function NominatePage() {
       }
 
       /*
-       * Contact name.
+       * Contact name
        */
       if (!c.name.trim()) {
         currentCioErrors.name = 'CIO name is required.';
@@ -1245,7 +1564,7 @@ export default function NominatePage() {
       }
 
       /*
-       * Company.
+       * Company
        */
       if (!c.company.trim()) {
         currentCioErrors.company = 'CIO company is required.';
@@ -1253,7 +1572,7 @@ export default function NominatePage() {
       }
 
       /*
-       * Email.
+       * Email
        */
       if (!c.email.trim()) {
         currentCioErrors.email = 'Email is required.';
@@ -1264,7 +1583,7 @@ export default function NominatePage() {
       }
 
       /*
-       * Mobile.
+       * Mobile
        */
       if (c.mobile && !phoneRegex.test(c.mobile)) {
         currentCioErrors.mobile = 'Enter a valid 10-digit mobile number.';
@@ -1298,13 +1617,6 @@ export default function NominatePage() {
         nominatorContact,
         nominatorEmail,
 
-        /*
-         * Subcategory ID is now included.
-         *
-         * IMPORTANT:
-         * This requires subcategoryId to be supported
-         * by the POST API type/schema.
-         */
         nominees: cios.map((cio) => ({
           categoryId: cio.categoryId,
           subcategoryId: cio.subcategoryId,
@@ -1337,7 +1649,53 @@ export default function NominatePage() {
   };
 
   /*
-   * Success screen.
+   * =========================================================
+   * CHECKING STATUS SCREEN
+   * =========================================================
+   */
+  if (nominationActive === null) {
+    return (
+      <main className="nominate-page-container">
+        <section className="nominate-success-section">
+          <h1>Nomination</h1>
+
+          <p>Checking nomination availability...</p>
+        </section>
+      </main>
+    );
+  }
+
+  /*
+   * =========================================================
+   * NOMINATION CLOSED SCREEN
+   *
+   * IMPORTANT:
+   * The user can still open /nominate.
+   * We only hide the form when inactive.
+   * =========================================================
+   */
+  if (nominationActive === false) {
+    return (
+      <main className="nominate-page-container">
+        <section className="nominate-success-section nomination-closed-section">
+          <h1>Nomination Closed</h1>
+
+          <p>Thank you for your interest in CIO CHOICE. Nominations are currently closed.</p>
+
+          <p>Please check back later for the next nomination cycle.</p>
+
+          <p>
+            <Link href="/">Return to Home</Link>
+          </p>
+        </section>
+      </main>
+    );
+  }
+
+  /*
+   * =========================================================
+   * SUCCESS SCREEN
+   * =========================================================
    */
   if (submitted) {
     return (
@@ -1359,7 +1717,9 @@ export default function NominatePage() {
   }
 
   /*
-   * Category options.
+   * =========================================================
+   * CATEGORY OPTIONS
+   * =========================================================
    */
   const categoryOptions: CategoryOption[] = (
     categories.length > 0 ? categories : NOMINATION_CATEGORY_OPTIONS
@@ -1369,7 +1729,9 @@ export default function NominatePage() {
   }));
 
   /*
-   * React Select styles.
+   * =========================================================
+   * REACT SELECT STYLES
+   * =========================================================
    */
   const customSelectStyles: StylesConfig<CategoryOption, false> = {
     control: (provided, state) => ({
@@ -1423,6 +1785,11 @@ export default function NominatePage() {
     }),
   };
 
+  /*
+   * =========================================================
+   * NOMINATION FORM
+   * =========================================================
+   */
   return (
     <main className="nominate-page-container">
       <section className="nominate-page-content">
@@ -1633,16 +2000,6 @@ export default function NominatePage() {
                   <legend className="nominate-legend">You can recommend (up to {maxCios})</legend>
 
                   {cios.map((c, idx) => {
-                    /*
-                     * Filter the independently loaded
-                     * subcategory API response according
-                     * to the selected category.
-                     *
-                     * Supports:
-                     * categoryId
-                     * categoryID
-                     * category.id
-                     */
                     const subcategoryOptions: SubcategoryOption[] = subcategories
                       .filter((subcategory) => {
                         const subcategoryCategoryId =
@@ -1682,9 +2039,7 @@ export default function NominatePage() {
                           )}
                         </div>
 
-                        {/* =========================
-                            CATEGORY + SUBCATEGORY
-                        ========================== */}
+                        {/* CATEGORY + SUBCATEGORY */}
 
                         <div className="nominate-category-row">
                           <label className="nominate-label">
@@ -1699,10 +2054,6 @@ export default function NominatePage() {
                                 null
                               }
                               onChange={(selected) => {
-                                /*
-                                 * Change category and clear
-                                 * previously selected subcategory.
-                                 */
                                 updateCio(idx, 'categoryId', selected?.value || '');
 
                                 updateCio(idx, 'subcategoryId', '');
@@ -1769,9 +2120,7 @@ export default function NominatePage() {
                           </label>
                         </div>
 
-                        {/* =========================
-                            CONTACT NAME
-                        ========================== */}
+                        {/* CONTACT NAME */}
 
                         <label className="nominate-label">
                           ICT Vendor Contact Name *
@@ -1787,9 +2136,7 @@ export default function NominatePage() {
                           )}
                         </label>
 
-                        {/* =========================
-                            COMPANY
-                        ========================== */}
+                        {/* COMPANY */}
 
                         <label className="nominate-label">
                           ICT Company Name *
@@ -1803,9 +2150,7 @@ export default function NominatePage() {
                           )}
                         </label>
 
-                        {/* =========================
-                            EMAIL
-                        ========================== */}
+                        {/* EMAIL */}
 
                         <label className="nominate-label">
                           Contact Email *
@@ -1820,9 +2165,7 @@ export default function NominatePage() {
                           )}
                         </label>
 
-                        {/* =========================
-                            MOBILE
-                        ========================== */}
+                        {/* MOBILE */}
 
                         <label className="nominate-label">
                           Mobile No.
@@ -1845,9 +2188,7 @@ export default function NominatePage() {
                   })}
                 </fieldset>
 
-                {/* =========================
-                    ADD CIO
-                ========================== */}
+                {/* ADD CIO */}
 
                 <div className="nominate-add-wrap">
                   <button
@@ -1864,9 +2205,7 @@ export default function NominatePage() {
           </div>
         </div>
 
-        {/* =========================
-            SUBMIT
-        ========================== */}
+        {/* SUBMIT */}
 
         <div className="nominate-submit-row">
           {status && (
