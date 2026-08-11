@@ -1,18 +1,248 @@
+// // 'use client';
+
+// // import Link from 'next/link';
+// // import Image from 'next/image';
+// // import { Phone, Mail, Send } from 'lucide-react';
+// // import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
+
+// // export default function Footer() {
+// //   return (
+// //     <footer className="footer-section">
+// //       {/* MAIN FOOTER */}
+// //       <div className="footer-main">
+// //         <div className="footer-container">
+// //           <div className="footer-grid">
+// //             {/* COLUMN 1 */}
+// //             <div className="footer-widget footer-brand">
+// //               <Link href="/" className="footer-logo1">
+// //                 <Image
+// //                   src="/assets/logo/Headingg.png"
+// //                   alt="Core Media"
+// //                   width={220}
+// //                   height={100}
+// //                   priority
+// //                 />
+// //               </Link>
+
+// //               {/* <p className="footer-description">
+// //                 Developing personalized customer journeys to increase customer satisfaction,
+// //                 engagement, and long-term loyalty for business growth.
+// //               </p> */}
+// //             </div>
+
+// //             {/* COLUMN 2 */}
+// //             <div className="footer-widget">
+// //               <h4 className="footer-title">Services</h4>
+
+// //               <ul className="footer-links">
+// //                 <li>
+// //                   <Link href="/videos">Video</Link>
+// //                 </li>
+
+// //                 <li>
+// //                   <Link href="/events">Events</Link>
+// //                 </li>
+
+// //                 {/* <li>
+// //                   <Link href="/dialoges">Dialogues</Link>
+// //                 </li> */}
+
+// //                 <li>
+// //                   <Link
+// //                     href="https://ciodialogues.com/index.php/category/cio-voice/"
+// //                     target="_blank"
+// //                     rel="noopener noreferrer"
+// //                   >
+// //                     Dialogues
+// //                   </Link>
+// //                 </li>
+// //               </ul>
+// //             </div>
+
+// //             {/* COLUMN 3 */}
+// //             <div className="footer-widget">
+// //               <h4 className="footer-title">Resources</h4>
+
+// //               <ul className="footer-links">
+// //                 <li>
+// //                   <Link href="/#contact-section">Contact Us</Link>
+// //                 </li>
+
+// //                 <li>
+// //                   <Link href="/blog">Blogs</Link>
+// //                 </li>
+
+// //                 <li>
+// //                   <Link href="/register">Registration</Link>
+// //                 </li>
+
+// //                 <li>
+// //                   <Link href="/nominate">Nominate</Link>
+// //                 </li>
+// //               </ul>
+// //             </div>
+
+// //             {/* COLUMN 4 */}
+// //             <div className="footer-widget">
+// //               <h4 className="footer-title">Subscribe</h4>
+
+// //               <form className="footer-subscribe">
+// //                 <input type="email" placeholder="Enter your email" className="footer-input" />
+
+// //                 <button type="submit" className="footer-submit" aria-label="Subscribe">
+// //                   <Send size={18} />
+// //                 </button>
+// //               </form>
+// //               <br />
+// //               <h2 className="footer-description1">Office Address</h2>
+// //               <p className="footer-description">
+// //                 Units Nos. 3037 – A1 Wing, 3rd Floor, Oberoi Garden Estate, Near Chandivali Studio,
+// //                 Andheri (East), Mumbai – 400072, INDIA
+// //               </p>
+
+// //               {/* <label className="footer-checkbox">
+// //                 <input type="checkbox" />
+
+// //                 <span>
+// //                   I agree to the{' '}
+// //                   <Link href="/" className="footer-terms">
+// //                     Terms & Conditions
+// //                   </Link>
+// //                 </span>
+// //               </label> */}
+// //             </div>
+// //           </div>
+// //         </div>
+// //       </div>
+
+// //       {/* FOOTER BOTTOM */}
+// //       <div className="footer-bottom">
+// //         <div className="footer-container footer-bottom-wrapper">
+// //           {/* CONTACT */}
+// //           <div className="footer-contact">
+// //             <a href="tel:+917506035537" className="footer-contact-item">
+// //               <span className="footer-contact-icon">
+// //                 <Phone size={15} />
+// //               </span>
+
+// //               <span className="footer-contact-text">+91 7506035537</span>
+// //             </a>
+
+// //             <div className="footer-contact-item">
+// //               {/* <span className="footer-contact-icon">
+// //                 <Mail size={15} />
+// //               </span> */}
+
+// //               <a
+// //                 href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
+// //                 target="_blank"
+// //                 rel="noopener noreferrer"
+// //                 className="footer-contact-item"
+// //               >
+// //                 <span className="footer-contact-icon">
+// //                   <Mail size={15} />
+// //                 </span>
+
+// //                 <span className="footer-contact-text">contact@core-mediagroup.com</span>
+// //               </a>
+// //             </div>
+// //           </div>
+
+// //           {/* SOCIAL */}
+// //           <div className="footer-socials">
+// //             <a href="https://www.facebook.com/coremediaindia/" aria-label="Facebook">
+// //               <FaFacebookF />
+// //             </a>
+
+// //             <a href="https://www.instagram.com/core_media_/" aria-label="Instagram">
+// //               <FaInstagram />
+// //             </a>
+
+// //             <a href="https://x.com/CIOChoice" aria-label="Twitter">
+// //               <FaXTwitter />
+// //             </a>
+
+// //             <a href="https://www.linkedin.com/company/core-mediagroup/" aria-label="LinkedIn">
+// //               <FaLinkedinIn />
+// //             </a>
+// //           </div>
+
+// //           {/* COPYRIGHT */}
+// //           <div className="footer-copy">Copyright © 2026 CORE Media. All Rights Reserved.</div>
+// //         </div>
+// //       </div>
+// //     </footer>
+// //   );
+// // }
+
 // 'use client';
 
 // import Link from 'next/link';
 // import Image from 'next/image';
+// import { useState } from 'react';
 // import { Phone, Mail, Send } from 'lucide-react';
 // import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 
+// import { subscribeWebsiteEmail } from '@/services/subscribes.service';
+
 // export default function Footer() {
+//   const [subscribeEmail, setSubscribeEmail] = useState('');
+//   const [subscribeStatus, setSubscribeStatus] = useState<string | null>(null);
+//   const [isSubscribing, setIsSubscribing] = useState(false);
+
+//   const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+
+//     const email = subscribeEmail.trim();
+
+//     // Clear previous message
+//     setSubscribeStatus(null);
+
+//     // Required validation
+//     if (!email) {
+//       setSubscribeStatus('Please enter your email address.');
+//       return;
+//     }
+
+//     // Email validation
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+//     if (!emailRegex.test(email)) {
+//       setSubscribeStatus('Please enter a valid email address.');
+//       return;
+//     }
+
+//     setIsSubscribing(true);
+
+//     try {
+//       const response = await subscribeWebsiteEmail(email);
+
+//       setSubscribeStatus(response.message || 'Successfully subscribed!');
+
+//       // Clear input after successful subscription
+//       setSubscribeEmail('');
+//     } catch (error: unknown) {
+//       setSubscribeStatus(
+//         error instanceof Error ? error.message : 'Failed to subscribe. Please try again.',
+//       );
+//     } finally {
+//       setIsSubscribing(false);
+//     }
+//   };
+
 //   return (
 //     <footer className="footer-section">
-//       {/* MAIN FOOTER */}
-//       <div className="footer-main">
-//         <div className="footer-container">
-//           <div className="footer-grid">
-//             {/* COLUMN 1 */}
+//       {/* =========================================
+//           MAIN FOOTER
+//       ========================================= */}
+//       <div className="footer-container">
+//         <div className="footer-grid">
+//           {/* =========================================
+//               COLUMN 1
+//           ========================================= */}
+//           <div className="footer-widget">
+//             {/* Add your logo/content here if required */}
+
 //             <div className="footer-widget footer-brand">
 //               <Link href="/" className="footer-logo1">
 //                 <Image
@@ -25,101 +255,145 @@
 //               </Link>
 
 //               {/* <p className="footer-description">
-//                 Developing personalized customer journeys to increase customer satisfaction,
+//                  Developing personalized customer journeys to increase customer satisfaction,
 //                 engagement, and long-term loyalty for business growth.
-//               </p> */}
+//                </p> */}
 //             </div>
 
-//             {/* COLUMN 2 */}
-//             <div className="footer-widget">
-//               <h4 className="footer-title">Services</h4>
+//             {/*
+//             <p className="footer-description">
+//               Developing personalized customer journeys to increase
+//               customer satisfaction, engagement, and long-term loyalty
+//               for business growth.
+//             </p>
+//             */}
+//           </div>
 
-//               <ul className="footer-links">
-//                 <li>
-//                   <Link href="/videos">Video</Link>
-//                 </li>
+//           {/* =========================================
+//               COLUMN 2 - SERVICES
+//           ========================================= */}
+//           <div className="footer-widget">
+//             <h4 className="footer-title">Services</h4>
 
-//                 <li>
-//                   <Link href="/events">Events</Link>
-//                 </li>
+//             <ul className="footer-links">
+//               <li>
+//                 <Link href="/videos">Video</Link>
+//               </li>
 
-//                 {/* <li>
-//                   <Link href="/dialoges">Dialogues</Link>
-//                 </li> */}
+//               <li>
+//                 <Link href="/events">Events</Link>
+//               </li>
 
-//                 <li>
-//                   <Link
-//                     href="https://ciodialogues.com/index.php/category/cio-voice/"
-//                     target="_blank"
-//                     rel="noopener noreferrer"
-//                   >
-//                     Dialogues
-//                   </Link>
-//                 </li>
-//               </ul>
-//             </div>
+//               <li>
+//                 <Link
+//                   href="https://ciodialogues.com/index.php/category/cio-voice/"
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                 >
+//                   Dialogues
+//                 </Link>
+//               </li>
+//             </ul>
+//           </div>
 
-//             {/* COLUMN 3 */}
-//             <div className="footer-widget">
-//               <h4 className="footer-title">Resources</h4>
+//           {/* =========================================
+//               COLUMN 3 - RESOURCES
+//           ========================================= */}
+//           <div className="footer-widget">
+//             <h4 className="footer-title">Resources</h4>
 
-//               <ul className="footer-links">
-//                 <li>
-//                   <Link href="/#contact-section">Contact Us</Link>
-//                 </li>
+//             <ul className="footer-links">
+//               <li>
+//                 <Link href="/#contact-section">Contact Us</Link>
+//               </li>
 
-//                 <li>
-//                   <Link href="/blog">Blogs</Link>
-//                 </li>
+//               <li>
+//                 <Link href="/blog">Blogs</Link>
+//               </li>
 
-//                 <li>
-//                   <Link href="/register">Registration</Link>
-//                 </li>
+//               <li>
+//                 <Link href="/register">Registration</Link>
+//               </li>
 
-//                 <li>
-//                   <Link href="/nominate">Nominate</Link>
-//                 </li>
-//               </ul>
-//             </div>
+//               <li>
+//                 <Link href="/nominate">Nominate</Link>
+//               </li>
+//             </ul>
+//           </div>
 
-//             {/* COLUMN 4 */}
-//             <div className="footer-widget">
-//               <h4 className="footer-title">Subscribe</h4>
+//           {/* =========================================
+//               COLUMN 4 - SUBSCRIBE
+//           ========================================= */}
+//           <div className="footer-widget">
+//             <h4 className="footer-title">Subscribe</h4>
 
-//               <form className="footer-subscribe">
-//                 <input type="email" placeholder="Enter your email" className="footer-input" />
+//             <form className="footer-subscribe" onSubmit={handleSubscribe} noValidate>
+//               <input
+//                 type="email"
+//                 value={subscribeEmail}
+//                 onChange={(e) => {
+//                   setSubscribeEmail(e.target.value);
+//                   setSubscribeStatus(null);
+//                 }}
+//                 placeholder="Enter your email"
+//                 className="footer-input"
+//                 disabled={isSubscribing}
+//                 aria-label="Email address"
+//                 autoComplete="email"
+//               />
 
-//                 <button type="submit" className="footer-submit" aria-label="Subscribe">
-//                   <Send size={18} />
-//                 </button>
-//               </form>
-//               <br />
-//               <h2 className="footer-description1">Office Address</h2>
-//               <p className="footer-description">
-//                 Units Nos. 3037 – A1 Wing, 3rd Floor, Oberoi Garden Estate, Near Chandivali Studio,
-//                 Andheri (East), Mumbai – 400072, INDIA
+//               <button
+//                 type="submit"
+//                 className="footer-submit"
+//                 aria-label="Subscribe"
+//                 disabled={isSubscribing}
+//               >
+//                 <Send size={18} />
+//               </button>
+//             </form>
+
+//             {subscribeStatus && (
+//               <p className="footer-subscribe-status" role="status" aria-live="polite">
+//                 {subscribeStatus}
 //               </p>
+//             )}
 
-//               {/* <label className="footer-checkbox">
-//                 <input type="checkbox" />
+//             <h2 className="footer-description1">Office Address</h2>
 
-//                 <span>
-//                   I agree to the{' '}
-//                   <Link href="/" className="footer-terms">
-//                     Terms & Conditions
-//                   </Link>
-//                 </span>
-//               </label> */}
-//             </div>
+//             <p className="footer-description">
+//               Units Nos. 3037 – A1 Wing, 3rd Floor, Oberoi Garden Estate, Near Chandivali Studio,
+//               Andheri (East), Mumbai – 400072, INDIA
+//             </p>
+
+//             {/*
+//             <label className="footer-checkbox">
+//               <input type="checkbox" />
+
+//               <span>
+//                 I agree to the{' '}
+//                 <Link
+//                   href="/"
+//                   className="footer-terms"
+//                 >
+//                   Terms & Conditions
+//                 </Link>
+//               </span>
+//             </label>
+//             */}
 //           </div>
 //         </div>
 //       </div>
 
-//       {/* FOOTER BOTTOM */}
+//       {/* =========================================
+//           FOOTER BOTTOM
+//       ========================================= */}
 //       <div className="footer-bottom">
 //         <div className="footer-container footer-bottom-wrapper">
-//           {/* CONTACT */}
+//           {/* =========================================
+//               CONTACT
+//           ========================================= */}
 //           <div className="footer-contact">
+//             {/* PHONE */}
 //             <a href="tel:+917506035537" className="footer-contact-item">
 //               <span className="footer-contact-icon">
 //                 <Phone size={15} />
@@ -128,46 +402,65 @@
 //               <span className="footer-contact-text">+91 7506035537</span>
 //             </a>
 
-//             <div className="footer-contact-item">
-//               {/* <span className="footer-contact-icon">
+//             {/* EMAIL */}
+//             <a
+//               href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               className="footer-contact-item"
+//             >
+//               <span className="footer-contact-icon">
 //                 <Mail size={15} />
-//               </span> */}
+//               </span>
 
-//               <a
-//                 href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
-//                 target="_blank"
-//                 rel="noopener noreferrer"
-//                 className="footer-contact-item"
-//               >
-//                 <span className="footer-contact-icon">
-//                   <Mail size={15} />
-//                 </span>
-
-//                 <span className="footer-contact-text">contact@core-mediagroup.com</span>
-//               </a>
-//             </div>
+//               <span className="footer-contact-text">contact@core-mediagroup.com</span>
+//             </a>
 //           </div>
 
-//           {/* SOCIAL */}
+//           {/* =========================================
+//               SOCIAL
+//           ========================================= */}
 //           <div className="footer-socials">
-//             <a href="https://www.facebook.com/coremediaindia/" aria-label="Facebook">
+//             <a
+//               href="https://www.facebook.com/coremediaindia/"
+//               aria-label="Facebook"
+//               target="_blank"
+//               rel="noopener noreferrer"
+//             >
 //               <FaFacebookF />
 //             </a>
 
-//             <a href="https://www.instagram.com/core_media_/" aria-label="Instagram">
+//             <a
+//               href="https://www.instagram.com/core_media_/"
+//               aria-label="Instagram"
+//               target="_blank"
+//               rel="noopener noreferrer"
+//             >
 //               <FaInstagram />
 //             </a>
 
-//             <a href="https://x.com/CIOChoice" aria-label="Twitter">
+//             <a
+//               href="https://x.com/CIOChoice"
+//               aria-label="X / Twitter"
+//               target="_blank"
+//               rel="noopener noreferrer"
+//             >
 //               <FaXTwitter />
 //             </a>
 
-//             <a href="https://www.linkedin.com/company/core-mediagroup/" aria-label="LinkedIn">
+//             <a
+//               href="https://www.linkedin.com/company/core-mediagroup/"
+//               aria-label="LinkedIn"
+//               target="_blank"
+//               rel="noopener noreferrer"
+//             >
 //               <FaLinkedinIn />
 //             </a>
 //           </div>
 
-//           {/* COPYRIGHT */}
+//           {/* =========================================
+//               COPYRIGHT
+//           ========================================= */}
 //           <div className="footer-copy">Copyright © 2026 CORE Media. All Rights Reserved.</div>
 //         </div>
 //       </div>
@@ -187,8 +480,11 @@ import { subscribeWebsiteEmail } from '@/services/subscribes.service';
 
 export default function Footer() {
   const [subscribeEmail, setSubscribeEmail] = useState('');
-  const [subscribeStatus, setSubscribeStatus] = useState<string | null>(null);
+  // const [subscribeStatus, setSubscribeStatus] = useState<string | null>(null);
   const [isSubscribing, setIsSubscribing] = useState(false);
+
+  const [showSubscribePopup, setShowSubscribePopup] = useState(false);
+  const [subscribePopupMessage, setSubscribePopupMessage] = useState('');
 
   const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -196,11 +492,12 @@ export default function Footer() {
     const email = subscribeEmail.trim();
 
     // Clear previous message
-    setSubscribeStatus(null);
+    // setSubscribeStatus(null);
 
     // Required validation
     if (!email) {
-      setSubscribeStatus('Please enter your email address.');
+      setSubscribePopupMessage('Please enter your email address.');
+      setShowSubscribePopup(true);
       return;
     }
 
@@ -208,26 +505,36 @@ export default function Footer() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
-      setSubscribeStatus('Please enter a valid email address.');
+      setSubscribePopupMessage('Please enter a valid email address.');
+      setShowSubscribePopup(true);
       return;
     }
 
     setIsSubscribing(true);
 
     try {
-      const response = await subscribeWebsiteEmail(email);
+      await subscribeWebsiteEmail(email);
 
-      setSubscribeStatus(response.message || 'Successfully subscribed!');
+      // Success popup
+      setSubscribePopupMessage('Operation successful');
+      setShowSubscribePopup(true);
 
       // Clear input after successful subscription
       setSubscribeEmail('');
     } catch (error: unknown) {
-      setSubscribeStatus(
+      setSubscribePopupMessage(
         error instanceof Error ? error.message : 'Failed to subscribe. Please try again.',
       );
+
+      setShowSubscribePopup(true);
     } finally {
       setIsSubscribing(false);
     }
+  };
+
+  const closeSubscribePopup = () => {
+    setShowSubscribePopup(false);
+    setSubscribePopupMessage('');
   };
 
   return (
@@ -235,14 +542,14 @@ export default function Footer() {
       {/* =========================================
           MAIN FOOTER
       ========================================= */}
+
       <div className="footer-container">
         <div className="footer-grid">
           {/* =========================================
               COLUMN 1
           ========================================= */}
-          <div className="footer-widget">
-            {/* Add your logo/content here if required */}
 
+          <div className="footer-widget">
             <div className="footer-widget footer-brand">
               <Link href="/" className="footer-logo1">
                 <Image
@@ -253,25 +560,13 @@ export default function Footer() {
                   priority
                 />
               </Link>
-
-              {/* <p className="footer-description">
-                 Developing personalized customer journeys to increase customer satisfaction,
-                engagement, and long-term loyalty for business growth.
-               </p> */}
             </div>
-
-            {/*
-            <p className="footer-description">
-              Developing personalized customer journeys to increase
-              customer satisfaction, engagement, and long-term loyalty
-              for business growth.
-            </p>
-            */}
           </div>
 
           {/* =========================================
               COLUMN 2 - SERVICES
           ========================================= */}
+
           <div className="footer-widget">
             <h4 className="footer-title">Services</h4>
 
@@ -285,13 +580,13 @@ export default function Footer() {
               </li>
 
               <li>
-                <Link
+                <a
                   href="https://ciodialogues.com/index.php/category/cio-voice/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Dialogues
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -299,6 +594,7 @@ export default function Footer() {
           {/* =========================================
               COLUMN 3 - RESOURCES
           ========================================= */}
+
           <div className="footer-widget">
             <h4 className="footer-title">Resources</h4>
 
@@ -324,6 +620,7 @@ export default function Footer() {
           {/* =========================================
               COLUMN 4 - SUBSCRIBE
           ========================================= */}
+
           <div className="footer-widget">
             <h4 className="footer-title">Subscribe</h4>
 
@@ -333,7 +630,7 @@ export default function Footer() {
                 value={subscribeEmail}
                 onChange={(e) => {
                   setSubscribeEmail(e.target.value);
-                  setSubscribeStatus(null);
+                  // setSubscribeStatus(null);
                 }}
                 placeholder="Enter your email"
                 className="footer-input"
@@ -352,10 +649,25 @@ export default function Footer() {
               </button>
             </form>
 
-            {subscribeStatus && (
-              <p className="footer-subscribe-status" role="status" aria-live="polite">
-                {subscribeStatus}
-              </p>
+            {/* =========================================
+    SUBSCRIBE TOAST
+========================================= */}
+
+            {showSubscribePopup && (
+              <div className="subscribe-toast" role="alert" aria-live="polite">
+                <span className="subscribe-toast-dot" />
+
+                <p className="subscribe-toast-message">{subscribePopupMessage}</p>
+
+                <button
+                  type="button"
+                  className="subscribe-toast-close"
+                  onClick={closeSubscribePopup}
+                  aria-label="Close notification"
+                >
+                  ×
+                </button>
+              </div>
             )}
 
             <h2 className="footer-description1">Office Address</h2>
@@ -364,22 +676,6 @@ export default function Footer() {
               Units Nos. 3037 – A1 Wing, 3rd Floor, Oberoi Garden Estate, Near Chandivali Studio,
               Andheri (East), Mumbai – 400072, INDIA
             </p>
-
-            {/*
-            <label className="footer-checkbox">
-              <input type="checkbox" />
-
-              <span>
-                I agree to the{' '}
-                <Link
-                  href="/"
-                  className="footer-terms"
-                >
-                  Terms & Conditions
-                </Link>
-              </span>
-            </label>
-            */}
           </div>
         </div>
       </div>
@@ -387,13 +683,16 @@ export default function Footer() {
       {/* =========================================
           FOOTER BOTTOM
       ========================================= */}
+
       <div className="footer-bottom">
         <div className="footer-container footer-bottom-wrapper">
           {/* =========================================
               CONTACT
           ========================================= */}
+
           <div className="footer-contact">
             {/* PHONE */}
+
             <a href="tel:+917506035537" className="footer-contact-item">
               <span className="footer-contact-icon">
                 <Phone size={15} />
@@ -403,6 +702,7 @@ export default function Footer() {
             </a>
 
             {/* EMAIL */}
+
             <a
               href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
               target="_blank"
@@ -420,6 +720,7 @@ export default function Footer() {
           {/* =========================================
               SOCIAL
           ========================================= */}
+
           <div className="footer-socials">
             <a
               href="https://www.facebook.com/coremediaindia/"
@@ -461,6 +762,7 @@ export default function Footer() {
           {/* =========================================
               COPYRIGHT
           ========================================= */}
+
           <div className="footer-copy">Copyright © 2026 CORE Media. All Rights Reserved.</div>
         </div>
       </div>
