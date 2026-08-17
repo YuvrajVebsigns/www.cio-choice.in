@@ -5223,9 +5223,6 @@ main.advisory-page {
 }
 
 /* =========================================================
-   CONTACT SECTION
-========================================================= */
-/* =========================================================
    CONTACT SECTION - SPLIT CARD DESIGN
 ========================================================= */
 
@@ -5244,7 +5241,9 @@ main.advisory-page {
   box-shadow: 0 30px 70px rgba(164, 0, 0, 0.12);
 }
 
-/* LEFT SIDE */
+/* =========================================================
+   LEFT SIDE - MAP
+========================================================= */
 
 .contact-map-area {
   background: linear-gradient(135deg, #8e0101 100%);
@@ -5285,10 +5284,13 @@ main.advisory-page {
 
 .contact-map-img {
   width: 100%;
+  height: auto;
   object-fit: contain;
 }
 
-/* MAP DOTS */
+/* =========================================================
+   MAP DOTS
+========================================================= */
 
 .map-dot {
   position: absolute;
@@ -5299,76 +5301,71 @@ main.advisory-page {
   box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.15);
   animation: pulseDot 2s infinite;
 }
-/* india */
+
+/* India */
 .dot-1 {
   top: 49%;
   left: 77%;
 }
-/* dubai */
+
+/* Dubai */
 .dot-2 {
   top: 40%;
   left: 60%;
 }
 
+/* Singapore */
 .dot-3 {
   top: 45%;
   left: 69%;
 }
 
-/* Map labels shown above each dot */
+/* =========================================================
+   MAP LABELS
+========================================================= */
 
 .map-label {
   position: absolute !important;
   display: inline-block !important;
   z-index: 130 !important;
   pointer-events: none !important;
+
   transform: translate(-50%, -160%) !important;
+
   background: transparent !important;
-  color: black !important;
+  color: #000000 !important;
+
   padding: 0 !important;
   border-radius: 0 !important;
+
   font-weight: 800 !important;
   font-size: 12px !important;
+
   white-space: nowrap !important;
   box-shadow: none !important;
 }
 
-/* Position labels matching dots */
+/* India */
 .label-1 {
   top: 47% !important;
   left: 70% !important;
 }
+
+/* Dubai */
 .label-2 {
   top: 45% !important;
   left: 60% !important;
 }
+
+/* Singapore */
 .label-3 {
   top: 53% !important;
   left: 81% !important;
 }
 
-@media (max-width: 768px) {
-  .map-dot {
-    width: 8px;
-    height: 8px;
-  }
-  .map-label {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-  .label-1 {
-    top: 55% !important;
-    left: 70% !important;
-  }
-  .label-2 {
-    top: 52% !important;
-    left: 55% !important;
-  }
-  .label-3 {
-    top: 60% !important;
-    left: 90% !important;
-  }
-}
+/* =========================================================
+   MAP DOT ANIMATION
+========================================================= */
 
 @keyframes pulseDot {
   50% {
@@ -5377,9 +5374,12 @@ main.advisory-page {
   }
 }
 
-/* RIGHT SIDE */
+/* =========================================================
+   RIGHT SIDE - CONTACT FORM
+========================================================= */
 
 .contact-form-area {
+  position: relative;
   background: #ffffff;
   padding: 42px 50px;
   display: flex;
@@ -5387,18 +5387,31 @@ main.advisory-page {
   justify-content: center;
 }
 
+/* =========================================================
+   CONTACT BADGE
+========================================================= */
+
 .contact-badge {
   display: inline-flex;
   width: fit-content;
+
   padding: 7px 16px;
+
   border-radius: 999px;
+
   background: #f7ebeb;
   color: #8e0101;
+
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.15em;
+
   margin-bottom: 14px;
 }
+
+/* =========================================================
+   CONTACT TITLE
+========================================================= */
 
 .contact-title {
   font-size: 36px;
@@ -5406,6 +5419,14 @@ main.advisory-page {
   font-weight: 700;
   color: #181818;
   margin-bottom: 24px;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.contact-form {
+  width: 100%;
 }
 
 .contact-grid {
@@ -5418,12 +5439,22 @@ main.advisory-page {
 .contact-grid select,
 .contact-form textarea {
   width: 100%;
+
   border: 1px solid #e6dada;
   background: #faf8f8;
+
   border-radius: 14px;
+
   padding: 12px 15px;
+
+  font-family: inherit;
   font-size: 14px;
-  color: #222;
+  color: #222222;
+
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .contact-grid input,
@@ -5437,34 +5468,70 @@ main.advisory-page {
   resize: none;
 }
 
+.contact-grid input::placeholder,
+.contact-form textarea::placeholder {
+  color: #858585;
+}
+
 .contact-grid input:focus,
 .contact-grid select:focus,
 .contact-form textarea:focus {
   border-color: #8e0101;
-  background: #fff;
+  background: #ffffff;
   outline: none;
+  box-shadow: 0 0 0 3px rgba(142, 1, 1, 0.07);
 }
 
-/* BUTTON */
+/* =========================================================
+   SELECT
+========================================================= */
+
+.contact-grid select {
+  cursor: pointer;
+}
+
+.contact-grid select:invalid {
+  color: #858585;
+}
+
+.contact-grid select option {
+  color: #222222;
+}
+
+/* =========================================================
+   CONTACT BUTTON
+========================================================= */
 
 .contact-btn {
   margin-top: 18px;
+
   height: 52px;
   padding: 0 24px;
+
   border: none;
   border-radius: 14px;
+
   background: #a40000;
-  color: #fff;
+  color: #ffffff;
+
+  font-family: inherit;
   font-size: 15px;
   font-weight: 700;
+
   display: inline-flex;
   align-items: center;
+  justify-content: space-between;
   gap: 14px;
+
   cursor: pointer;
-  transition: all 0.3s ease;
+
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease,
+    opacity 0.2s ease;
 }
 
-.contact-btn:hover {
+.contact-btn:hover:not(:disabled) {
   background: #8e0101;
   transform: translateY(-3px);
 }
@@ -5472,19 +5539,539 @@ main.advisory-page {
 .contact-btn-icon {
   width: 32px;
   height: 32px;
+
+  flex-shrink: 0;
+
   border-radius: 50%;
-  background: white;
+
+  background: #ffffff;
   color: #a40000;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  transition: transform 0.3s ease;
 }
 
-.contact-btn:hover .contact-btn-icon {
+.contact-btn:hover:not(:disabled) .contact-btn-icon {
   transform: rotate(45deg);
 }
 
-/* MOBILE */
+/* =========================================================
+   CONTACT BUTTON - DISABLED
+========================================================= */
+
+.contact-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.contact-btn:disabled:hover {
+  background: #a40000;
+  transform: none;
+}
+
+.contact-btn:disabled .contact-btn-icon {
+  transform: none;
+}
+
+/* =========================================================
+   CONTACT POPUP
+========================================================= */
+
+.contact-popup {
+  position: fixed;
+
+  top: 134px;
+  right: 24px;
+
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: min(360px, calc(100vw - 32px));
+
+  padding: 14px 16px;
+
+  border: 1px solid rgba(142, 1, 1, 0.1);
+  border-radius: 14px;
+
+  background: #ffffff;
+  color: #7a0d0d;
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+
+  animation: contactPopupIn 0.35s ease forwards;
+}
+
+.contact-popup p {
+  margin: 0;
+
+  flex: 1;
+
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.contact-popup-dot {
+  width: 12px;
+  height: 12px;
+
+  min-width: 12px;
+
+  border-radius: 999px;
+
+  background: #19a65a;
+}
+
+.contact-popup button {
+  margin-left: auto;
+
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #f3f3f3;
+  color: #555555;
+
+  font-size: 21px;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.contact-popup button:hover {
+  color: #ffffff;
+  background: #a90000;
+  transform: rotate(90deg);
+}
+
+@keyframes contactPopupIn {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================================================
+   OLD TOAST SUPPORT
+========================================================= */
+
+.contact-toast {
+  position: fixed;
+
+  top: 110px;
+  right: 30px;
+
+  z-index: 99999;
+
+  width: min(420px, calc(100% - 32px));
+
+  padding: 18px 52px 18px 18px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.14),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+
+  animation: contactToastIn 0.35s ease forwards;
+}
+
+.contact-toast-success {
+  border-left: 5px solid #0f9d58;
+}
+
+.contact-toast-error {
+  border-left: 5px solid #d93025;
+}
+
+.contact-toast-icon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+  background: #8e0101;
+
+  border-radius: 50%;
+}
+
+.contact-toast-content {
+  flex: 1;
+  padding-top: 1px;
+}
+
+.contact-toast-content strong {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #161616;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.contact-toast-content p {
+  margin: 0;
+
+  color: #666666;
+
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.contact-toast-close {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  width: 30px;
+  height: 30px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #555555;
+  background: #f3f3f3;
+
+  border: none;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.contact-toast-close:hover {
+  color: #ffffff;
+  background: #a90000;
+  transform: rotate(90deg);
+}
+
+@keyframes contactToastIn {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================================================
+   CLOUDFLARE TURNSTILE CAPTCHA
+========================================================= */
+
+.contact-captcha {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.captcha-title {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #333333;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   CUSTOM CAPTCHA BOX
+========================================================= */
+
+.custom-captcha {
+  width: 60%;
+  min-height: 75px;
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 12px 14px;
+
+  background: #faf8f8;
+
+  border: 1px solid #e6dada;
+  border-radius: 14px;
+
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.custom-captcha:hover {
+  border-color: #cfa8a8;
+}
+
+/* =========================================================
+   CAPTCHA VERIFIED
+========================================================= */
+
+.custom-captcha-verified {
+  background: #f3fbf6;
+  border-color: #8ed1aa;
+}
+
+.custom-captcha-error {
+  background: #fff6f6;
+  border-color: #e2a2a2;
+}
+
+/* =========================================================
+   CAPTCHA CHECK ICON
+========================================================= */
+
+.captcha-check {
+  width: 38px;
+  height: 38px;
+
+  min-width: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #cfc4c4;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.captcha-check > span {
+  width: 13px;
+  height: 13px;
+
+  border: 2px solid #aaa0a0;
+  border-radius: 4px;
+
+  background: #ffffff;
+}
+
+.captcha-check-success {
+  color: #168b4c;
+  background: #e9f8ef;
+  border-color: #38a866;
+}
+
+.captcha-check-loading {
+  color: #8e0101;
+  border-color: #a40000;
+}
+
+/* =========================================================
+   CAPTCHA CONTENT
+========================================================= */
+
+.captcha-content {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.captcha-content strong {
+  color: #242424;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.captcha-content small {
+  color: #777777;
+
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   I'M HUMAN BUTTON
+========================================================= */
+
+.captcha-verify-button {
+  flex-shrink: 0;
+
+  height: 38px;
+
+  padding: 0 15px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #8e0101;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.25s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.captcha-verify-button:hover:not(:disabled) {
+  background: #a40000;
+  transform: translateY(-1px);
+}
+
+.captcha-verify-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.captcha-verify-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   CAPTCHA REFRESH BUTTON
+========================================================= */
+
+.captcha-refresh-icon-button {
+  width: 38px;
+  height: 38px;
+
+  min-width: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #d8caca;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #8e0101;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease;
+}
+
+.captcha-refresh-icon-button:hover:not(:disabled) {
+  background: #8e0101;
+  color: #ffffff;
+  border-color: #8e0101;
+  transform: rotate(15deg);
+}
+
+.captcha-refresh-icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   CAPTCHA SPINNER
+========================================================= */
+
+.captcha-spin {
+  animation: captchaSpin 0.9s linear infinite;
+}
+
+@keyframes captchaSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   INVISIBLE CLOUDFLARE TURNSTILE
+========================================================= */
+
+.turnstile-invisible {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  overflow: hidden;
+
+  opacity: 0;
+  pointer-events: none;
+
+  left: -9999px;
+  top: -9999px;
+}
+
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
 
 @media (max-width: 992px) {
   .contact-container {
@@ -5508,164 +6095,177 @@ main.advisory-page {
   }
 }
 
-.contact-toast {
-  position: fixed;
-  top: 110px;
-  right: 30px;
-  z-index: 99999;
+/* =========================================================
+   MAP - TABLET / MOBILE
+========================================================= */
 
-  width: min(420px, calc(100% - 32px));
-  padding: 18px 52px 18px 18px;
-
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.14),
-    0 4px 12px rgba(0, 0, 0, 0.08);
-
-  animation: contactToastIn 0.35s ease forwards;
-}
-
-.contact-toast-success {
-  border-left: 5px solid #0f9d58;
-}
-
-.contact-toast-error {
-  border-left: 5px solid #d93025;
-}
-
-.contact-toast-icon {
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #ffffff;
-  background: #8e0101;
-  border-radius: 50%;
-}
-
-.contact-toast-content {
-  flex: 1;
-  padding-top: 1px;
-}
-
-.contact-toast-content strong {
-  display: block;
-  margin-bottom: 5px;
-
-  color: #161616;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.contact-toast-content p {
-  margin: 0;
-
-  color: #666666;
-  font-size: 14px;
-  line-height: 1.55;
-}
-
-.contact-toast-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-
-  width: 30px;
-  height: 30px;
-  padding: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #555555;
-  background: #f3f3f3;
-  border: none;
-  border-radius: 50%;
-
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.contact-toast-close:hover {
-  color: #ffffff;
-  background: #a90000;
-  transform: rotate(90deg);
-}
-
-.contact-popup {
-  position: fixed;
-  top: 134px;
-  right: 24px;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  max-width: 360px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: #ffffff;
-  color: #7a0d0d;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
-}
-.contact-popup p {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.contact-popup-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: #19a65a;
-}
-
-.contact-popup button {
-  margin-left: auto;
-  border: none;
-  background: transparent;
-  color: inherit;
-  font-size: 21px;
-  cursor: pointer;
-}
-
-@keyframes contactToastIn {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
+@media (max-width: 768px) {
+  .map-dot {
+    width: 8px;
+    height: 8px;
   }
 
-  to {
-    opacity: 1;
-    transform: translateX(0);
+  .map-label {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .label-1 {
+    top: 55% !important;
+    left: 70% !important;
+  }
+
+  .label-2 {
+    top: 52% !important;
+    left: 55% !important;
+  }
+
+  .label-3 {
+    top: 60% !important;
+    left: 90% !important;
   }
 }
+
+/* =========================================================
+   MOBILE - 600px
+========================================================= */
 
 @media (max-width: 600px) {
+  .contact-section {
+    padding: 50px 16px;
+  }
+
+  .contact-container {
+    border-radius: 24px;
+  }
+
+  .contact-map-area {
+    padding: 30px 18px;
+  }
+
+  .contact-form-area {
+    padding: 30px 18px;
+  }
+
+  .contact-title {
+    font-size: 28px;
+  }
+
+  .contact-grid {
+    gap: 12px;
+  }
+
+  .contact-grid input,
+  .contact-grid select {
+    height: 48px;
+  }
+
+  .contact-form textarea {
+    min-height: 100px;
+  }
+
+  .contact-popup {
+    top: 20px;
+    right: 16px;
+    left: 16px;
+
+    width: auto;
+    max-width: none;
+  }
+
   .contact-toast {
     top: 20px;
     right: 16px;
     left: 17px;
+
     width: auto;
+  }
+
+  .custom-captcha {
+    min-height: 76px;
+    padding: 11px;
+    gap: 10px;
+  }
+
+  .captcha-check {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+
+  .captcha-content strong {
+    font-size: 12px;
+  }
+
+  .captcha-content small {
+    font-size: 10px;
+  }
+
+  .captcha-verify-button {
+    height: 36px;
+    padding: 0 11px;
+    font-size: 11px;
+  }
+
+  .captcha-refresh-icon-button {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
   }
 }
 
+/* =========================================================
+   SMALL MOBILE - 430px
+========================================================= */
+
+@media (max-width: 430px) {
+  .contact-section {
+    padding: 40px 12px;
+  }
+
+  .contact-container {
+    border-radius: 20px;
+  }
+
+  .contact-map-area {
+    padding: 25px 12px;
+  }
+
+  .contact-form-area {
+    padding: 26px 14px;
+  }
+
+  .contact-badge {
+    font-size: 10px;
+    padding: 6px 12px;
+  }
+
+  .contact-title {
+    font-size: 25px;
+  }
+
+  .custom-captcha {
+    flex-wrap: wrap;
+  }
+
+  .captcha-content {
+    flex: 1;
+  }
+
+  .captcha-verify-button {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .captcha-refresh-icon-button {
+    margin-left: auto;
+  }
+
+  .contact-btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
 /* =========================
    BLOG SECTION
 ========================= */
