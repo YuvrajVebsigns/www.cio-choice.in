@@ -69,6 +69,8 @@ export default function ContactSection() {
 
   const turnstileWidgetIdRef = useRef<string | null>(null);
 
+  const captchaVerificationRequestedRef = useRef(false);
+
   /* =========================================================
      UI STATE
   ========================================================= */
@@ -105,8 +107,6 @@ export default function ContactSection() {
     if (!turnstileSiteKey) {
       setCaptchaStatus('error');
 
-      setPopupMessage('CAPTCHA configuration is missing. Please try again later.');
-
       return;
     }
 
@@ -119,8 +119,6 @@ export default function ContactSection() {
 
       if (!window.turnstile) {
         setCaptchaStatus('error');
-
-        setPopupMessage('Unable to load CAPTCHA verification. Please try again later.');
 
         return;
       }
@@ -190,7 +188,9 @@ export default function ContactSection() {
 
             setIsRefreshingCaptcha(false);
 
-            setPopupMessage('CAPTCHA verification expired. Please verify again.');
+            if (captchaVerificationRequestedRef.current) {
+              setPopupMessage('CAPTCHA verification expired. Please verify again.');
+            }
           },
 
           /*
@@ -207,10 +207,12 @@ export default function ContactSection() {
 
             setIsRefreshingCaptcha(false);
 
-            if (errorCode === '110200') {
-              setPopupMessage(' CAPTCHA verification failed.');
-            } else {
-              setPopupMessage('CAPTCHA verification failed.');
+            if (captchaVerificationRequestedRef.current) {
+              if (errorCode === '110200') {
+                setPopupMessage(' CAPTCHA verification failed.');
+              } else {
+                setPopupMessage('CAPTCHA verification failed.');
+              }
             }
           },
 
@@ -228,7 +230,9 @@ export default function ContactSection() {
 
             setIsRefreshingCaptcha(false);
 
-            setPopupMessage('CAPTCHA verification timed out. Please try again.');
+            if (captchaVerificationRequestedRef.current) {
+              setPopupMessage('CAPTCHA verification timed out. Please try again.');
+            }
           },
         });
 
@@ -247,8 +251,6 @@ export default function ContactSection() {
         setCaptchaStatus('ready');
       } catch {
         setCaptchaStatus('error');
-
-        setPopupMessage('Unable to load CAPTCHA. Please try again later.');
       }
     };
 
@@ -292,8 +294,6 @@ export default function ContactSection() {
       }
 
       setCaptchaStatus('error');
-
-      setPopupMessage('Unable to connect to CAPTCHA service. Please try again later.');
     });
 
     document.head.appendChild(script);
@@ -388,6 +388,8 @@ export default function ContactSection() {
     }
 
     try {
+      captchaVerificationRequestedRef.current = true;
+
       setCaptchaStatus('verifying');
 
       setIsRefreshingCaptcha(false);
@@ -409,6 +411,8 @@ export default function ContactSection() {
   ========================================================= */
 
   function resetTurnstile() {
+    captchaVerificationRequestedRef.current = false;
+
     /*
      * Remove current Cloudflare token.
      */
