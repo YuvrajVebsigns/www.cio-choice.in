@@ -232,10 +232,10 @@ export default function EnterPage() {
             service and / or solution recognition where winners are picked by CIOs.
           </h1>
 
-          <p>
+          {/* <p>
             It will only take a couple of minutes of your time to enter. Please be sure to download
             the full terms & conditions and read the details below.
-          </p>
+          </p> */}
         </div>
 
         <details open className="enter-card">
@@ -257,7 +257,15 @@ export default function EnterPage() {
               <strong>CATEGORY SELECTION:</strong> You are required to select the category of
               recognition your Product/ Service/ Solution falls into. If your Product/ Service/
               Solution does not fit any of the categories listed, please contact us on{' '}
-              <a href="mailto:contact@core-mediagroup.com">contact@core-mediagroup.com</a>.
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-contact-item"
+              >
+                contact@core-mediagroup.com
+              </a>
+              .
             </p>
 
             <p>
@@ -288,8 +296,15 @@ export default function EnterPage() {
           <div className="enter-card-content">
             <p>
               Send the filled entry form to{' '}
-              <a href="mailto:contact@core-mediagroup.com">contact@core-mediagroup.com</a>. We will
-              confirm successful entry and contact you if more information is required.
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-contact-item"
+              >
+                contact@core-mediagroup.com
+              </a>
+              . We will confirm successful entry and contact you if more information is required.
             </p>
           </div>
         </details>
@@ -343,19 +358,22 @@ export default function EnterPage() {
           <div className="enter-card-content">
             <p>
               Please{' '}
-              <a
-                href="https://www.cio-choice.in/wp-content/uploads/2025/07/CIO-CHOICE-Entry-Form-2026.docx"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="/#contact-section" target="_blank" rel="noreferrer">
                 CLICK HERE
               </a>{' '}
               to download the Entry Form.
             </p>
             <p>
               Please contact us on{' '}
-              <a href="mailto:contact@core-mediagroup.com">contact@core-mediagroup.com</a> for the
-              terms & conditions.
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-contact-item"
+              >
+                contact@core-mediagroup.com
+              </a>{' '}
+              for the terms & conditions.
             </p>
           </div>
         </details>
@@ -365,7 +383,15 @@ export default function EnterPage() {
           <div className="enter-card-content">
             <p>
               Contact us on +91 22 <strong>4608 0974</strong> or write to{' '}
-              <a href="mailto:contact@core-mediagroup.com">contact@core-mediagroup.com</a>.
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@core-mediagroup.com&su=Enquiry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-contact-item"
+              >
+                contact@core-mediagroup.com
+              </a>
+              .
             </p>
           </div>
         </details>

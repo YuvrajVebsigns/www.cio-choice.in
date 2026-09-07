@@ -72,7 +72,7 @@ export default function AboutUsPage() {
 
               <div className="social-media-back">
                 <a
-                  href="https://website.uatcoremedia.vebsigns.com/"
+                  href="https://core-mediagroup.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-media-back-btn"

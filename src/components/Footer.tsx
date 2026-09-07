@@ -572,7 +572,7 @@ export default function Footer() {
 
             <ul className="footer-links">
               <li>
-                <Link href="/videos">Video</Link>
+                <Link href="/gallery/video-gallery">Video</Link>
               </li>
 
               <li>

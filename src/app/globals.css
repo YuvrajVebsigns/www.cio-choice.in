@@ -1995,7 +1995,7 @@ main.advisory-page {
 
 .hero-section {
   position: relative;
-  margin-top: 40px;
+  margin-top: 60px;
   width: 100%;
   padding: 40px 0;
   display: flex;
@@ -12539,13 +12539,13 @@ s .dialogues-badge-mark {
 .process-hero h1 {
   margin: 1rem 0;
   font-size: 34px;
-  font-weight: 540;
+  font-weight: 700;
   line-height: 1.05;
 }
 
 .process-hero p:last-child {
   margin: 0;
-  max-width: 760px;
+  max-width: 950px;
   line-height: 1.9;
   font-size: 1rem;
   opacity: 0.95;
@@ -12620,6 +12620,7 @@ s .dialogues-badge-mark {
 .enter-hero {
   background: #a40000;
   color: #ffffff;
+  margin-top: 70px;
 }
 
 .enter-label {
@@ -12631,8 +12632,8 @@ s .dialogues-badge-mark {
 
 .enter-hero h1 {
   margin: 1rem 0;
-  font-size: 34px;
-  font-weight: 540;
+  font-size: 28px;
+  font-weight: 700;
   line-height: 1.05;
 }
 
