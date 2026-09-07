@@ -10,20 +10,32 @@ import { apiFetch } from '@/services/apiFetch';
 /** Matches backend RegisterAttendeeDto — all 6 fields sent on every request. */
 export type RegisterAttendeeApiBody = {
   eventId: string;
+  reportId?: string;
+  firstName?: string;
+  lastName?: string;
   name: string;
   email: string;
   countryCode: string;
   phoneNumber: string;
   organization: string;
+  companyName?: string;
+  designation?: string;
+  industry?: string;
 };
 
 export type AttendeeRegistrationInput = {
   eventId: string;
+  reportId?: string;
+  firstName?: string;
+  lastName?: string;
   name: string;
   email: string;
   phoneNumber: string;
   countryCode?: string;
   organization: string;
+  companyName?: string;
+  designation?: string;
+  industry?: string;
 };
 
 type RegistrationResponse = {
@@ -35,11 +47,17 @@ type RegistrationResponse = {
 function buildRegisterAttendeeBody(input: AttendeeRegistrationInput): RegisterAttendeeApiBody {
   return {
     eventId: input.eventId,
+    ...(input.reportId ? { reportId: input.reportId } : {}),
+    ...(input.firstName ? { firstName: input.firstName } : {}),
+    ...(input.lastName ? { lastName: input.lastName } : {}),
     name: input.name,
     email: input.email,
     countryCode: input.countryCode ?? '+91',
     phoneNumber: input.phoneNumber,
     organization: input.organization,
+    ...(input.companyName ? { companyName: input.companyName } : {}),
+    ...(input.designation ? { designation: input.designation } : {}),
+    ...(input.industry ? { industry: input.industry } : {}),
   };
 }
 

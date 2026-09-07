@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import type { Country } from 'react-phone-number-input';
 import CountryCodeSelect, { getDialCodeFromCountry } from '@/components/CountryCodeSelect';
-import { submitAttendeeRegistration } from '@/services/attendees.service';
+import { downloadWebsiteReport } from '@/services/reports.service';
 
 const industries = [
   '',
@@ -21,6 +20,7 @@ const industries = [
   'FMCG',
   'HEALTHCARE & PHARMA',
   'INSURANCE',
+  'Information Technology',
   'IT, BPO & ITES',
   'MANUFACTURING',
   'MEDIA & ENTERTAINMENT',
@@ -30,7 +30,7 @@ const industries = [
 ];
 
 export default function RegisterPage() {
-  const router = useRouter();
+  const [reportId, setReportId] = useState('6a9ec0f34c71528d1a3a067c');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -41,6 +41,19 @@ export default function RegisterPage() {
   const [industry, setIndustry] = useState('');
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    setReportId(params.get('reportId') || '6a9ec0f34c71528d1a3a067c');
+    setFirstName(params.get('firstName') || '');
+    setLastName(params.get('lastName') || '');
+    setEmail(params.get('email') || '');
+    setPhone(params.get('phoneNumber') || '');
+    setCompanyName(params.get('companyName') || '');
+    setDesignation(params.get('designation') || '');
+    setIndustry(params.get('industry') || '');
+  }, []);
 
   const [errors, setErrors] = useState<{
     firstName?: string;
@@ -121,35 +134,23 @@ export default function RegisterPage() {
     setPopupMessage(null);
 
     try {
-      const response = await submitAttendeeRegistration({
-        eventId: 'business-pulse-report',
-        name: `${firstName.trim()} ${lastName.trim()}`,
+      const downloadUrl = await downloadWebsiteReport({
         email: email.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         phoneNumber: trimmedPhone,
         countryCode: dialCode,
-        organization: companyName.trim(),
+        companyName: companyName.trim(),
+        designation: designation.trim(),
+        industry,
+        reportId,
       });
 
-      const apiMessage =
-        response && typeof response === 'object' && 'message' in response
-          ? String((response as { message?: string }).message)
-          : '';
-
-      setPopupMessage(apiMessage || 'Registration successful — thank you!');
-      setFirstName('');
-      setLastName('');
-      setCompanyName('');
-      setDesignation('');
-      setEmail('');
-      setCountry('IN');
-      setPhone('');
-      setIndustry('');
-      setErrors({});
+      window.location.assign(downloadUrl);
     } catch (err) {
       setPopupMessage(err instanceof Error ? err.message : 'Network error. Please try again.');
     } finally {
       setLoading(false);
-      router.push('/research/download-report');
     }
   }
 
@@ -174,6 +175,7 @@ export default function RegisterPage() {
           <h2 className="registration-title">CIO OUTLOOK SURVEY 2021 - BUSINESS PULSE REPORT</h2>
 
           <form onSubmit={handleSubmit} className="registration-form">
+            <input type="hidden" name="reportId" value={reportId} />
             <label className="registration-label">
               First Name *
               <input
