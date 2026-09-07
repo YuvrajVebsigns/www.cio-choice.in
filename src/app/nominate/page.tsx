@@ -1865,8 +1865,8 @@ export default function NominatePage() {
 
             <div className="nominate-card-body">
               <p className="nominate-sub">
-                You can nominate up to 10 Influential CIOs by clicking on the &quot;Add Vendor&quot;
-                button.
+                You can nominate up to 10 Influential CIOs by clicking on the &quot;Add ICT
+                Vendor&quot; button.
               </p>
 
               <form id="nominate-form" onSubmit={handleSubmit} className="nominate-form" noValidate>
@@ -2026,7 +2026,7 @@ export default function NominatePage() {
                         }`}
                       >
                         <div className="nominate-cio-top">
-                          <strong className="nominate-cio-title">Vendor {idx + 1}</strong>
+                          <strong className="nominate-cio-title">ICT Vendor {idx + 1}</strong>
 
                           {cios.length > 1 && (
                             <button

@@ -12665,6 +12665,11 @@ s .dialogues-badge-mark {
 .enter-card-content ul {
   padding-left: 1.4rem;
   margin-top: 0;
+  list-style-type: disc;
+}
+
+.enter-card-content li {
+  margin-bottom: 0.4rem;
 }
 
 .enter-card-content p {
