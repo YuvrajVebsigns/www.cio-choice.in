@@ -35,7 +35,7 @@ export default function HeroSection() {
   return (
     <section className="hero-section">
       <Image
-        src="/assets/hero/CIO CHOICE 2027 logo.png"
+        src="/assets/hero/heroo.jpeg"
         alt="CIO Choice"
         width={1400}
         height={800}

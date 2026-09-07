@@ -2005,10 +2005,10 @@ main.advisory-page {
 }
 
 .hero-image {
-  width: 98%;
+  width: 100%;
   max-width: 1480px;
-  height: 600px;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   object-position: center;
   display: block;
   border-radius: 12px;
