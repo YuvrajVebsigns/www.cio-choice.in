@@ -5,28 +5,48 @@ import type { Country } from 'react-phone-number-input';
 import CountryCodeSelect, { getDialCodeFromCountry } from '@/components/CountryCodeSelect';
 import { downloadWebsiteReport } from '@/services/reports.service';
 
+// const industries = [
+//   '',
+//   'ASSET MANAGEMENT (AMC)',
+//   'AUTOMOBILES & AUTO ANCILLARIES',
+//   'BANKING',
+//   'CHEMICALS',
+//   'CONSULTING',
+//   'DIVERSIFIED GROUP',
+//   'E-COMMERCE',
+//   'EDUCATION',
+//   'ENGINEERING',
+//   'FINANCIAL SERVICES',
+//   'FMCG',
+//   'HEALTHCARE & PHARMA',
+//   'INSURANCE',
+//   'Information Technology',
+//   'IT, BPO & ITES',
+//   'MANUFACTURING',
+//   'MEDIA & ENTERTAINMENT',
+//   'NBFC',
+//   'REALTY',
+//   'RETAIL',
+// ];
+
 const industries = [
   '',
-  'ASSET MANAGEMENT (AMC)',
-  'AUTOMOBILES & AUTO ANCILLARIES',
-  'BANKING',
-  'CHEMICALS',
-  'CONSULTING',
-  'DIVERSIFIED GROUP',
-  'E-COMMERCE',
-  'EDUCATION',
-  'ENGINEERING',
-  'FINANCIAL SERVICES',
-  'FMCG',
-  'HEALTHCARE & PHARMA',
-  'INSURANCE',
-  'Information Technology',
-  'IT, BPO & ITES',
-  'MANUFACTURING',
-  'MEDIA & ENTERTAINMENT',
-  'NBFC',
-  'REALTY',
-  'RETAIL',
+  'SOFTWARE',
+  'CLOUD SERVICES',
+  'HARDWARE, NETWORK & STORAGE',
+  'DATA CENTER & IT INFRASTRUCTURE',
+  'SECURITY',
+  'TELECOM SERVICES',
+  'RISK MANAGEMENT',
+  'SYSTEM INTEGRATION',
+  'DATA RECOVERY',
+  'VIRTUALIZATION',
+  'IT SERVICES',
+  'SAAS AND CLOUD SOLUTIONS',
+  'ADVISORY & RESEARCH',
+  'EMERGING TECHNOLOGIES',
+  'ENTERPRISE MOBILITY',
+  'COLLABORATION AND WORK FROM HOME',
 ];
 
 export default function RegisterPage() {
@@ -172,7 +192,8 @@ export default function RegisterPage() {
             </div>
           ) : null}
 
-          <h2 className="registration-title">CIO OUTLOOK SURVEY 2021 - BUSINESS PULSE REPORT</h2>
+          {/* <h2 className="registration-title">CIO OUTLOOK SURVEY 2021 - BUSINESS PULSE REPORT</h2> */}
+          <h2 className="registration-title">CIO CHOICE 2027 – ENTRY FORM</h2>
 
           <form onSubmit={handleSubmit} className="registration-form">
             <input type="hidden" name="reportId" value={reportId} />
