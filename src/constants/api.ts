@@ -55,8 +55,7 @@
 //   },
 // } as const;
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'https://backend.uatcoremedia.vebsigns.com';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.core-mediagroup.com';
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -89,6 +88,10 @@ export const API_ENDPOINTS = {
 
     ATTENDEES: {
       REGISTER: '/api/v1/website/attendees/register',
+    },
+
+    REPORTS: {
+      DOWNLOAD: '/api/v1/website/reports/download',
     },
 
     EVENTS: {

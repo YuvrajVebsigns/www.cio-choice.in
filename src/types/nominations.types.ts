@@ -1,5 +1,6 @@
 export type NomineeInput = {
   categoryId: string;
+  subcategoryId?: string;
   contactName: string;
   companyName: string;
   contactEmail: string;
@@ -24,6 +25,7 @@ export type SubmitNominationApiBody = {
   nominatorEmail: string;
   nominees: {
     categoryId: string;
+    subCategoryId?: string;
     contactName: string;
     companyName: string;
     contactEmail: string;
