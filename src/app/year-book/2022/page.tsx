@@ -136,11 +136,27 @@ export default function SurveyStudyPage() {
             {Array.from({ length: 14 }, (_, index) => {
               const year = 2026 - index;
 
+              const yearbookImages: Record<number, string> = {
+                2026: '/assets/yearbook/2026/page-01.jpg',
+                2025: '/assets/yearbook/2025/page-001.jpg',
+                2024: '/assets/yearbook/2024/page-001.jpg',
+                2023: '/assets/yearbook/2023/page-001.jpg',
+                2022: '/assets/yearbook/2022/page-001.jpg',
+                2021: '/assets/yearbook/2021/page-001.jpg',
+                2020: '/assets/yearbook/2020/page-001.jpg',
+                2019: '/assets/yearbook/2019/page-001.jpg',
+                2018: '/assets/yearbook/2018/page-001.jpg',
+                2017: '/assets/yearbook/2017/page-001.jpg',
+                2016: '/assets/yearbook/2016/page-001.jpg',
+                2015: '/assets/yearbook/2015/page-001.jpg',
+                2014: '/assets/yearbook/2014/page-01.jpg',
+                2013: '/assets/yearbook/2013/page-01.jpg',
+              };
+
               return (
                 <div className="yearbook-card" key={year}>
                   <div className="yearbook-card-image">
-                    {/* <img src={`/assets/yearbook/${year}.png`} alt={`CIO Choice Year Book ${year}`} /> */}
-                    <img src={`/assets/book2025/1.png`} alt={`CIO Choice Year Book ${year}`} />
+                    <img src={yearbookImages[year]} alt={`CIO Choice Year Book ${year}`} />
                   </div>
 
                   <h3>{year} Year Book</h3>

@@ -11325,17 +11325,26 @@ s .dialogues-badge-mark {
   font-weight: 700;
 }
 
+/* =========================================================
+   BOOK WRAPPER
+========================================================= */
+
 .book-wrapper {
   position: relative;
   min-height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 55px;
   perspective: 1800px;
 }
 
+/* =========================================================
+   BOOK SPREAD
+========================================================= */
+
 .book-spread {
-  width: min(100%, 720px);
+  /* width: min(100%, 720px); */
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   background: #ffffff;
@@ -11345,10 +11354,39 @@ s .dialogues-badge-mark {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.16);
 }
 
+/* =========================================================
+   COVER
+========================================================= */
+
 .book-spread.book-cover {
   width: min(100%, 360px);
   grid-template-columns: 1fr;
+  border-radius: 8px;
+  overflow: hidden;
 }
+
+/* Cover page fills the complete cover area */
+.book-spread.book-cover .book-page {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  min-height: 0;
+  background: #ffffff;
+}
+
+/* Cover image fills the cover */
+.book-spread.book-cover .book-page img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  background: #ffffff;
+  backface-visibility: hidden;
+}
+
+/* =========================================================
+   NORMAL BOOK PAGES
+========================================================= */
 
 .book-page {
   position: relative;
@@ -11366,12 +11404,15 @@ s .dialogues-badge-mark {
   width: 100%;
   height: 400px;
   object-fit: contain;
+  object-position: center;
   display: block;
   background: #ffffff;
   backface-visibility: hidden;
 }
 
-/* Slow page open animation */
+/* =========================================================
+   SLOW PAGE OPEN ANIMATION
+========================================================= */
 
 .book-spread.book-cover .book-page {
   transform-origin: left center;
@@ -11388,6 +11429,10 @@ s .dialogues-badge-mark {
   animation: rightPageSlowOpen 1.4s ease-in-out both;
   animation-delay: 0.25s;
 }
+
+/* =========================================================
+   COVER ANIMATION
+========================================================= */
 
 @keyframes coverSlowOpen {
   0% {
@@ -11409,6 +11454,10 @@ s .dialogues-badge-mark {
   }
 }
 
+/* =========================================================
+   LEFT PAGE ANIMATION
+========================================================= */
+
 @keyframes leftPageSlowOpen {
   0% {
     opacity: 0;
@@ -11428,6 +11477,10 @@ s .dialogues-badge-mark {
     filter: brightness(1);
   }
 }
+
+/* =========================================================
+   RIGHT PAGE ANIMATION
+========================================================= */
 
 @keyframes rightPageSlowOpen {
   0% {
@@ -11449,24 +11502,37 @@ s .dialogues-badge-mark {
   }
 }
 
+/* =========================================================
+   NAVIGATION ARROWS
+========================================================= */
+
 .book-arrow {
   position: absolute;
   top: 50%;
   z-index: 5;
+
   width: 46px;
   height: 46px;
+
   transform: translateY(-50%);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border: 1px solid rgba(142, 1, 1, 0.18);
   border-radius: 50%;
+
   background: #ffffff;
   color: #8e0101;
+
   font-size: 28px;
   line-height: 1;
+
   cursor: pointer;
+
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+
   transition: all 0.3s ease;
 }
 
@@ -11489,23 +11555,37 @@ s .dialogues-badge-mark {
   cursor: not-allowed;
 }
 
+/* =========================================================
+   PAGE INDICATOR
+========================================================= */
+
 .book-indicator {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   margin-top: 18px;
   padding: 8px 18px;
+
   border-radius: 999px;
+
   background: #ffffff;
   color: #8e0101;
+
   font-size: 13px;
   font-weight: 700;
+
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
 }
+
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media (max-width: 992px) {
   .book-wrapper {
     min-height: 360px;
+    padding: 0 50px;
   }
 
   .book-spread {
@@ -11519,7 +11599,19 @@ s .dialogues-badge-mark {
   .book-page img {
     height: 330px;
   }
+
+  .book-spread.book-cover .book-page {
+    aspect-ratio: 3 / 4;
+  }
+
+  .book-spread.book-cover .book-page img {
+    height: 100%;
+  }
 }
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 768px) {
   .book-section {
@@ -11528,12 +11620,17 @@ s .dialogues-badge-mark {
 
   .book-wrapper {
     min-height: auto;
-    padding: 0 35px;
+    padding: 0 42px;
   }
 
+  /*
+     Normal pages become single-column on mobile.
+     Cover also remains single-column.
+  */
   .book-spread,
   .book-spread.book-cover {
     width: 100%;
+    max-width: 360px;
     grid-template-columns: 1fr;
   }
 
@@ -11541,11 +11638,33 @@ s .dialogues-badge-mark {
     border-right: none;
   }
 
+  /* Normal pages */
   .book-page img {
+    width: 100%;
     height: auto;
     max-height: 420px;
+    object-fit: contain;
   }
 
+  /* Cover */
+  .book-spread.book-cover {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .book-spread.book-cover .book-page {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+  }
+
+  .book-spread.book-cover .book-page img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Mobile arrows */
   .book-arrow {
     width: 38px;
     height: 38px;
@@ -11557,6 +11676,42 @@ s .dialogues-badge-mark {
   }
 }
 
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .book-section {
+    padding: 35px 12px;
+  }
+
+  .book-wrapper {
+    padding: 0 38px;
+  }
+
+  .book-spread.book-cover {
+    max-width: 300px;
+  }
+
+  .book-spread.book-cover .book-page {
+    aspect-ratio: 3 / 4;
+  }
+
+  .book-page img {
+    max-height: 380px;
+  }
+
+  .book-arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
+  }
+
+  .book-indicator {
+    font-size: 12px;
+    padding: 7px 14px;
+  }
+}
 /* =========================================================
    YEAR BOOK CARDS 2013 - 2026
 ========================================================= */

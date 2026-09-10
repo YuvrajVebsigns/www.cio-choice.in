@@ -184,7 +184,7 @@
 // }
 
 export const metadata = {
-  title: 'Enter CIO Choice 2026',
+  title: 'Enter CIO Choice 2027',
   description: 'Enter India’s largest CIO survey for product, service and solution recognition.',
 };
 
@@ -193,10 +193,10 @@ export default function EnterPage() {
     <main className="enter-page">
       <section className="enter-section">
         <div className="enter-hero">
-          <p className="enter-label">Enter CIO Choice 2026</p>
+          <p className="enter-label">Enter CIO Choice 2027</p>
 
           <h1>
-            CIO Choice 2026 welcomes you to participate in India’s largest CIO survey on product,
+            CIO Choice 2027 welcomes you to participate in India’s largest CIO survey on product,
             service and / or solution recognition where winners are picked by CIOs.
           </h1>
         </div>
@@ -206,13 +206,9 @@ export default function EnterPage() {
 
           <div className="enter-card-content">
             <p>
-              <a
-                href="https://www.cio-choice.in/wp-content/uploads/2025/07/CIO-CHOICE-Entry-Form-2026.docx"
-                target="_blank"
-                rel="noreferrer"
-              >
-                CLICK HERE
-              </a>{' '}
+              <p>
+                <a href="/research">CLICK HERE</a>
+              </p>
               TO DOWNLOAD FORM. Please download the form from the link provided and fill in the
               details as per the form requirement. It is mandatory to fill each section.
             </p>

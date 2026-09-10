@@ -1,18 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-
-const spreads: string[][] = [
-  ['/assets/book2025/1.png'],
-  ['/assets/book2025/2.png', '/assets/book2025/3.png'],
-  ['/assets/book2025/4.png', '/assets/book2025/5.png'],
-  ['/assets/book2025/6.png', '/assets/book2025/7.png'],
-  ['/assets/book2025/8.png', '/assets/book2025/9.png'],
-];
 
 export default function SurveyStudyPage() {
   const [currentSpread, setCurrentSpread] = useState<number>(0);
+  const [pages, setPages] = useState<string[]>([]);
 
   const heroContentRef = useScrollAnimation<HTMLDivElement>({
     animationClass: 'animate-fade-in-left',
@@ -21,10 +14,91 @@ export default function SurveyStudyPage() {
     once: false,
   });
 
+  /*
+   * Automatically finds all pages from:
+   * /assets/yearbook/2026/
+   *
+   * Expected filenames:
+   * page-01.jpg
+   * page-02.jpg
+   * page-03.jpg
+   * ...
+   *
+   * No need to manually add every image path.
+   */
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadYearbookPages = async () => {
+      const foundPages: string[] = [];
+
+      /*
+       * Maximum number of pages we will check.
+       * This does NOT mean you need to have this many pages.
+       * The loading stops when a page does not exist.
+       */
+      const MAX_PAGES = 200;
+
+      for (let pageNumber = 1; pageNumber <= MAX_PAGES; pageNumber++) {
+        const page = String(pageNumber).padStart(2, '0');
+        const imagePath = `/assets/yearbook/2016/page-0${page}.jpg`;
+
+        const imageExists = await new Promise<boolean>((resolve) => {
+          const image = new Image();
+
+          image.onload = () => resolve(true);
+
+          image.onerror = () => resolve(false);
+
+          image.src = imagePath;
+        });
+
+        if (!imageExists) {
+          break;
+        }
+
+        foundPages.push(imagePath);
+      }
+
+      if (!cancelled) {
+        setPages(foundPages);
+      }
+    };
+
+    loadYearbookPages();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /*
+   * Automatically creates book spreads.
+   *
+   * Page 1  = Cover
+   * Page 2 + 3
+   * Page 4 + 5
+   * Page 6 + 7
+   * ...
+   */
+  const spreads: string[][] = [];
+
+  if (pages.length > 0 && pages[0]) {
+    spreads.push([pages[0]]);
+
+    for (let i = 1; i < pages.length; i += 2) {
+      const spreadPages = pages.slice(i, i + 2);
+
+      if (spreadPages.length > 0) {
+        spreads.push(spreadPages);
+      }
+    }
+  }
+
   const currentPages = spreads[currentSpread] ?? [];
 
   const nextPage = () => {
-    setCurrentSpread((prev) => Math.min(prev + 1, spreads.length - 1));
+    setCurrentSpread((prev) => Math.min(prev + 1, Math.max(spreads.length - 1, 0)));
   };
 
   const prevPage = () => {
@@ -48,7 +122,7 @@ export default function SurveyStudyPage() {
               <div className="survey-study-card">
                 <div className="survey-study-book">
                   <img
-                    src="/assets/yearbook/2016/1.png"
+                    src="/assets/yearbook/2016/page-001.jpg"
                     alt="CIO Choice Year Book 2026"
                     className="survey-study-book-image"
                   />
@@ -95,25 +169,36 @@ export default function SurveyStudyPage() {
               type="button"
               className="book-arrow left"
               onClick={prevPage}
-              disabled={currentSpread === 0}
+              disabled={currentSpread === 0 || spreads.length === 0}
               aria-label="Previous page"
             >
               &#10094;
             </button>
 
             <div className={`book-spread ${currentSpread === 0 ? 'book-cover' : ''}`}>
-              {currentPages.map((page, index) => (
-                <div className="book-page" key={page}>
-                  <img src={page} alt={`CIO Choice Year Book Page ${index + 1}`} />
+              {currentPages.length > 0 ? (
+                currentPages.map((page, index) => (
+                  <div className="book-page" key={page}>
+                    <img
+                      src={page}
+                      alt={`CIO Choice Year Book Page ${
+                        currentSpread === 0 ? 1 : currentSpread * 2 + index
+                      }`}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="book-page">
+                  <p>Loading Year Book...</p>
                 </div>
-              ))}
+              )}
             </div>
 
             <button
               type="button"
               className="book-arrow right"
               onClick={nextPage}
-              disabled={currentSpread === spreads.length - 1}
+              disabled={spreads.length === 0 || currentSpread === spreads.length - 1}
               aria-label="Next page"
             >
               &#10095;
@@ -121,9 +206,11 @@ export default function SurveyStudyPage() {
           </div>
 
           <div className="book-indicator">
-            {currentSpread === 0
-              ? 'Cover Page'
-              : `Pages ${currentSpread * 2} - ${currentSpread * 2 + 1}`}
+            {spreads.length === 0
+              ? 'Loading...'
+              : currentSpread === 0
+                ? 'Cover Page'
+                : `Pages ${currentSpread * 2} - ${Math.min(currentSpread * 2 + 1, pages.length)}`}
           </div>
         </div>
       </section>
@@ -136,11 +223,27 @@ export default function SurveyStudyPage() {
             {Array.from({ length: 14 }, (_, index) => {
               const year = 2026 - index;
 
+              const yearbookImages: Record<number, string> = {
+                2026: '/assets/yearbook/2026/page-01.jpg',
+                2025: '/assets/yearbook/2025/page-001.jpg',
+                2024: '/assets/yearbook/2024/page-001.jpg',
+                2023: '/assets/yearbook/2023/page-001.jpg',
+                2022: '/assets/yearbook/2022/page-001.jpg',
+                2021: '/assets/yearbook/2021/page-001.jpg',
+                2020: '/assets/yearbook/2020/page-001.jpg',
+                2019: '/assets/yearbook/2019/page-001.jpg',
+                2018: '/assets/yearbook/2018/page-001.jpg',
+                2017: '/assets/yearbook/2017/page-001.jpg',
+                2016: '/assets/yearbook/2016/page-001.jpg',
+                2015: '/assets/yearbook/2015/page-001.jpg',
+                2014: '/assets/yearbook/2014/page-01.jpg',
+                2013: '/assets/yearbook/2013/page-01.jpg',
+              };
+
               return (
                 <div className="yearbook-card" key={year}>
                   <div className="yearbook-card-image">
-                    {/* <img src={`/assets/yearbook/${year}.png`} alt={`CIO Choice Year Book ${year}`} /> */}
-                    <img src={`/assets/book2025/1.png`} alt={`CIO Choice Year Book ${year}`} />
+                    <img src={yearbookImages[year]} alt={`CIO Choice Year Book ${year}`} />
                   </div>
 
                   <h3>{year} Year Book</h3>
