@@ -122,8 +122,8 @@ export default function RecognizedBrands2014Page() {
                     <div className="advisory-avatar advisory-avatar-placeholder" />
                   )}
 
-                  <h3>{item.author}</h3>
-                  <p>{item.role}</p>
+                  <h3>TITLE: {item.author}</h3>
+                  <p>CATEGORY: {item.role}</p>
 
                   {item.quote ? <blockquote>{item.quote}</blockquote> : null}
                 </article>

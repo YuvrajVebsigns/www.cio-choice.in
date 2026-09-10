@@ -424,9 +424,9 @@ export default function RecognizedBrands2023Page() {
                 >
                   <BrandImage src={item.avatar} alt={item.author} />
 
-                  <h3>{item.author}</h3>
+                  <h3>TITLE: {item.author}</h3>
 
-                  {item.role ? <p>{item.role}</p> : null}
+                  {item.role ? <p>CATEGORY: {item.role}</p> : null}
 
                   {item.quote ? <blockquote>{item.quote}</blockquote> : null}
                 </article>

@@ -446,9 +446,9 @@ export default function RecognizedBrands2026Page() {
                 <article key={`${item.author}-${item.role}-${index}`} className="advisory-card">
                   <BrandImage src={item.avatar} alt={item.author} />
 
-                  <h3>{item.author}</h3>
+                  <h3> TITLE: {item.author}</h3>
 
-                  {item.role ? <p>{item.role}</p> : null}
+                  {item.role ? <p> CATEGORY: {item.role}</p> : null}
 
                   {item.quote ? <blockquote>{item.quote}</blockquote> : null}
                 </article>
