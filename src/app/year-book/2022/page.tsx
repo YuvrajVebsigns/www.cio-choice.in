@@ -419,6 +419,11 @@ export default function SurveyStudyPage() {
             {Array.from({ length: 14 }, (_, index) => {
               const year = 2026 - index;
 
+              // Hide 2022 and 2015
+              if (year === 2022 || year === 2015) {
+                return null;
+              }
+
               const yearbookImages: Record<number, string> = {
                 2026: '/assets/yearbook/2026/page-01.jpg',
                 2025: '/assets/yearbook/2025/page-001.jpg',

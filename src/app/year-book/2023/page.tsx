@@ -44,7 +44,7 @@ export default function SurveyStudyPage() {
        * Replace this with the actual 2023 report ID
        * from your backend/CMS.
        */
-      const reportId = '6aa3bf6d59fc0416cb73415d';
+      const reportId = '6aa3bd7e59fc0416cb734149';
 
       const downloadUrl = await downloadWebsiteReport({
         email,
@@ -541,6 +541,11 @@ export default function SurveyStudyPage() {
           <div className="yearbook-cards-grid">
             {Array.from({ length: 14 }, (_, index) => {
               const year = 2026 - index;
+
+              // Hide 2022 and 2015
+              if (year === 2022 || year === 2015) {
+                return null;
+              }
 
               const yearbookImages: Record<number, string> = {
                 2026: '/assets/yearbook/2026/page-01.jpg',
