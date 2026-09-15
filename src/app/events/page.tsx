@@ -4,20 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useEffect, useState } from 'react';
-import { fetchWebsiteEvents, WebsiteEvent } from '@/services/events.service';
-
-function getSafeImageSrc(item: WebsiteEvent): string {
-  const image =
-    typeof item.image === 'string' && item.image.trim()
-      ? item.image
-      : typeof item.heroImage === 'string' && item.heroImage.trim()
-        ? item.heroImage
-        : typeof item.banner === 'string' && item.banner.trim()
-          ? item.banner
-          : '';
-
-  return image || '/assets/blogs/blog-1.webp';
-}
+import {
+  fetchWebsiteEvents,
+  getWebsiteEventImageUrl,
+  getWebsiteEventSlug,
+  WebsiteEvent,
+} from '@/services/events.service';
 
 export default function EventsPage() {
   const [events, setEvents] = useState<WebsiteEvent[] | null>(null);
@@ -130,15 +122,9 @@ export default function EventsPage() {
             <div className="project-grid">
               {events.map((item: WebsiteEvent, index: number) => {
                 const title = String(item.title ?? item.name ?? item.eventName ?? 'Event');
-                const slug =
-                  item.id && typeof item.id === 'string'
-                    ? item.id
-                    : title
-                        .toLowerCase()
-                        .replace(/\s+/g, '-')
-                        .replace(/[^a-z0-9-]/g, '');
+                const slug = getWebsiteEventSlug({ ...item, title });
 
-                const imageSrc = getSafeImageSrc(item);
+                const imageSrc = getWebsiteEventImageUrl(item);
                 const category =
                   typeof item.category === 'string' && item.category.trim()
                     ? item.category

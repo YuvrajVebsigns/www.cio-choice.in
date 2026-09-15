@@ -114,6 +114,113 @@ export interface WebsiteBlogCommentsResponse {
   data: WebsiteBlogComment[];
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function resolveImageUrlFromRecord(record: Record<string, unknown>): string {
+  const urlVariants = isRecord(record.urlVariants) ? record.urlVariants : null;
+
+  const candidateKeys = [
+    'url',
+    'src',
+    'href',
+    'image',
+    'original',
+    'large',
+    'medium',
+    'small',
+    'thumbnail',
+    'secure_url',
+    'publicUrl',
+    'fileUrl',
+    'cdnUrl',
+    'path',
+  ];
+
+  for (const key of candidateKeys) {
+    const value = record[key];
+    if (typeof value === 'string' && value.trim()) return value.trim();
+  }
+
+  for (const key of ['large', 'medium', 'small', 'thumbnail']) {
+    const value = urlVariants?.[key];
+    if (typeof value === 'string' && value.trim()) return value.trim();
+  }
+
+  if (isRecord(record.file)) {
+    const fileUrl = resolveImageUrlFromRecord(record.file);
+    if (fileUrl) return fileUrl;
+  }
+
+  if (isRecord(record.image)) {
+    const imageUrl = resolveImageUrlFromRecord(record.image);
+    if (imageUrl) return imageUrl;
+  }
+
+  return '';
+}
+
+export function getWebsiteBlogImageUrl(value: unknown): string {
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    return trimmed || '/assets/blogs/blog-1.webp';
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const nestedUrl = getWebsiteBlogImageUrl(item);
+      if (nestedUrl && nestedUrl !== '/assets/blogs/blog-1.webp') {
+        return nestedUrl;
+      }
+    }
+  }
+
+  if (isRecord(value)) {
+    const record = value as Record<string, unknown>;
+    const directUrl = resolveImageUrlFromRecord(record);
+    if (directUrl) return directUrl;
+
+    const nestedKeys = [
+      'featureImage',
+      'featuredImage',
+      'image',
+      'coverImage',
+      'thumbnail',
+      'media',
+    ];
+    for (const key of nestedKeys) {
+      const nestedUrl = getWebsiteBlogImageUrl(record[key]);
+      if (nestedUrl && nestedUrl !== '/assets/blogs/blog-1.webp') {
+        return nestedUrl;
+      }
+    }
+  }
+
+  return '/assets/blogs/blog-1.webp';
+}
+
+export function getWebsiteBlogImageForItem(blog?: Partial<WebsiteBlogItem> | null): string {
+  const candidateValues = [
+    blog?.featureImage,
+    blog?.seo?.ogImage,
+    (blog as Record<string, unknown> | undefined)?.featuredImage,
+    (blog as Record<string, unknown> | undefined)?.image,
+    (blog as Record<string, unknown> | undefined)?.coverImage,
+    (blog as Record<string, unknown> | undefined)?.thumbnail,
+    (blog as Record<string, unknown> | undefined)?.media,
+  ];
+
+  for (const value of candidateValues) {
+    const resolved = getWebsiteBlogImageUrl(value);
+    if (resolved && resolved !== '/assets/blogs/blog-1.webp') {
+      return resolved;
+    }
+  }
+
+  return '/assets/blogs/blog-1.webp';
+}
+
 function extractCommentItems(response: unknown): WebsiteBlogComment[] {
   const tryArray = (value: unknown): WebsiteBlogComment[] | null =>
     Array.isArray(value) ? (value as WebsiteBlogComment[]) : null;

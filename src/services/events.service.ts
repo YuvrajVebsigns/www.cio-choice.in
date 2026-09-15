@@ -30,6 +30,60 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
+function getImageUrl(value: unknown): string {
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+
+  if (!isRecord(value)) {
+    return '';
+  }
+
+  const urlVariants = isRecord(value.urlVariants) ? value.urlVariants : null;
+
+  return (
+    (typeof value.url === 'string' && value.url.trim()) ||
+    (typeof value.original === 'string' && value.original.trim()) ||
+    (typeof value.large === 'string' && value.large.trim()) ||
+    (typeof value.medium === 'string' && value.medium.trim()) ||
+    (typeof value.small === 'string' && value.small.trim()) ||
+    (typeof value.thumbnail === 'string' && value.thumbnail.trim()) ||
+    (typeof urlVariants?.large === 'string' && urlVariants.large.trim()) ||
+    (typeof urlVariants?.medium === 'string' && urlVariants.medium.trim()) ||
+    (typeof urlVariants?.small === 'string' && urlVariants.small.trim()) ||
+    (typeof urlVariants?.thumbnail === 'string' && urlVariants.thumbnail.trim()) ||
+    ''
+  );
+}
+
+export function getWebsiteEventImageUrl(event: WebsiteEvent): string {
+  return (
+    getImageUrl(event.bannerImage) ||
+    getImageUrl(event.bannerImageId) ||
+    getImageUrl(event.imageId) ||
+    getImageUrl(event.image) ||
+    getImageUrl(event.heroImage) ||
+    getImageUrl(event.banner) ||
+    '/assets/blogs/blog-1.webp'
+  );
+}
+
+export function getWebsiteEventSlug(event: WebsiteEvent): string {
+  const slug = typeof event.slug === 'string' ? event.slug.trim() : '';
+
+  if (slug) {
+    return slug;
+  }
+
+  const title = event.title ?? event.name ?? event.eventName ?? '';
+
+  return String(title)
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
 function normalizeEvent(data: RawEvent, fallbackId = ''): WebsiteEvent {
   return {
     id: String(data.id ?? data._id ?? data.eventId ?? data.uid ?? data.slug ?? fallbackId),

@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 
 import ClientErrorBoundary from '@/components/ClientErrorBoundary';
 import EventDetailsAnimated from '@/components/EventDetailsAnimated';
-import EventSponsorsSection from '@/components/EventSponsorsSection';
 
 import {
   fetchWebsiteEventByIdOrSlug,
@@ -403,7 +402,7 @@ export default function EventDetailsPage() {
 
             const matchedSlug = getString(getEventField(matchedEvent, 'slug'));
 
-            loadedEvent = await fetchWebsiteEventByIdOrSlug(matchedId || matchedSlug);
+            loadedEvent = await fetchWebsiteEventByIdOrSlug(matchedSlug || matchedId);
           }
         }
 
@@ -520,10 +519,6 @@ export default function EventDetailsPage() {
 
   const readableSlug = slug.replace(/-/g, ' ');
 
-  /*
-   * API sponsors available hain to dynamic section,
-   * otherwise existing static section show hoga.
-   */
   const sponsors = extractEventSponsors(event);
 
   const normalizedSections: EventSection[] = [];
@@ -734,20 +729,7 @@ export default function EventDetailsPage() {
         <ClientErrorBoundary>
           <EventDetailsAnimated featuredEvent={featuredEvent} readableSlug={readableSlug} />
 
-          {/* Sponsors condition */}
-          {sponsors.length === 0 ? (
-            /*
-             * API sponsors empty hain:
-             * existing static section show hoga.
-             */
-            <EventSponsorsSection />
-          ) : (
-            /*
-             * API sponsors available hain:
-             * dynamic section show hoga.
-             */
-            <DynamicEventSponsorsSection sponsors={sponsors} />
-          )}
+          {sponsors.length > 0 ? <DynamicEventSponsorsSection sponsors={sponsors} /> : null}
 
           {contentBlocks.length > 0 ? (
             <section className="event-description-content">
