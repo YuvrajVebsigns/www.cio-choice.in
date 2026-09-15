@@ -1220,7 +1220,7 @@ export default function SurveyStudyPage() {
 
           <div className="yearbook-cards-grid">
             {Array.from({ length: 14 }, (_, index) => {
-              const year = 2026 - index;
+              const year = 2025 - index;
 
               const yearbookImages: Record<number, string> = {
                 2026: '/assets/yearbook/2026/page-01.jpg',
@@ -1229,7 +1229,7 @@ export default function SurveyStudyPage() {
 
                 2024: '/assets/yearbook/2024/page-001.jpg',
 
-                2023: '/assets/yearbook/2023/page-001.jpg',
+                2023: '/assets/yearbook/2023/page-01.jpg',
 
                 2022: '/assets/yearbook/2022/page-001.jpg',
 

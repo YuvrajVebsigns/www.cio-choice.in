@@ -1156,7 +1156,7 @@ export default function SurveyStudyPage() {
                 2026: '/assets/yearbook/2026/page-01.jpg',
                 2025: '/assets/yearbook/2025/page-001.jpg',
                 2024: '/assets/yearbook/2024/page-001.jpg',
-                2023: '/assets/yearbook/2023/page-001.jpg',
+                2023: '/assets/yearbook/2023/page-01.jpg',
                 2022: '/assets/yearbook/2022/page-001.jpg',
                 2021: '/assets/yearbook/2021/page-001.jpg',
                 2020: '/assets/yearbook/2020/page-001.jpg',

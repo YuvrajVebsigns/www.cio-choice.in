@@ -5,6 +5,20 @@ import Link from 'next/link';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 // import Image from 'next/image';
 
+const formatEventDate = (date: string) => {
+  const formattedDate = new Date(date);
+  const datePart = formattedDate.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  const timePart = formattedDate.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+  return `${datePart} at ${timePart}`;
+};
 type Section = {
   heading: string;
   body: string;
@@ -78,7 +92,7 @@ export default function EventDetailsAnimated({
         </div>
       </div>
 
-      <div className="event-details-meta-grid" ref={metaRef}>
+      {/* <div className="event-details-meta-grid" ref={metaRef}>
         <div className="event-details-meta-card">
           <span className="event-details-meta-label">Authored by</span>
           <strong>{featuredEvent.author}</strong>
@@ -87,6 +101,20 @@ export default function EventDetailsAnimated({
           <span className="event-details-meta-label">Date Released</span>
           <strong>{featuredEvent.date}</strong>
         </div>
+      </div> */}
+
+      <div className="event-details-meta-grid" ref={metaRef}>
+        {' '}
+        <div className="event-details-meta-card">
+          {' '}
+          <span className="event-details-meta-label">Authored by</span>{' '}
+          <strong>{featuredEvent.author}</strong>{' '}
+        </div>{' '}
+        <div className="event-details-meta-card">
+          {' '}
+          <span className="event-details-meta-label">Date Released</span>{' '}
+          <strong>{formatEventDate(featuredEvent.date)}</strong>{' '}
+        </div>{' '}
       </div>
 
       <article className="event-details-article">

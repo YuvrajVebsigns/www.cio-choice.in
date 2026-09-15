@@ -395,6 +395,7 @@ import { useEffect, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import {
   fetchWebsiteBlogs,
+  getWebsiteBlogImageForItem,
   submitWebsiteBlogLike,
   type WebsiteBlogItem,
 } from '@/services/blogs.service';
@@ -408,7 +409,7 @@ function getBlogAuthor(blog: WebsiteBlogItem) {
 }
 
 function getBlogImage(blog: WebsiteBlogItem) {
-  return blog.featureImage || blog.seo?.ogImage || '/assets/blogs/blog-1.png';
+  return getWebsiteBlogImageForItem(blog);
 }
 
 function getBlogDescription(blog: WebsiteBlogItem) {

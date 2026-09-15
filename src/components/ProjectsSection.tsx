@@ -5,7 +5,12 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { fetchWebsiteEvents, WebsiteEvent } from '@/services/events.service';
+import {
+  fetchWebsiteEvents,
+  getWebsiteEventImageUrl,
+  getWebsiteEventSlug,
+  WebsiteEvent,
+} from '@/services/events.service';
 
 // function getStoredWebsiteId(): string | undefined {
 //   if (typeof window === 'undefined') return undefined;
@@ -120,17 +125,9 @@ export default function ProjectsSection() {
                   (item['eventName'] as unknown) ??
                   'Event',
               );
-              const slug =
-                item.id && typeof item.id === 'string'
-                  ? String(item.id)
-                  : title
-                      .toLowerCase()
-                      .replace(/\s+/g, '-')
-                      .replace(/[^a-z0-9-]/g, '');
+              const slug = getWebsiteEventSlug({ ...item, title });
 
-              const imageSrc = String(
-                item.image ?? item.heroImage ?? item.banner ?? '/assets/blogs/blog-1.webp',
-              );
+              const imageSrc = getWebsiteEventImageUrl(item);
               const category = String(item.category ?? 'Events');
 
               return (

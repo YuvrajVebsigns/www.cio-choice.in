@@ -73,7 +73,7 @@ export default function VideoGalleryPage() {
       <section className="video-gallery-section">
         <div className="video-gallery-container">
           <div className="video-gallery-heading">
-            <span className="video-gallery-label11">VIDEO GALLERY</span>
+            {/* <span className="video-gallery-label11">VIDEO GALLERY</span> */}
 
             <h1>VIDEO GALLERY</h1>
 

@@ -9,6 +9,7 @@ import useScrollAnimation from '../../../hooks/useScrollAnimation';
 import BlogCommentsPanel from '@/components/BlogCommentsPanel';
 import {
   fetchWebsiteBlogBySlug,
+  getWebsiteBlogImageUrl,
   type WebsiteBlogContentBlock,
   type WebsiteBlogDetailItem,
 } from '@/services/blogs.service';
@@ -47,7 +48,7 @@ function formatPublishedDate(value?: string) {
 }
 
 function getBlogImage(blog?: WebsiteBlogDetailItem | null) {
-  return blog?.featureImage || blog?.seo?.ogImage || '/assets/blogs/blog-1.webp';
+  return getWebsiteBlogImageUrl(blog?.featureImage ?? blog?.seo?.ogImage ?? blog ?? null);
 }
 
 function getBlogCategory(blog?: WebsiteBlogDetailItem | null) {
@@ -111,8 +112,12 @@ function renderBlock(block: WebsiteBlogContentBlock | null | undefined, index: n
 
   if (type === 'image') {
     const file = isObject(data?.file) ? data.file : undefined;
-    const url = typeof file?.url === 'string' ? file.url : '';
-    if (!url) return null;
+    const url =
+      getWebsiteBlogImageUrl(file) ||
+      getWebsiteBlogImageUrl(data?.image) ||
+      getWebsiteBlogImageUrl(data);
+
+    if (!url || url === '/assets/blogs/blog-1.webp') return null;
 
     return (
       <div key={key} style={{ margin: '24px 0' }}>
