@@ -624,9 +624,25 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { downloadWebsiteReport } from '@/services/reports.service';
+
+const YEARBOOK_YEAR = 2021;
+
+/*
+ * IMPORTANT:
+ * Set this to the actual total number of JPG pages available in:
+ *
+ * /public/assets/yearbook/2021/
+ *
+ * Expected format:
+ * page-001.jpg
+ * page-002.jpg
+ * page-003.jpg
+ * ...
+ */
+const TOTAL_PAGES = 40;
 
 export default function SurveyStudyPage() {
   const [currentSpread, setCurrentSpread] = useState<number>(0);
@@ -640,16 +656,10 @@ export default function SurveyStudyPage() {
     once: false,
   });
 
-  /*
-   * ============================================================
-   * 2021 YEAR BOOK DOWNLOAD
-   * ============================================================
-   *
-   * The PDF is downloaded from the API.
-   *
-   * Replace YOUR_2021_REPORT_ID with the actual 2021
-   * report ID from your CMS/backend.
-   */
+  /* ============================================================
+     2021 YEAR BOOK DOWNLOAD
+  ============================================================ */
+
   const handleYearbookDownload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -686,9 +696,7 @@ export default function SurveyStudyPage() {
       const industry = String(formData.get('industry') ?? '').trim();
 
       /*
-       * IMPORTANT:
-       * Replace this with the actual CIO Choice 2021
-       * report ID from your backend/CMS.
+       * CIO Choice 2021 report ID
        */
       const reportId = '6aa3bded59fc0416cb73414c';
 
@@ -708,13 +716,8 @@ export default function SurveyStudyPage() {
         throw new Error('Download link was not returned by the server.');
       }
 
-      /*
-       * API returns the actual PDF download URL.
-       */
       window.location.assign(downloadUrl);
     } catch (error) {
-      // console.error('CIO Choice 2021 Year Book download failed:', error);
-
       alert(
         error instanceof Error
           ? error.message
@@ -725,11 +728,9 @@ export default function SurveyStudyPage() {
     }
   };
 
-  /*
-   * ============================================================
-   * COUNTRY CODES
-   * ============================================================
-   */
+  /* ============================================================
+     COUNTRY CODES
+  ============================================================ */
 
   const countryCodes = [
     { code: '+91', country: 'India' },
@@ -768,87 +769,130 @@ export default function SurveyStudyPage() {
     { code: '+64', country: 'New Zealand' },
   ];
 
+  /* ============================================================
+     LOAD 2021 YEAR BOOK PAGES
+  ============================================================ */
+
   /*
-   * ============================================================
-   * LOAD 2021 YEAR BOOK PAGES
-   * ============================================================
+   * Instead of checking images one-by-one up to 200 pages,
+   * generate the known paths immediately.
    *
-   * Expected:
+   * This avoids 200 sequential network requests.
    *
-   * /public/assets/yearbook/2021/page-001.jpg
-   * /public/assets/yearbook/2021/page-002.jpg
-   * /public/assets/yearbook/2021/page-003.jpg
+   * 2021 uses 3-digit page names:
+   *
+   * /assets/yearbook/2021/page-001.jpg
+   * /assets/yearbook/2021/page-002.jpg
+   * /assets/yearbook/2021/page-003.jpg
    * ...
    */
 
   useEffect(() => {
-    let cancelled = false;
+    const generatedPages = Array.from({ length: TOTAL_PAGES }, (_, index) => {
+      const pageNumber = String(index + 1).padStart(3, '0');
 
-    const loadYearbookPages = async () => {
-      const foundPages: string[] = [];
+      return `/assets/yearbook/${YEARBOOK_YEAR}/page-${pageNumber}.jpg`;
+    });
 
-      const MAX_PAGES = 200;
-
-      for (let pageNumber = 1; pageNumber <= MAX_PAGES; pageNumber++) {
-        const page = String(pageNumber).padStart(3, '0');
-
-        const imagePath = `/assets/yearbook/2021/page-${page}.jpg`;
-
-        const imageExists = await new Promise<boolean>((resolve) => {
-          const image = new Image();
-
-          image.onload = () => resolve(true);
-          image.onerror = () => resolve(false);
-
-          image.src = imagePath;
-        });
-
-        if (!imageExists) {
-          break;
-        }
-
-        foundPages.push(imagePath);
-      }
-
-      if (!cancelled) {
-        setPages(foundPages);
-      }
-    };
-
-    loadYearbookPages();
-
-    return () => {
-      cancelled = true;
-    };
+    setPages(generatedPages);
   }, []);
 
+  /* ============================================================
+     CREATE BOOK SPREADS
+  ============================================================ */
+
   /*
-   * ============================================================
-   * CREATE BOOK SPREADS
-   * ============================================================
-   *
    * Page 001 = Cover
+   *
    * Page 002 + 003
    * Page 004 + 005
    * Page 006 + 007
    * ...
    */
 
-  const spreads: string[][] = [];
+  const spreads = useMemo(() => {
+    const result: string[][] = [];
 
-  if (pages.length > 0 && pages[0]) {
-    spreads.push([pages[0]]);
+    /*
+     * Keep this explicit check to avoid the TypeScript
+     * pages[0] undefined error.
+     */
+    const firstPage = pages[0];
 
-    for (let i = 1; i < pages.length; i += 2) {
-      const spreadPages = pages.slice(i, i + 2);
+    if (firstPage) {
+      result.push([firstPage]);
 
-      if (spreadPages.length > 0) {
-        spreads.push(spreadPages);
+      for (let i = 1; i < pages.length; i += 2) {
+        const spreadPages = pages.slice(i, i + 2);
+
+        if (spreadPages.length > 0) {
+          result.push(spreadPages);
+        }
       }
     }
-  }
+
+    return result;
+  }, [pages]);
 
   const currentPages = spreads[currentSpread] ?? [];
+
+  /* ============================================================
+     PRELOAD CURRENT / NEXT / PREVIOUS SPREAD
+  ============================================================ */
+
+  /*
+   * Only preload nearby pages instead of loading the entire
+   * yearbook at once.
+   */
+
+  useEffect(() => {
+    if (pages.length === 0 || spreads.length === 0) {
+      return;
+    }
+
+    const pagesToPreload = new Set<string>();
+
+    /*
+     * Current spread
+     */
+    currentPages.forEach((page) => {
+      pagesToPreload.add(page);
+    });
+
+    /*
+     * Next spread
+     */
+    const nextSpread = spreads[currentSpread + 1];
+
+    if (nextSpread) {
+      nextSpread.forEach((page) => {
+        pagesToPreload.add(page);
+      });
+    }
+
+    /*
+     * Previous spread
+     */
+    const previousSpread = spreads[currentSpread - 1];
+
+    if (previousSpread) {
+      previousSpread.forEach((page) => {
+        pagesToPreload.add(page);
+      });
+    }
+
+    /*
+     * Start browser preload.
+     */
+    pagesToPreload.forEach((page) => {
+      const image = new Image();
+      image.src = page;
+    });
+  }, [currentSpread, currentPages, pages, spreads]);
+
+  /* ============================================================
+     PAGE NAVIGATION
+  ============================================================ */
 
   const nextPage = () => {
     setCurrentSpread((prev) => Math.min(prev + 1, Math.max(spreads.length - 1, 0)));
@@ -882,6 +926,9 @@ export default function SurveyStudyPage() {
                     src="/assets/yearbook/2021/page-001.jpg"
                     alt="CIO Choice Year Book 2021"
                     className="survey-study-book-image"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                   />
 
                   <div className="survey-study-book-content">
@@ -945,6 +992,9 @@ export default function SurveyStudyPage() {
                       alt={`CIO Choice 2021 Year Book Page ${
                         currentSpread === 0 ? 1 : currentSpread * 2 + index
                       }`}
+                      loading={currentSpread === 0 ? 'eager' : 'lazy'}
+                      fetchPriority={currentSpread === 0 ? 'high' : 'auto'}
+                      decoding="async"
                     />
                   </div>
                 ))
@@ -1248,7 +1298,12 @@ export default function SurveyStudyPage() {
               return (
                 <div className="yearbook-card" key={year}>
                   <div className="yearbook-card-image">
-                    <img src={yearbookImages[year]} alt={`CIO Choice Year Book ${year}`} />
+                    <img
+                      src={yearbookImages[year]}
+                      alt={`CIO Choice Year Book ${year}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
 
                   <h3>{year} Year Book</h3>

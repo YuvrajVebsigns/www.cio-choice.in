@@ -298,9 +298,9 @@ export default function EnterPage() {
             </p>
 
             <ul>
-              <li>Entry – US$ 1,000 + Local Taxes for Yr. 2026</li>
-              <li>If Recognised – US$ 11,000 + Local Taxes for Yr. 2026</li>
-              <li>Total after Winning – US$ 12,000 + Local Taxes for Yr. 2026</li>
+              <li>Entry – US$ 1,000 + Local Taxes for Yr. 2027</li>
+              <li>If Recognised – US$ 11,000 + Local Taxes for Yr. 2027</li>
+              <li>Total after Winning – US$ 12,000 + Local Taxes for Yr. 2027</li>
             </ul>
 
             <p>
@@ -308,9 +308,9 @@ export default function EnterPage() {
             </p>
 
             <ul>
-              <li>Entry – US$ 1,000 + Local Taxes for Yr. 2026</li>
-              <li>If Recognised – US$ 8,000 + Local Taxes for Yr. 2026</li>
-              <li>Total after Winning – US$ 9,000 + Local Taxes for Yr. 2026</li>
+              <li>Entry – US$ 1,000 + Local Taxes for Yr. 2027</li>
+              <li>If Recognised – US$ 8,000 + Local Taxes for Yr. 2027</li>
+              <li>Total after Winning – US$ 9,000 + Local Taxes for Yr. 2027</li>
             </ul>
 
             <p>

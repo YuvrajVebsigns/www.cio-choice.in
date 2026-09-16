@@ -117,21 +117,21 @@ export default function RecognizedBrands2020Page() {
             <div className="advisory-grid">
               {items.map((item, index) => (
                 <article key={`${item.author}-${index}`} className="advisory-card">
+                  <h3>{item.author}</h3>
                   {item.avatar ? (
                     <Image
                       src={item.avatar}
                       alt={item.author}
-                      width={120}
-                      height={120}
-                      className="advisory-avatar"
+                      width={128}
+                      height={128}
+                      className="rcn-brand-image"
                       unoptimized
                     />
                   ) : (
-                    <div className="advisory-avatar advisory-avatar-placeholder" />
+                    <div className="rcn-brand-image advisory-avatar-placeholder" />
                   )}
 
-                  <h3>TITLE: {item.author}</h3>
-                  <p>CATEGORY: {item.role}</p>
+                  <p>{item.role}</p>
 
                   {item.quote ? <blockquote>{item.quote}</blockquote> : null}
                 </article>

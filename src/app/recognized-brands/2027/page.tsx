@@ -12,12 +12,12 @@ type BrandItem = {
   avatar?: string;
 };
 
-type BrandImageProps = {
-  src?: string;
-  alt: string;
-};
+// type BrandImageProps = {
+//   src?: string;
+//   alt: string;
+// };
 
-const FALLBACK_BRAND_IMAGE = '/assets/blogs/blog-2.png';
+// const FALLBACK_BRAND_IMAGE = '/assets/blogs/blog-2.png';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
@@ -50,31 +50,31 @@ function getImageUrl(value: unknown): string {
  * API image missing ya broken hone par
  * fallback image automatically show karega.
  */
-function BrandImage({ src, alt }: BrandImageProps) {
-  const [imageSrc, setImageSrc] = useState(src?.trim() || FALLBACK_BRAND_IMAGE);
+// function BrandImage({ src, alt }: BrandImageProps) {
+//   const [imageSrc, setImageSrc] = useState(src?.trim() || FALLBACK_BRAND_IMAGE);
 
-  useEffect(() => {
-    setImageSrc(src?.trim() || FALLBACK_BRAND_IMAGE);
-  }, [src]);
+//   useEffect(() => {
+//     setImageSrc(src?.trim() || FALLBACK_BRAND_IMAGE);
+//   }, [src]);
 
-  function handleImageError() {
-    if (imageSrc !== FALLBACK_BRAND_IMAGE) {
-      setImageSrc(FALLBACK_BRAND_IMAGE);
-    }
-  }
+//   function handleImageError() {
+//     if (imageSrc !== FALLBACK_BRAND_IMAGE) {
+//       setImageSrc(FALLBACK_BRAND_IMAGE);
+//     }
+//   }
 
-  return (
-    <Image
-      src={imageSrc}
-      alt={alt}
-      width={120}
-      height={120}
-      className="advisory-avatar"
-      unoptimized
-      onError={handleImageError}
-    />
-  );
-}
+//   return (
+//     <Image
+//       src={imageSrc}
+//       alt={alt}
+//       width={120}
+//       height={120}
+//       className="advisory-avatar"
+//       unoptimized
+//       onError={handleImageError}
+//     />
+//   );
+// }
 
 function extractItems(page: WebsitePage | null): BrandItem[] {
   if (!page) {
@@ -304,11 +304,21 @@ export default function RecognizedBrands2027Page() {
             <div className="advisory-grid">
               {items.map((item, index) => (
                 <article key={`${item.author}-${item.role}-${index}`} className="advisory-card">
-                  <BrandImage src={item.avatar} alt={item.author} />
+                  <h3>{item.author}</h3>
+                  {item.avatar ? (
+                    <Image
+                      src={item.avatar}
+                      alt={item.author}
+                      width={128}
+                      height={128}
+                      className="rcn-brand-image"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="rcn-brand-image advisory-avatar-placeholder" />
+                  )}
 
-                  <h3> TITLE: {item.author}</h3>
-
-                  {item.role ? <p> CATEGORY: {item.role}</p> : null}
+                  {item.role ? <p> {item.role}</p> : null}
 
                   {item.quote ? <blockquote>{item.quote}</blockquote> : null}
                 </article>

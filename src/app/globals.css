@@ -510,7 +510,9 @@ body {
     font-size: 0.8rem;
   }
 }
-/* CARDS SECTION */
+/* =========================================================
+   CARDS SECTION
+========================================================= */
 
 .rcn-cards-section,
 .advisory-panel-section {
@@ -525,6 +527,10 @@ body {
   width: min(1180px, 100%);
   margin: 0 auto;
 }
+
+/* =========================================================
+   CARD
+========================================================= */
 
 .rcn-card,
 .advisory-card {
@@ -557,6 +563,10 @@ body {
   border-color: #8e0101;
 }
 
+/* =========================================================
+   CARD TEXT
+========================================================= */
+
 .rcn-card h2,
 .advisory-card h3 {
   margin: 0;
@@ -579,7 +589,10 @@ body {
   line-height: 1.7;
 }
 
-/* Center card content */
+/* =========================================================
+   RECOGNIZED BRAND CARD
+========================================================= */
+
 .rcn-brand-card {
   display: flex;
   flex-direction: column;
@@ -587,9 +600,13 @@ body {
   text-align: center;
 }
 
-/* Rectangle logo/image */
-.advisory-avatar1,
-.advisory-card img {
+/* =========================================================
+   ADVISORY IMAGE
+   This is ONLY for advisory images.
+   It does NOT affect .rcn-brand-image.
+========================================================= */
+
+.advisory-avatar1 {
   width: 180px !important;
   height: 180px !important;
   object-fit: contain !important;
@@ -602,7 +619,42 @@ body {
   box-shadow: none !important;
 }
 
-/* Placeholder also rectangle */
+/* =========================================================
+   RECOGNIZED BRAND LOGO
+========================================================= */
+
+.rcn-brand-image {
+  width: 358px !important;
+  height: 108px !important;
+  max-width: 100%;
+  object-fit: contain !important;
+  display: block;
+  margin: 0 auto 20px;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 12px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   RECOGNIZED BRAND IMAGE PLACEHOLDER
+========================================================= */
+
+.rcn-brand-image-placeholder {
+  width: 358px !important;
+  height: 108px !important;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto 20px;
+  border-radius: 12px;
+  background: #f5eeee;
+}
+
+/* =========================================================
+   ADVISORY PLACEHOLDER
+========================================================= */
+
 .advisory-avatar,
 .advisory-avatar-placeholder {
   width: 210px;
@@ -616,7 +668,9 @@ body {
   display: block;
 }
 
-/* SUMMARY SECTION */
+/* =========================================================
+   SUMMARY SECTION
+========================================================= */
 
 .rcn-summary-section {
   padding: 3rem 1.5rem 5rem;
@@ -675,7 +729,9 @@ body {
   line-height: 1.75;
 }
 
-/* STATES */
+/* =========================================================
+   STATES
+========================================================= */
 
 .rcn-loading {
   min-height: 60vh;
@@ -685,7 +741,15 @@ body {
   font-weight: 800;
 }
 
-/* RESPONSIVE */
+.rcn-empty {
+  text-align: center;
+  color: #4b5563;
+  font-size: 1.1rem;
+}
+
+/* =========================================================
+   DESKTOP
+========================================================= */
 
 @media (min-width: 768px) {
   .rcn-cta-row {
@@ -702,6 +766,10 @@ body {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 767px) {
   .rcn-hero {
@@ -722,12 +790,30 @@ body {
     padding: 1.6rem;
   }
 
-  .advisory-avatar1,
-  .advisory-card img,
-  .advisory-avatar,
-  .advisory-avatar-placeholder {
+  /* Advisory images only */
+  .advisory-avatar1 {
     width: 150px !important;
     height: 85px !important;
+  }
+
+  .advisory-avatar,
+  .advisory-avatar-placeholder {
+    width: 150px;
+    height: 85px;
+  }
+
+  /* Recognized brand logo */
+  .rcn-brand-image {
+    width: 100% !important;
+    max-width: 358px;
+    height: 108px !important;
+    object-fit: contain !important;
+  }
+
+  .rcn-brand-image-placeholder {
+    width: 100% !important;
+    max-width: 358px;
+    height: 108px !important;
   }
 }
 
@@ -12785,10 +12871,15 @@ s .dialogues-badge-mark {
   padding: 28px;
   text-align: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  /* Keep content aligned and paragraph at bottom */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .advisory-avatar {
-  border-radius: 50%;
+  border-radius: 0%;
   object-fit: cover;
   margin-bottom: 16px;
 }
@@ -12801,6 +12892,8 @@ s .dialogues-badge-mark {
 .advisory-card p {
   color: #555;
   line-height: 1.6;
+  margin-top: auto;
+  margin-bottom: 0;
 }
 
 /* redcarpet event section */
@@ -14268,6 +14361,6 @@ s .dialogues-badge-mark {
   }
 
   .privacy-policy-block:not(:last-child) {
-    padding-bottom: 15px;
+    padding-bottom: 14px;
   }
 }

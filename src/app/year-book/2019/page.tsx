@@ -601,9 +601,18 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { downloadWebsiteReport } from '@/services/reports.service';
+
+// =========================================================
+// 2019 YEAR BOOK CONFIGURATION
+// =========================================================
+const YEARBOOK_YEAR = 2019;
+
+// Change this number if your 2019 folder contains a different
+// number of page JPG files.
+const TOTAL_PAGES = 40;
 
 export default function SurveyStudyPage() {
   const [currentSpread, setCurrentSpread] = useState<number>(0);
@@ -648,7 +657,7 @@ export default function SurveyStudyPage() {
       const email = String(formData.get('email') ?? '').trim();
       const industry = String(formData.get('industry') ?? '').trim();
 
-      // Replace this with the actual 2019 report ID
+      // 2019 Year Book report ID
       const reportId = '6aa3be4a59fc0416cb734150';
 
       const downloadUrl = await downloadWebsiteReport({
@@ -670,8 +679,6 @@ export default function SurveyStudyPage() {
       // Start PDF download
       window.location.assign(downloadUrl);
     } catch (error) {
-      // console.error('CIO Choice 2019 Year Book download failed:', error);
-
       alert(
         error instanceof Error
           ? error.message
@@ -723,68 +730,82 @@ export default function SurveyStudyPage() {
   ];
 
   // =========================================================
-  // LOAD 2019 YEAR BOOK PAGES
+  // GENERATE 2019 YEAR BOOK PAGE PATHS
   // =========================================================
   useEffect(() => {
-    let cancelled = false;
+    const generatedPages = Array.from({ length: TOTAL_PAGES }, (_, index) => {
+      const pageNumber = String(index + 1).padStart(3, '0');
 
-    const loadYearbookPages = async () => {
-      const foundPages: string[] = [];
-      const MAX_PAGES = 200;
+      return `/assets/yearbook/${YEARBOOK_YEAR}/page-${pageNumber}.jpg`;
+    });
 
-      for (let pageNumber = 1; pageNumber <= MAX_PAGES; pageNumber++) {
-        const page = String(pageNumber).padStart(3, '0');
-
-        const imagePath = `/assets/yearbook/2019/page-${page}.jpg`;
-
-        const imageExists = await new Promise<boolean>((resolve) => {
-          const image = new Image();
-
-          image.onload = () => resolve(true);
-          image.onerror = () => resolve(false);
-
-          image.src = imagePath;
-        });
-
-        if (!imageExists) {
-          break;
-        }
-
-        foundPages.push(imagePath);
-      }
-
-      if (!cancelled) {
-        setPages(foundPages);
-      }
-    };
-
-    loadYearbookPages();
-
-    return () => {
-      cancelled = true;
-    };
+    setPages(generatedPages);
   }, []);
 
   // =========================================================
   // CREATE BOOK SPREADS
   // =========================================================
-  const spreads: string[][] = [];
+  const spreads = useMemo(() => {
+    const result: string[][] = [];
+    const firstPage = pages[0];
 
-  if (pages.length > 0 && pages[0]) {
-    // Cover page
-    spreads.push([pages[0]]);
+    if (firstPage) {
+      // Cover page
+      result.push([firstPage]);
 
-    // Remaining pages in pairs
-    for (let i = 1; i < pages.length; i += 2) {
-      const spreadPages = pages.slice(i, i + 2);
+      // Remaining pages in pairs
+      for (let i = 1; i < pages.length; i += 2) {
+        const spreadPages = pages.slice(i, i + 2);
 
-      if (spreadPages.length > 0) {
-        spreads.push(spreadPages);
+        if (spreadPages.length > 0) {
+          result.push(spreadPages);
+        }
       }
     }
-  }
+
+    return result;
+  }, [pages]);
 
   const currentPages = spreads[currentSpread] ?? [];
+
+  // =========================================================
+  // PRELOAD CURRENT, NEXT AND PREVIOUS SPREAD
+  // =========================================================
+  useEffect(() => {
+    if (pages.length === 0 || spreads.length === 0) {
+      return;
+    }
+
+    const pagesToPreload = new Set<string>();
+
+    // Current spread
+    currentPages.forEach((page) => {
+      pagesToPreload.add(page);
+    });
+
+    // Next spread
+    const nextSpread = spreads[currentSpread + 1];
+
+    if (nextSpread) {
+      nextSpread.forEach((page) => {
+        pagesToPreload.add(page);
+      });
+    }
+
+    // Previous spread
+    const previousSpread = spreads[currentSpread - 1];
+
+    if (previousSpread) {
+      previousSpread.forEach((page) => {
+        pagesToPreload.add(page);
+      });
+    }
+
+    pagesToPreload.forEach((page) => {
+      const image = new Image();
+      image.src = page;
+    });
+  }, [currentSpread, currentPages, pages, spreads]);
 
   // =========================================================
   // PAGE NAVIGATION
@@ -820,6 +841,9 @@ export default function SurveyStudyPage() {
                     src="/assets/yearbook/2019/page-001.jpg"
                     alt="CIO Choice Year Book 2019"
                     className="survey-study-book-image"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                   />
 
                   <div className="survey-study-book-content">
@@ -882,6 +906,9 @@ export default function SurveyStudyPage() {
                       alt={`CIO Choice 2019 Year Book Page ${
                         currentSpread === 0 ? 1 : currentSpread * 2 + index
                       }`}
+                      loading={currentSpread === 0 ? 'eager' : 'lazy'}
+                      fetchPriority={currentSpread === 0 ? 'high' : 'auto'}
+                      decoding="async"
                     />
                   </div>
                 ))
@@ -1177,7 +1204,12 @@ export default function SurveyStudyPage() {
               return (
                 <div className="yearbook-card" key={year}>
                   <div className="yearbook-card-image">
-                    <img src={yearbookImages[year]} alt={`CIO Choice Year Book ${year}`} />
+                    <img
+                      src={yearbookImages[year]}
+                      alt={`CIO Choice Year Book ${year}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
 
                   <h3>{year} Year Book</h3>
