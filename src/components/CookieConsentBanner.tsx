@@ -221,12 +221,14 @@ export default function CookieConsentBanner({ onAccept, onDecline }: CookieConse
         <div id="cookie-desc" className="cookie-consent-body">
           <p>
             We use cookies to enhance your browsing experience, personalize your content, and
-            understand site performance.
+            understand site performance. Some cookies are essential for this website to work
+            correctly, while optional cookies help us understand how visitors use our pages.
           </p>
 
           <p>
             Click <strong>Accept all</strong> to agree to cookies that help us deliver better
-            content and a smoother browsing experience.
+            content and a smoother browsing experience. You can choose which optional cookies to
+            allow by selecting Customize.
           </p>
 
           <p>
