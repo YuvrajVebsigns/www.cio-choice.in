@@ -123,7 +123,7 @@ export default function RecognizedBrands2015Page() {
                     <div className="rcn-brand-image advisory-avatar-placeholder" />
                   )}
 
-                  <p>CATEGORY: {item.role}</p>
+                  <p> {item.role}</p>
 
                   {item.quote ? <blockquote>{item.quote}</blockquote> : null}
                 </article>

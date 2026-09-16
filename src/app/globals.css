@@ -12858,12 +12858,6 @@ s .dialogues-badge-mark {
   padding: 40px 28px 80px;
 }
 
-.advisory-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
-}
-
 .advisory-card {
   border-left: 8px solid #8e0101;
   background: #fff;
@@ -12872,7 +12866,6 @@ s .dialogues-badge-mark {
   text-align: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 
-  /* Keep content aligned and paragraph at bottom */
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -12892,10 +12885,14 @@ s .dialogues-badge-mark {
 .advisory-card p {
   color: #555;
   line-height: 1.6;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.advisory-card blockquote {
   margin-top: auto;
   margin-bottom: 0;
 }
-
 /* redcarpet event section */
 
 .rcn-event-section {
