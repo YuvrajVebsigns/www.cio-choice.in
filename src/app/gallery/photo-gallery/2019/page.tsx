@@ -113,8 +113,6 @@ export default function MediaCoverage2017Page() {
             {highlights.map((item) => (
               <div className="media-profile-card" key={item.image}>
                 <img src={item.image} alt={item.name} />
-                <h3>{item.name}</h3>
-                <p>{item.date}</p>
               </div>
             ))}
           </div>

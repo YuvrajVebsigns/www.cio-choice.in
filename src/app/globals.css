@@ -13546,7 +13546,7 @@ s .dialogues-badge-mark {
 .highlights-grid {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
@@ -13584,10 +13584,10 @@ s .dialogues-badge-mark {
   height: 280px;
 }
 
-/* media highlights image smaller */
+/* media highlights image */
 .highlights-grid .media-profile-card img {
-  max-width: 200px;
-  height: 210px;
+  max-width: 300px;
+  height: 280px;
 }
 
 .media-profile-card:hover img {
@@ -13613,12 +13613,6 @@ s .dialogues-badge-mark {
   margin: 8px 0 0;
   font-size: 14px;
   color: #6b7280;
-}
-
-@media (max-width: 1400px) {
-  .highlights-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
 
 @media (max-width: 1200px) {
