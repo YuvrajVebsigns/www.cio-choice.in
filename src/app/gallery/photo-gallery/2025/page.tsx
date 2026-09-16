@@ -63,7 +63,7 @@ const leaders = [
   },
 ];
 
-const highlights = Array.from({ length: 56 }, (_, index) => ({
+const highlights = Array.from({ length: 54 }, (_, index) => ({
   image: `/assets/photogallery/2025/photo${index + 1}.png`,
   name: `CIO-Choice ${index + 1}`,
   date: '2025',

@@ -1,25 +1,25 @@
 'use client';
 
-const leaders = [
-  {
-    image: '/assets/media/aarti-singh.png',
-    name: 'Aarti Singh',
-    designation: 'Enterprise CIO',
-    company: 'Mahindra Group',
-  },
-  {
-    image: '/assets/media/gautam-datta.png',
-    name: 'Gautam Datta',
-    designation: 'Chief Digital Officer',
-    company: 'Bajaj Allianz',
-  },
-  {
-    image: '/assets/media/jayant-goyal.png',
-    name: 'Jayant Goyal',
-    designation: 'CIO',
-    company: 'Coforge',
-  },
-];
+// const leaders = [
+//   {
+//     image: '/assets/media/aarti-singh.png',
+//     name: 'Aarti Singh',
+//     designation: 'Enterprise CIO',
+//     company: 'Mahindra Group',
+//   },
+//   {
+//     image: '/assets/media/gautam-datta.png',
+//     name: 'Gautam Datta',
+//     designation: 'Chief Digital Officer',
+//     company: 'Bajaj Allianz',
+//   },
+//   {
+//     image: '/assets/media/jayant-goyal.png',
+//     name: 'Jayant Goyal',
+//     designation: 'CIO',
+//     company: 'Coforge',
+//   },
+// ];
 
 const highlights = Array.from({ length: 22 }, (_, index) => ({
   image: `/assets/photogallery/2013/photo${index + 1}.jpg`,
@@ -36,7 +36,7 @@ export default function MediaCoverage2017Page() {
       </section>
 
       <section className="media-two-sections">
-        <div className="media-section-card">
+        {/* <div className="media-section-card">
           <h2>Advisory Leaders</h2>
 
           <div className="leaders-grid">
@@ -49,7 +49,7 @@ export default function MediaCoverage2017Page() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="media-section-card">
           <h2>Media Highlights</h2>
