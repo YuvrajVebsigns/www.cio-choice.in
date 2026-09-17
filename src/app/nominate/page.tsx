@@ -1816,10 +1816,9 @@ export default function NominatePage() {
   if (nominationActive === null) {
     return (
       <main className="nominate-page-container">
-        <section className="nominate-success-section">
-          <h1>Nomination</h1>
-
-          <p>Checking nomination availability...</p>
+        <section className="nominate-loading-section" role="status" aria-live="polite">
+          <span className="nominate-loading-spinner" aria-hidden="true" />
+          <span className="nominate-loading-label">Loading nomination form...</span>
         </section>
       </main>
     );
