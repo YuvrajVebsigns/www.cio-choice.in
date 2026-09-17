@@ -1446,6 +1446,13 @@ export default function EventDetailsPage() {
 
           {/* Registration + Share */}
           <div className="event-actions">
+            <Link href="/events" className="backbutton">
+              <span>Back to Events</span>
+              <div className="backbutton-icon">
+                <ArrowUpRight size={18} />
+              </div>
+            </Link>
+
             <Link
               href={`/register?event=${encodeURIComponent(
                 String(getEventField(event, 'id') ?? slug),
@@ -1458,63 +1465,59 @@ export default function EventDetailsPage() {
                 <ArrowUpRight size={18} />
               </span>
             </Link>
+          </div>
+          <br />
+          <div className="share-container">
+            <button
+              type="button"
+              className="backbutton"
+              onClick={() => setShowShareOptions((current) => !current)}
+              aria-expanded={showShareOptions}
+              aria-haspopup="menu"
+              id="share-button"
+            >
+              <span>Share Event</span>
 
-            <div className="share-container">
-              <button
-                type="button"
-                className="backbutton"
-                onClick={() => setShowShareOptions((current) => !current)}
-                aria-expanded={showShareOptions}
-                aria-haspopup="menu"
-                id="share-button"
-              >
-                <span>Share Event</span>
+              <span className="backbutton-icon">
+                <ArrowUpRight size={18} />
+              </span>
+            </button>
 
-                <span className="backbutton-icon">
-                  <ArrowUpRight size={18} />
-                </span>
-              </button>
+            {showShareOptions ? (
+              <div className="share-popup" role="menu" aria-labelledby="share-button">
+                <button
+                  type="button"
+                  onClick={handleShareWhatsApp}
+                  className="share-option whatsapp"
+                >
+                  WhatsApp
+                </button>
 
-              {showShareOptions ? (
-                <div className="share-popup" role="menu" aria-labelledby="share-button">
-                  <button
-                    type="button"
-                    onClick={handleShareWhatsApp}
-                    className="share-option whatsapp"
-                  >
-                    WhatsApp
-                  </button>
+                <button
+                  type="button"
+                  onClick={handleShareFacebook}
+                  className="share-option facebook"
+                >
+                  Facebook
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={handleShareFacebook}
-                    className="share-option facebook"
-                  >
-                    Facebook
-                  </button>
+                <button type="button" onClick={handleShareTwitter} className="share-option twitter">
+                  Twitter
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={handleShareTwitter}
-                    className="share-option twitter"
-                  >
-                    Twitter
-                  </button>
+                <button
+                  type="button"
+                  onClick={handleShareInstagram}
+                  className="share-option instagram"
+                >
+                  Instagram
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={handleShareInstagram}
-                    className="share-option instagram"
-                  >
-                    Instagram
-                  </button>
-
-                  <button type="button" onClick={copyLinkToClipboard} className="share-option copy">
-                    Copy Link
-                  </button>
-                </div>
-              ) : null}
-            </div>
+                <button type="button" onClick={copyLinkToClipboard} className="share-option copy">
+                  Copy Link
+                </button>
+              </div>
+            ) : null}
           </div>
         </ClientErrorBoundary>
       </div>
