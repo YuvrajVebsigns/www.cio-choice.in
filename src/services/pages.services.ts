@@ -38,7 +38,7 @@ function normalizePageResponse(res: unknown): WebsitePage | null {
   return res as WebsitePage;
 }
 
-export async function fetchWebsitePageBySlug(slug: string): Promise<WebsitePage | null> {
+async function fetchWebsitePage(endpoint: string): Promise<WebsitePage | null> {
   if (typeof window === 'undefined') return null;
 
   const domain = getWebsiteDomain();
@@ -55,7 +55,7 @@ export async function fetchWebsitePageBySlug(slug: string): Promise<WebsitePage 
   if (!auth?.token || !auth.websiteId) return null;
 
   try {
-    const res = await apiFetch<unknown>(API_ENDPOINTS.WEBSITE.PAGES.BY_SLUG(slug), {
+    const res = await apiFetch<unknown>(endpoint, {
       method: 'GET',
       requireAuth: false,
       headers: buildWebsiteAuthHeaders(auth),
@@ -65,4 +65,14 @@ export async function fetchWebsitePageBySlug(slug: string): Promise<WebsitePage 
   } catch {
     return null;
   }
+}
+
+export async function fetchWebsitePageBySlug(slug: string): Promise<WebsitePage | null> {
+  return fetchWebsitePage(API_ENDPOINTS.WEBSITE.PAGES.BY_SLUG(slug));
+}
+
+export async function fetchWebsiteMediaVideosPage(
+  slug = 'media-videos',
+): Promise<WebsitePage | null> {
+  return fetchWebsitePage(API_ENDPOINTS.WEBSITE.PAGES.BY_SLUG(slug));
 }
