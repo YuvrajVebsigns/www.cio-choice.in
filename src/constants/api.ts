@@ -86,6 +86,8 @@ export const API_ENDPOINTS = {
       BY_SLUG: (slug: string) => `/api/v1/website/pages/${encodeURIComponent(slug)}`,
     },
 
+    MEDIA_VIDEOS: '/api/v1/website/pages/media-videos',
+
     ATTENDEES: {
       REGISTER: '/api/v1/website/attendees/register',
     },

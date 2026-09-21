@@ -1844,7 +1844,12 @@ export default function NominatePage() {
           <p>Please check back later for the next nomination cycle.</p>
 
           <p>
-            <Link href="/">Return to Home</Link>
+            <Link
+              href="/"
+              className="nominate-btn nominate-btn-primary nominate-submit nominate-home-btn"
+            >
+              Return to Home
+            </Link>
           </p>
         </section>
       </main>
@@ -1860,15 +1865,20 @@ export default function NominatePage() {
     return (
       <main className="nominate-page-container">
         <section className="nominate-success-section">
-          <h1>CIO CHOICE 2026 — Nomination Received</h1>
+          <h1>Thank you for your nominations for CIO CHOICE 2027.</h1>
 
-          <p>
+          {/* <p>
             Thank you. Your nomination has been recorded. You will receive a confirmation email
             shortly and the nominated CIO(s) will be notified as described.
-          </p>
+          </p> */}
 
           <p>
-            <Link href="/">Return to home</Link>
+            <Link
+              href="/"
+              className="nominate-btn nominate-btn-primary nominate-submit nominate-home-btn"
+            >
+              Return to home
+            </Link>
           </p>
         </section>
       </main>
@@ -2399,8 +2409,8 @@ export default function NominatePage() {
           </button>
 
           <small className="nominate-submit-note">
-            By submitting you agree that nominated CIOs will be contacted. All nominations are
-            confidential.
+            All nominations are confidential. We will connect with you and your nominated ICT
+            partners.
           </small>
         </div>
       </section>
