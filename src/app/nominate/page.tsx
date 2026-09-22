@@ -1204,6 +1204,9 @@
 import Select, { StylesConfig } from 'react-select';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import type { Country } from 'react-phone-number-input';
+
+import CountryCodeSelect, { getDialCodeFromCountry } from '@/components/CountryCodeSelect';
 
 import { MONGODB_ID_REGEX, NOMINATION_CATEGORY_OPTIONS } from '@/constants/nominations.constants';
 
@@ -1227,6 +1230,7 @@ type CIOEntry = {
   company: string;
   email: string;
   mobile: string;
+  country?: Country;
 };
 
 type FormErrors = {
@@ -1279,6 +1283,7 @@ export default function NominatePage() {
   const [nominatorCompany, setNominatorCompany] = useState('');
   const [nominatorCity, setNominatorCity] = useState('');
   const [nominatorContact, setNominatorContact] = useState('');
+  const [nominatorCountry, setNominatorCountry] = useState<Country | undefined>(undefined);
   const [nominatorEmail, setNominatorEmail] = useState('');
 
   const [cios, setCios] = useState<CIOEntry[]>([
@@ -1289,6 +1294,7 @@ export default function NominatePage() {
       company: '',
       email: '',
       mobile: '',
+      country: undefined,
     },
   ]);
 
@@ -1597,7 +1603,7 @@ export default function NominatePage() {
    * UPDATE CIO FIELD
    * =========================================================
    */
-  const updateCio = (idx: number, key: keyof CIOEntry, value: string) => {
+  const updateCio = <K extends keyof CIOEntry>(idx: number, key: K, value: CIOEntry[K]) => {
     setCios((prev) =>
       prev.map((c, i) =>
         i === idx
@@ -1609,13 +1615,15 @@ export default function NominatePage() {
       ),
     );
 
-    if (errors.cios?.[idx]?.[key]) {
+    const cioErrors = errors.cios?.[idx];
+
+    if (cioErrors && key in cioErrors) {
       setErrors({
         ...errors,
         cios: {
           ...errors.cios,
           [idx]: {
-            ...errors.cios[idx],
+            ...cioErrors,
             [key]: undefined,
           },
         },
@@ -1775,6 +1783,7 @@ export default function NominatePage() {
         nominatorCompany,
         nominatorCity,
         nominatorContact,
+        nominatorCountryCode: getDialCodeFromCountry(nominatorCountry),
         nominatorEmail,
 
         nominees: cios.map((cio) => ({
@@ -1784,6 +1793,8 @@ export default function NominatePage() {
           companyName: cio.company,
           contactEmail: cio.email,
           mobileNo: cio.mobile,
+          countryCode: getDialCodeFromCountry(cio.country),
+          mobileCountryCode: getDialCodeFromCountry(cio.country),
         })),
       });
 
@@ -1871,6 +1882,7 @@ export default function NominatePage() {
             Thank you. Your nomination has been recorded. You will receive a confirmation email
             shortly and the nominated CIO(s) will be notified as described.
           </p> */}
+          <br />
 
           <p>
             <Link
@@ -2112,30 +2124,6 @@ export default function NominatePage() {
                   </label>
 
                   <label className="nominate-label">
-                    CIO&apos;s Contact Number
-                    <input
-                      type="tel"
-                      value={nominatorContact}
-                      onChange={(e) => {
-                        setNominatorContact(e.target.value.replace(/[^0-9]/g, ''));
-
-                        if (errors.nominatorContact) {
-                          setErrors({
-                            ...errors,
-                            nominatorContact: undefined,
-                          });
-                        }
-                      }}
-                      maxLength={10}
-                      placeholder="9876543210"
-                      className="nominate-input-field"
-                    />
-                    {errors.nominatorContact && (
-                      <div className="registration-error">{errors.nominatorContact}</div>
-                    )}
-                  </label>
-
-                  <label className="nominate-label">
                     CIO&apos;s Email ID *
                     <input
                       type="email"
@@ -2156,10 +2144,42 @@ export default function NominatePage() {
                     {errors.nominatorEmail && (
                       <div className="registration-error">{errors.nominatorEmail}</div>
                     )}
-                    <br />
-                    <br />
+                  </label>
+
+                  <label className="nominate-label">
+                    Country Code
+                    <CountryCodeSelect
+                      id="nominator-country"
+                      value={nominatorCountry}
+                      onChange={(country) => setNominatorCountry(country)}
+                    />
+                  </label>
+
+                  <label className="nominate-label">
+                    CIO&apos;s Contact Number
+                    <input
+                      type="tel"
+                      value={nominatorContact}
+                      onChange={(e) => {
+                        setNominatorContact(e.target.value.replace(/[^0-9]/g, ''));
+
+                        if (errors.nominatorContact) {
+                          setErrors({
+                            ...errors,
+                            nominatorContact: undefined,
+                          });
+                        }
+                      }}
+                      maxLength={10}
+                      placeholder="9XXXXXXXX0"
+                      className="nominate-input-field"
+                    />
+                    {errors.nominatorContact && (
+                      <div className="registration-error">{errors.nominatorContact}</div>
+                    )}
                   </label>
                 </fieldset>
+                <br />
 
                 {/* =========================
                     CIO DETAILS
@@ -2328,25 +2348,19 @@ export default function NominatePage() {
                           )}
                         </label>
 
-                        {/* EMAIL */}
-
-                        <label className="nominate-label">
-                          Contact Email *
-                          <input
-                            type="email"
-                            value={c.email}
-                            onChange={(e) => updateCio(idx, 'email', e.target.value)}
-                            className="nominate-input-field"
-                          />
-                          {errors.cios?.[idx]?.email && (
-                            <div className="registration-error">{errors.cios[idx].email}</div>
-                          )}
-                        </label>
-
                         {/* MOBILE */}
 
                         <label className="nominate-label">
-                          Mobile No.
+                          Country Code
+                          <CountryCodeSelect
+                            id={`vendor-country-${idx}`}
+                            value={c.country}
+                            onChange={(country) => updateCio(idx, 'country', country)}
+                          />
+                        </label>
+
+                        <label className="nominate-label">
+                          Contact Number
                           <input
                             type="tel"
                             value={c.mobile}
@@ -2359,6 +2373,21 @@ export default function NominatePage() {
                           />
                           {errors.cios?.[idx]?.mobile && (
                             <div className="registration-error">{errors.cios[idx].mobile}</div>
+                          )}
+                        </label>
+
+                        {/* EMAIL */}
+
+                        <label className="nominate-label">
+                          Contact Email *
+                          <input
+                            type="email"
+                            value={c.email}
+                            onChange={(e) => updateCio(idx, 'email', e.target.value)}
+                            className="nominate-input-field"
+                          />
+                          {errors.cios?.[idx]?.email && (
+                            <div className="registration-error">{errors.cios[idx].email}</div>
                           )}
                         </label>
                       </div>

@@ -5,6 +5,8 @@ export type NomineeInput = {
   companyName: string;
   contactEmail: string;
   mobileNo?: string;
+  countryCode?: string;
+  mobileCountryCode?: string;
 };
 
 export type NominationSubmissionInput = {
@@ -12,6 +14,7 @@ export type NominationSubmissionInput = {
   nominatorCompany: string;
   nominatorCity: string;
   nominatorContact?: string;
+  nominatorCountryCode?: string;
   nominatorEmail: string;
   nominees: NomineeInput[];
 };
@@ -22,6 +25,7 @@ export type SubmitNominationApiBody = {
   nominatorCompany: string;
   nominatorCity: string;
   nominatorPhone?: string;
+  nominatorCountryCode?: string;
   nominatorEmail: string;
   nominees: {
     categoryId: string;
@@ -30,6 +34,8 @@ export type SubmitNominationApiBody = {
     companyName: string;
     contactEmail: string;
     mobileNo?: string;
+    countryCode?: string;
+    mobileCountryCode?: string;
   }[];
 };
 

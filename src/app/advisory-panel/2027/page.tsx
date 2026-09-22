@@ -157,7 +157,9 @@ function extractMembers(page: WebsitePage | null): AdvisoryMember[] {
 
   search(page);
 
-  return members;
+  return members.sort((a, b) =>
+    a.author.localeCompare(b.author, undefined, { sensitivity: 'base' }),
+  );
 }
 
 export default function AdvisoryPanel2027Page() {

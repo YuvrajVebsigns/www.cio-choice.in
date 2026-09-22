@@ -45,29 +45,45 @@ function buildSubmitNominationBody(input: NominationSubmissionInput): SubmitNomi
     nominatorCity: input.nominatorCity.trim(),
     nominatorEmail: input.nominatorEmail.trim(),
 
-    nominees: input.nominees.map((nominee) => ({
-      categoryId: nominee.categoryId.trim(),
-      ...(nominee.subcategoryId?.trim()
-        ? {
-            subCategoryId: nominee.subcategoryId.trim(),
-          }
-        : {}),
-      contactName: nominee.contactName.trim(),
-      companyName: nominee.companyName.trim(),
-      contactEmail: nominee.contactEmail.trim(),
+    nominees: input.nominees.map((nominee) => {
+      const nomineeBody: SubmitNominationApiBody['nominees'][number] = {
+        categoryId: nominee.categoryId.trim(),
+        ...(nominee.subcategoryId?.trim()
+          ? {
+              subCategoryId: nominee.subcategoryId.trim(),
+            }
+          : {}),
+        contactName: nominee.contactName.trim(),
+        companyName: nominee.companyName.trim(),
+        contactEmail: nominee.contactEmail.trim(),
+      };
 
-      ...(nominee.mobileNo?.trim()
-        ? {
-            mobileNo: nominee.mobileNo.trim(),
-          }
-        : {}),
-    })),
+      if (nominee.mobileNo?.trim()) {
+        nomineeBody.mobileNo = nominee.mobileNo.trim();
+      }
+
+      if (nominee.countryCode?.trim()) {
+        nomineeBody.countryCode = nominee.countryCode.trim();
+      }
+
+      if (nominee.mobileCountryCode?.trim()) {
+        nomineeBody.mobileCountryCode = nominee.mobileCountryCode.trim();
+      }
+
+      return nomineeBody;
+    }),
   };
 
   const phone = input.nominatorContact?.trim();
 
   if (phone) {
     body.nominatorPhone = phone;
+  }
+
+  const nominatorCountryCode = input.nominatorCountryCode?.trim();
+
+  if (nominatorCountryCode) {
+    body.nominatorCountryCode = nominatorCountryCode;
   }
 
   return body;
