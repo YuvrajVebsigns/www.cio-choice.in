@@ -559,7 +559,11 @@ function AnimatedBlogCard({ blog, index, variant = 'animate-fade-in' }: Animated
               aria-label={`${localLikes} likes`}
               onClick={handleLikeClick}
             >
-              <Heart size={14} fill={liked ? 'currentColor' : 'none'} />
+              <Heart
+                size={14}
+                color={liked ? '#e53935' : '#111827'}
+                fill={liked ? '#e53935' : 'none'}
+              />
               <span>{localLikes}</span>
             </button>
 

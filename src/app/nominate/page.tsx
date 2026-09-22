@@ -1762,7 +1762,7 @@ export default function NominatePage() {
     setErrors(nextErrors);
 
     if (hasErrors) {
-      setStatus('Please fix the errors marked in the form below.');
+      setStatus('Please fill in all required fields before submitting the nomination form.');
       return;
     }
 
@@ -2354,7 +2354,7 @@ export default function NominatePage() {
                               updateCio(idx, 'mobile', e.target.value.replace(/[^0-9]/g, ''))
                             }
                             maxLength={10}
-                            placeholder="9876543210"
+                            placeholder="9XXXXXXXX0"
                             className="nominate-input-field"
                           />
                           {errors.cios?.[idx]?.mobile && (

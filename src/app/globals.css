@@ -4447,7 +4447,7 @@ main.advisory-page {
 }
 
 .project-image {
-  object-fit: cover;
+  /* object-fit: cover; */
   transition: transform 0.55s ease;
 }
 
