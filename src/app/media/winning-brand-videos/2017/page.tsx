@@ -69,6 +69,11 @@ function getVideoEmbedUrl(value: unknown): string {
   }
 }
 
+function getVideoThumbnailUrl(videoUrl: string): string {
+  const videoId = videoUrl.match(/\/embed\/([^/?]+)/)?.[1];
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '';
+}
+
 function extractVideoCards(page: WebsitePage | null): VideoCard[] {
   if (!page) return [];
 
@@ -134,6 +139,7 @@ export default function WinningBrandVideos2017Page() {
   const [page, setPage] = useState<WebsitePage | null>(null);
   const [videoCards, setVideoCards] = useState<VideoCard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeVideoIndex, setActiveVideoIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (activeTab !== 'Video Highlights' || page) return;
@@ -206,12 +212,33 @@ export default function WinningBrandVideos2017Page() {
                   <article key={`${video.title}-${index}`} className="media-video-card">
                     {video.videoUrl ? (
                       <div className="media-video-card-player">
-                        <iframe
-                          src={video.videoUrl}
-                          title={video.title}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
+                        {activeVideoIndex === index ? (
+                          <iframe
+                            src={`${video.videoUrl}?autoplay=1`}
+                            title={video.title}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            className="media-video-card-poster"
+                            onClick={() => setActiveVideoIndex(index)}
+                            aria-label={`Play ${video.title}`}
+                          >
+                            <Image
+                              src={video.image || getVideoThumbnailUrl(video.videoUrl)}
+                              alt=""
+                              width={640}
+                              height={360}
+                              className="media-video-card-image"
+                              unoptimized
+                            />
+                            <span className="media-video-card-play" aria-hidden="true">
+                              Play
+                            </span>
+                          </button>
+                        )}
                       </div>
                     ) : video.image ? (
                       <Image
