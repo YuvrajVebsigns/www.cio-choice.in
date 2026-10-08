@@ -13,6 +13,29 @@ type VideoCard = {
   image?: string;
 };
 
+const fallbackVideoCards: VideoCard[] = [
+  {
+    title: 'CIO Choice 2017 Award Ceremony',
+    description: 'Celebrating innovation, leadership and technology excellence.',
+    videoUrl: 'https://www.youtube-nocookie.com/embed/JGwWNGJdvx8',
+  },
+  {
+    title: 'Red Carpet Night 2017',
+    description: 'A showcase of the year’s most celebrated technology leaders.',
+    videoUrl: 'https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ',
+  },
+  {
+    title: 'Brand Innovation Showcase',
+    description: 'Highlighting standout campaigns and strategic storytelling.',
+    videoUrl: 'https://www.youtube-nocookie.com/embed/ScMzIvxBSi4',
+  },
+  {
+    title: 'Leadership Forum Highlights',
+    description: 'A look at key conversations and executive moments from the event.',
+    videoUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE',
+  },
+];
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -67,11 +90,6 @@ function getVideoEmbedUrl(value: unknown): string {
   } catch {
     return '';
   }
-}
-
-function getVideoThumbnailUrl(videoUrl: string): string {
-  const videoId = videoUrl.match(/\/embed\/([^/?]+)/)?.[1];
-  return videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '';
 }
 
 function extractVideoCards(page: WebsitePage | null): VideoCard[] {
@@ -135,11 +153,10 @@ function extractVideoCards(page: WebsitePage | null): VideoCard[] {
 }
 
 export default function WinningBrandVideos2017Page() {
-  const [activeTab, setActiveTab] = useState('Overview');
+  const [activeTab, setActiveTab] = useState('Video Highlights');
   const [page, setPage] = useState<WebsitePage | null>(null);
   const [videoCards, setVideoCards] = useState<VideoCard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeVideoIndex, setActiveVideoIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (activeTab !== 'Video Highlights' || page) return;
@@ -152,8 +169,9 @@ export default function WinningBrandVideos2017Page() {
       try {
         const data = await fetchWebsiteMediaVideosPage('media-videos-2');
         if (isMounted) {
+          const cards = extractVideoCards(data);
           setPage(data);
-          setVideoCards(extractVideoCards(data));
+          setVideoCards(cards.length ? cards : fallbackVideoCards);
         }
       } finally {
         if (isMounted) setIsLoading(false);
@@ -212,33 +230,12 @@ export default function WinningBrandVideos2017Page() {
                   <article key={`${video.title}-${index}`} className="media-video-card">
                     {video.videoUrl ? (
                       <div className="media-video-card-player">
-                        {activeVideoIndex === index ? (
-                          <iframe
-                            src={`${video.videoUrl}?autoplay=1`}
-                            title={video.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
-                        ) : (
-                          <button
-                            type="button"
-                            className="media-video-card-poster"
-                            onClick={() => setActiveVideoIndex(index)}
-                            aria-label={`Play ${video.title}`}
-                          >
-                            <Image
-                              src={video.image || getVideoThumbnailUrl(video.videoUrl)}
-                              alt=""
-                              width={640}
-                              height={360}
-                              className="media-video-card-image"
-                              unoptimized
-                            />
-                            <span className="media-video-card-play" aria-hidden="true">
-                              Play
-                            </span>
-                          </button>
-                        )}
+                        <iframe
+                          src={video.videoUrl}
+                          title={video.title}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
                       </div>
                     ) : video.image ? (
                       <Image
