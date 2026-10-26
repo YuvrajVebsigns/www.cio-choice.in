@@ -6,6 +6,7 @@ import {
   getApiErrorStatus,
 } from '@/lib/website-auth';
 import { apiFetch } from '@/services/apiFetch';
+import { fetchWebsitePageBySlugOrThrow } from '@/services/pages.services';
 
 export type ReportDownloadInput = {
   email: string;
@@ -26,6 +27,18 @@ type ReportDownloadResponse = {
     downloadUrl?: string;
   };
 };
+
+export async function fetchYearbookReportId(year: number): Promise<string> {
+  const slug = `year-book-${year}`;
+  const page = await fetchWebsitePageBySlugOrThrow(slug);
+  const reportId = page.reportId;
+
+  if (typeof reportId !== 'string' || !reportId.trim()) {
+    throw new Error(`Year Book ${year} report ID is missing from CMS page "${slug}".`);
+  }
+
+  return reportId.trim();
+}
 
 async function postReportDownload(input: ReportDownloadInput) {
   const auth = await ensureWebsiteAuth();

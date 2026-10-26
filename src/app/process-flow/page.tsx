@@ -1,7 +1,38 @@
-export const metadata = {
-  title: 'Process and Flow',
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'CIO Choice Process and Flow | 3-Stage Recognition',
   description:
-    'CIO CHOICE has a 3 stage easy and simple process for product, solution, and service recognition.',
+    'Explore the 3-stage CIO Choice process, from applications and advisory panel validation to CIO voting and technology brand recognition.',
+  keywords: [
+    'CIO Choice process',
+    'CIO Choice process flow',
+    'CIO Choice recognition process',
+    '3-stage CIO Choice process',
+    'CIO voting survey',
+    'ICT brand recognition India',
+    'CIO advisory panel',
+    'technology brand recognition',
+    'CIO Choice applications',
+    'preferred ICT brands',
+  ],
+  alternates: {
+    canonical: 'https://ciochoice.com/process',
+  },
+  openGraph: {
+    title: 'CIO Choice Process and Flow | How It Works',
+    description:
+      'Explore the 3-stage CIO Choice process, from applications and advisory panel validation to CIO voting and technology brand recognition.',
+    url: 'https://ciochoice.com/process',
+    siteName: 'CIO Choice',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CIO Choice Process and Flow | How It Works',
+    description:
+      'Explore the 3-stage CIO Choice process, from applications and advisory panel validation to CIO voting and technology brand recognition.',
+  },
 };
 
 export default function ProcessPage() {

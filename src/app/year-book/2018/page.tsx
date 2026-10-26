@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { downloadWebsiteReport } from '@/services/reports.service';
+import { downloadWebsiteReport, fetchYearbookReportId } from '@/services/reports.service';
 
 // =========================================================
 // 2018 YEAR BOOK CONFIGURATION
@@ -56,8 +56,7 @@ export default function SurveyStudyPage() {
       const email = String(formData.get('email') ?? '').trim();
       const industry = String(formData.get('industry') ?? '').trim();
 
-      // 2018 Year Book report ID
-      const reportId = '6aa3be6c59fc0416cb734152';
+      const reportId = await fetchYearbookReportId(YEARBOOK_YEAR);
 
       const downloadUrl = await downloadWebsiteReport({
         email,

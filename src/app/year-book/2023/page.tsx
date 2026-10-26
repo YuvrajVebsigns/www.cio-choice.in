@@ -589,7 +589,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { downloadWebsiteReport } from '@/services/reports.service';
+import { downloadWebsiteReport, fetchYearbookReportId } from '@/services/reports.service';
 
 const YEARBOOK_YEAR = 2023;
 
@@ -643,10 +643,7 @@ export default function SurveyStudyPage() {
       const email = String(formData.get('email') || '').trim();
       const industry = String(formData.get('industry') || '').trim();
 
-      /*
-       * 2023 Year Book report ID
-       */
-      const reportId = '6aa3bd7e59fc0416cb734149';
+      const reportId = await fetchYearbookReportId(YEARBOOK_YEAR);
 
       const downloadUrl = await downloadWebsiteReport({
         email,

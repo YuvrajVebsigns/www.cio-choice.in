@@ -1205,7 +1205,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { downloadWebsiteReport } from '@/services/reports.service';
+import { downloadWebsiteReport, fetchYearbookReportId } from '@/services/reports.service';
 
 const YEARBOOK_YEAR = 2013;
 const TOTAL_PAGES = 40;
@@ -1250,7 +1250,7 @@ export default function SurveyStudyPage() {
       const email = String(formData.get('email') || '').trim();
       const industry = String(formData.get('industry') || '').trim();
 
-      const reportId = '6aa3bf6d59fc0416cb73415d';
+      const reportId = await fetchYearbookReportId(YEARBOOK_YEAR);
 
       const downloadUrl = await downloadWebsiteReport({
         email,

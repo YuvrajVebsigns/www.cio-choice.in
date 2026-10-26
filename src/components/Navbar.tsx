@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ArrowUpRight, ChevronDown, ChevronRight, Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { fetchWebsitePages } from '@/services/pages.services';
 
 type DropdownName = 'advisory' | 'redCarpet' | 'recognized' | 'process' | 'gallery' | 'media';
 
@@ -25,23 +26,14 @@ export default function Navbar() {
   const [photoGalleryOpen, setPhotoGalleryOpen] = useState(false);
   const [coverageOpen, setCoverageOpen] = useState(false);
   const [winnerOpen, setWinnerOpen] = useState(false);
+  const [advisoryYears, setAdvisoryYears] = useState<number[]>([]);
+  const [redCarpetYears, setRedCarpetYears] = useState<number[]>([]);
+  const [recognizedBrandYears, setRecognizedBrandYears] = useState<number[]>([]);
 
   const lastScrollY = useRef(0);
 
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dropdownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const advisoryYears = [
-    2027, 2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
-  ];
-
-  const redCarpetYears = [
-    2027, 2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
-  ];
-
-  const recognizedBrandYears = [
-    2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
-  ];
 
   const photoGalleryYears = [
     2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,
@@ -50,6 +42,41 @@ export default function Navbar() {
   const mediaCoverageYears = [2024, 2023, 2021, 2020, 2019, 2018, 2017];
 
   const winningBrandYears = [2019, 2017];
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadPageYears() {
+      const pages = await fetchWebsitePages();
+      const advisoryYears = pages
+        .map((page) => page.slug?.match(/^advisory-panel-(\d{4})$/)?.[1])
+        .filter((year): year is string => Boolean(year))
+        .map(Number)
+        .sort((first, second) => second - first);
+      const redCarpetYears = pages
+        .map((page) => page.slug?.match(/^red-carpet-night-(\d{4})$/)?.[1])
+        .filter((year): year is string => Boolean(year))
+        .map(Number)
+        .sort((first, second) => second - first);
+      const recognizedBrandYears = pages
+        .map((page) => page.slug?.match(/^recognized-brands-(\d{4})$/)?.[1])
+        .filter((year): year is string => Boolean(year))
+        .map(Number)
+        .sort((first, second) => second - first);
+
+      if (isMounted) {
+        setAdvisoryYears([...new Set(advisoryYears)]);
+        setRedCarpetYears([...new Set(redCarpetYears)]);
+        setRecognizedBrandYears([...new Set(recognizedBrandYears)]);
+      }
+    }
+
+    void loadPageYears();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   function resetNestedMenus() {
     setPhotoGalleryOpen(false);

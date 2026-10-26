@@ -7,6 +7,8 @@
 // }
 
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import { createPhotoGalleryMetadata } from '@/lib/seo-metadata';
 
 type Props = {
   params: Promise<{
@@ -30,6 +32,16 @@ const validYears = [
   '2014',
   '2013',
 ];
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { year } = await params;
+
+  if (!validYears.includes(year)) {
+    notFound();
+  }
+
+  return createPhotoGalleryMetadata(year);
+}
 
 export default async function PhotoGalleryYearPage({ params }: Props) {
   const { year } = await params;

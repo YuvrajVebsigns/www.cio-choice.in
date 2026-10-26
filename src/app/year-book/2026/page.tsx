@@ -589,7 +589,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { downloadWebsiteReport } from '@/services/reports.service';
+import { downloadWebsiteReport, fetchYearbookReportId } from '@/services/reports.service';
 
 export default function SurveyStudyPage() {
   const [currentSpread, setCurrentSpread] = useState<number>(0);
@@ -653,11 +653,7 @@ export default function SurveyStudyPage() {
       const email = String(formData.get('email') || '').trim();
       const industry = String(formData.get('industry') || '').trim();
 
-      /*
-       * Replace this with the actual 2023 report ID
-       * from your backend/CMS.
-       */
-      const reportId = '6aa3b5cb59fc0416cb73412e';
+      const reportId = await fetchYearbookReportId(YEARBOOK_YEAR);
 
       const downloadUrl = await downloadWebsiteReport({
         email,

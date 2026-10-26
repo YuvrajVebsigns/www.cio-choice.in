@@ -1,4 +1,14 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Media Coverage and Winning Brand Videos | CORE Media',
+  description:
+    'Explore CORE Media press coverage and winning brand video highlights from 2017 to 2024.',
+  alternates: {
+    canonical: 'https://ciochoice.com/media',
+  },
+};
 
 const mediaItems = [
   { href: '/media/media-coverage/2024-media-coverage', title: 'Media Coverage 2024' },

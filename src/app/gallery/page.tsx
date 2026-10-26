@@ -1,4 +1,14 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'CIO Choice Gallery | Event and Brand Highlights',
+  description:
+    'Explore selected visuals from CIO Choice and CORE Media campaigns, events, and brand stories.',
+  alternates: {
+    canonical: 'https://ciochoice.com/gallery',
+  },
+};
 
 const galleryItems = [
   {

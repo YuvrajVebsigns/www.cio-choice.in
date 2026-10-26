@@ -627,7 +627,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { downloadWebsiteReport } from '@/services/reports.service';
+import { downloadWebsiteReport, fetchYearbookReportId } from '@/services/reports.service';
 
 /* ============================================================
    YEAR BOOK CONFIGURATION
@@ -693,10 +693,7 @@ export default function SurveyStudyPage() {
       const email = String(formData.get('email') ?? '').trim();
       const industry = String(formData.get('industry') ?? '').trim();
 
-      /*
-       * CIO Choice 2020 Report ID
-       */
-      const reportId = '6aa3be1659fc0416cb73414e';
+      const reportId = await fetchYearbookReportId(YEARBOOK_YEAR);
 
       const downloadUrl = await downloadWebsiteReport({
         email,

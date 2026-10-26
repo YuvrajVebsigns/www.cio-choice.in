@@ -192,6 +192,7 @@ import { apiFetch } from '@/services/apiFetch';
 export type WebsiteAuth = {
   token: string;
   websiteId: string;
+  domain?: string;
 };
 
 type WebsiteTokenResponse = {
@@ -226,7 +227,7 @@ export function getWebsiteDomain(): string {
   const configuredDomain = process.env.NEXT_PUBLIC_WEBSITE_DOMAIN?.trim();
 
   if (!configuredDomain) {
-    return 'Cio-choice.com';
+    return 'ciochoice.com';
   }
 
   return configuredDomain.replace(/^https?:\/\//i, '').replace(/\/$/, '');
@@ -247,11 +248,15 @@ export function readStoredWebsiteAuth(): WebsiteAuth | null {
       'token' in parsed &&
       'websiteId' in parsed &&
       typeof (parsed as { token?: unknown }).token === 'string' &&
-      typeof (parsed as { websiteId?: unknown }).websiteId === 'string'
+      typeof (parsed as { websiteId?: unknown }).websiteId === 'string' &&
+      'domain' in parsed &&
+      typeof (parsed as { domain?: unknown }).domain === 'string' &&
+      (parsed as { domain: string }).domain === getWebsiteDomain()
     ) {
       return {
         token: (parsed as { token: string }).token,
         websiteId: (parsed as { websiteId: string }).websiteId,
+        domain: (parsed as { domain: string }).domain,
       };
     }
   } catch {
@@ -318,7 +323,7 @@ export async function ensureWebsiteAuth(domain?: string): Promise<WebsiteAuth> {
     throw new Error('Could not obtain website token. Check website domain and API URL.');
   }
 
-  const value: WebsiteAuth = { token, websiteId };
+  const value: WebsiteAuth = { token, websiteId, domain: resolvedDomain };
   window.localStorage.setItem('websiteAuth', JSON.stringify(value));
 
   return value;
