@@ -13,29 +13,6 @@ type VideoCard = {
   image?: string;
 };
 
-const fallbackVideoCards: VideoCard[] = [
-  {
-    title: 'CIO Choice 2017 Award Ceremony',
-    description: 'Celebrating innovation, leadership and technology excellence.',
-    videoUrl: 'https://www.youtube-nocookie.com/embed/JGwWNGJdvx8',
-  },
-  {
-    title: 'Red Carpet Night 2017',
-    description: 'A showcase of the year’s most celebrated technology leaders.',
-    videoUrl: 'https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ',
-  },
-  {
-    title: 'Brand Innovation Showcase',
-    description: 'Highlighting standout campaigns and strategic storytelling.',
-    videoUrl: 'https://www.youtube-nocookie.com/embed/ScMzIvxBSi4',
-  },
-  {
-    title: 'Leadership Forum Highlights',
-    description: 'A look at key conversations and executive moments from the event.',
-    videoUrl: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE',
-  },
-];
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -107,6 +84,7 @@ function extractVideoCards(page: WebsitePage | null): VideoCard[] {
     if (!isRecord(value)) return;
 
     const quote = getString(value.quote);
+    const author = getString(value.author);
     const videoUrl =
       getVideoEmbedUrl(value.videoUrl) ||
       getVideoEmbedUrl(value.videoURL) ||
@@ -114,14 +92,15 @@ function extractVideoCards(page: WebsitePage | null): VideoCard[] {
       getVideoEmbedUrl(value.video) ||
       getVideoEmbedUrl(value.youtubeUrl) ||
       getVideoEmbedUrl(value.videoLink) ||
+      getVideoEmbedUrl(author) ||
       getVideoEmbedUrl(quote);
-    const title =
+    const providedTitle =
       getString(value.title) ||
       getString(value.name) ||
       getString(value.heading) ||
-      getString(value.author) ||
       getString(value.brandName) ||
       getString(value.label);
+    const title = providedTitle || (videoUrl ? `Video Highlight ${cards.length + 1}` : author);
     const description =
       getString(value.description) ||
       getString(value.content) ||
@@ -156,7 +135,7 @@ export default function WinningBrandVideos2017Page() {
   const [activeTab, setActiveTab] = useState('Video Highlights');
   const [page, setPage] = useState<WebsitePage | null>(null);
   const [videoCards, setVideoCards] = useState<VideoCard[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (activeTab !== 'Video Highlights' || page) return;
@@ -167,11 +146,11 @@ export default function WinningBrandVideos2017Page() {
       setIsLoading(true);
 
       try {
-        const data = await fetchWebsiteMediaVideosPage('media-videos-2');
+        const data = await fetchWebsiteMediaVideosPage('media-videos-2017');
         if (isMounted) {
           const cards = extractVideoCards(data);
           setPage(data);
-          setVideoCards(cards.length ? cards : fallbackVideoCards);
+          setVideoCards(cards);
         }
       } finally {
         if (isMounted) setIsLoading(false);
