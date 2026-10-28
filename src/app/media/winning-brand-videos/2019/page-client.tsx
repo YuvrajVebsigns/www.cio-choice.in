@@ -75,57 +75,44 @@ function extractVideoCards(page: WebsitePage | null): VideoCard[] {
   const cards: VideoCard[] = [];
   const seen = new Set<string>();
 
-  function search(value: unknown) {
-    if (Array.isArray(value)) {
-      value.forEach(search);
-      return;
-    }
+  const blocks =
+    isRecord(page.content) && Array.isArray(page.content.blocks) ? page.content.blocks : [];
 
-    if (!isRecord(value)) return;
+  blocks.forEach((block) => {
+    if (!isRecord(block)) return;
 
-    const quote = getString(value.quote);
-    const videoUrl =
-      getVideoEmbedUrl(value.videoUrl) ||
-      getVideoEmbedUrl(value.videoURL) ||
-      getVideoEmbedUrl(value.embedUrl) ||
-      getVideoEmbedUrl(value.video) ||
-      getVideoEmbedUrl(value.youtubeUrl) ||
-      getVideoEmbedUrl(value.videoLink) ||
-      getVideoEmbedUrl(quote);
-    const title =
-      getString(value.title) ||
-      getString(value.name) ||
-      getString(value.heading) ||
-      getString(value.author) ||
-      getString(value.brandName) ||
-      getString(value.label);
-    const description =
-      getString(value.description) ||
-      getString(value.content) ||
-      getString(value.text) ||
-      getString(value.subtitle) ||
-      (quote && !getVideoEmbedUrl(quote) ? quote : '') ||
-      getString(value.message);
-    const image =
-      getMediaUrl(value.thumbnail) ||
-      getMediaUrl(value.image) ||
-      getMediaUrl(value.poster) ||
-      getMediaUrl(value.avatar) ||
-      getMediaUrl(value.logo);
+    const data = isRecord(block.data) ? block.data : null;
+    if (!data || !Array.isArray(data.testimonials)) return;
 
-    if (title && (videoUrl || description || image)) {
+    data.testimonials.forEach((testimonial, index) => {
+      if (!isRecord(testimonial)) return;
+
+      const videoUrl =
+        getVideoEmbedUrl(testimonial.author) ||
+        getVideoEmbedUrl(testimonial.videoUrl) ||
+        getVideoEmbedUrl(testimonial.videoURL) ||
+        getVideoEmbedUrl(testimonial.quote);
+      if (!videoUrl) return;
+
+      const title =
+        getString(testimonial.title) ||
+        getString(testimonial.name) ||
+        getString(testimonial.role) ||
+        `Video Highlight ${index + 1}`;
+      const description =
+        getString(testimonial.quote) ||
+        getString(testimonial.description) ||
+        getString(testimonial.subtitle);
+      const image = getMediaUrl(testimonial.avatar);
       const key = `${title.toLowerCase()}-${videoUrl.toLowerCase()}`;
 
       if (!seen.has(key)) {
         seen.add(key);
         cards.push({ title, description, videoUrl, image });
       }
-    }
+    });
+  });
 
-    Object.values(value).forEach(search);
-  }
-
-  search(page.content || page);
   return cards;
 }
 
@@ -144,7 +131,7 @@ export default function WinningBrandVideos2019Page() {
       setIsLoading(true);
 
       try {
-        const data = await fetchWebsiteMediaVideosPage();
+        const data = await fetchWebsiteMediaVideosPage('media-videos');
         if (isMounted) {
           setPage(data);
           setVideoCards(extractVideoCards(data));
