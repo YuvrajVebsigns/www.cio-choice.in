@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { fetchWebsitePageBySlug, type WebsitePage } from '@/services/pages.services';
 
@@ -145,7 +145,7 @@ export default function RedCarpetNight({ slug }: RedCarpetNightProps) {
             {` ${year}.`}
           </p>
 
-          <div className="rcn-cta-row">
+          {/* <div className="rcn-cta-row">
             <Link href="/contact" className="rcn-cta-button">
               Book Your Spotlight
             </Link>
@@ -153,7 +153,7 @@ export default function RedCarpetNight({ slug }: RedCarpetNightProps) {
             <span className="rcn-cta-note">
               Explore the event detail page for year-specific recognition and participation updates.
             </span>
-          </div>
+          </div> */}
         </div>
       </section>
 

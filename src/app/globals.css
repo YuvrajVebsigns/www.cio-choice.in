@@ -3986,7 +3986,7 @@ main.advisory-page {
 ========================================================= */
 
 .project-section {
-  padding: 100px 20px;
+  padding: 10px 20px 60px;
   background:
     radial-gradient(circle at 10% 12%, rgba(142, 1, 1, 0.08), transparent 26%),
     linear-gradient(180deg, #ffffff 0%, #f3ebeb 100%);
@@ -4476,7 +4476,7 @@ main.advisory-page {
 .project-image-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 8.5;
+  aspect-ratio: 20 / 8.5;
   background: #000000;
   overflow: hidden;
 }
@@ -6396,7 +6396,7 @@ main.advisory-page {
 
 .blogs-section {
   width: 100%;
-  padding: 110px 20px;
+  padding: 60px 20px;
   background: #f5f1f1;
 }
 
@@ -6409,7 +6409,7 @@ main.advisory-page {
 
 .blogs-heading {
   text-align: center;
-  margin-bottom: 70px;
+  margin-bottom: 20px;
 }
 
 .blogs-subtitle {
@@ -7695,6 +7695,51 @@ main.advisory-page {
 
   .event-sponsor-logo {
     max-height: 48px;
+  }
+}
+
+.events-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 35px;
+}
+
+.events-filter-button {
+  padding: 10px 26px;
+  border: 1px solid #8e0101;
+  border-radius: 25px;
+  background: #fff;
+  color: #8e0101;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.events-filter-button:hover,
+.events-filter-button.active {
+  background: #8e0101;
+  color: #fff;
+}
+
+.events-filter-button:focus-visible {
+  outline: 2px solid #8e0101;
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .events-filter {
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .events-filter-button {
+    padding: 9px 20px;
   }
 }
 

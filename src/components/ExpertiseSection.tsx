@@ -41,9 +41,9 @@ export default function AboutCioChoiceSection() {
       link: '/red-carpet-night/red-carpet-night-2027',
     },
     {
-      title: '2026 Red Carpet Night',
+      title: '2027 Red Carpet Night',
       image: '/assets/aboutus/red-carpet-2025.png',
-      link: '/red-carpet-night/red-carpet-night-2026',
+      link: '/red-carpet-night/red-carpet-night-2027',
     },
     {
       title: 'Recognized Brands',
